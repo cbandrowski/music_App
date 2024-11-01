@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.muicapplication.loginController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <children>
+        <Label text="Login" layoutX="150" layoutY="20" textAlignment="CENTER">
+            <font>
+                <Font size="24"/>
+            </font>
+        </Label>
+
+        <Label text="Username:" layoutX="50" layoutY="80"/>
+        <TextField fx:id="usernameField" layoutX="150" layoutY="80" promptText="Enter your username"/>
+
+        <Label text="Password:" layoutX="50" layoutY="130"/>
+        <PasswordField fx:id="passwordField" layoutX="150" layoutY="130" promptText="Enter your password"/>
+
+        <Button text="Login" layoutX="150" layoutY="180" onAction="#handleLogin"/>
+
+        <Text fx:id="statusMessage" layoutX="50" layoutY="220" fill="red"/>
+    </children>
+
+</AnchorPane>
