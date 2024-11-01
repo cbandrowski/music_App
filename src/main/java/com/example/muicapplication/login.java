@@ -17,6 +17,10 @@ public class login extends Application{
         public void start(Stage primaryStage) throws Exception {
             Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
             primaryStage.setTitle("Music App Login");
+            // Set a minimum width and height for the window
+            primaryStage.setMinWidth(400);
+            primaryStage.setMinHeight(300);
+
             primaryStage.setScene(new Scene(root, 400, 300));
             primaryStage.show();
         }

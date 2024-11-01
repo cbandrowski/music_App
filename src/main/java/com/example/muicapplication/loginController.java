@@ -26,6 +26,7 @@ public class loginController {
         // Add your login logic here (e.g., validation against a database)
         if (username.equals("user") && password.equals("pass")) { // Replace with your logic
             statusMessage.setText("Login successful!");
+            System.out.println("login successful"); //for debugging purposes
 
             //loads to the dashboard
             MusicApplication start = new MusicApplication();
@@ -34,5 +35,12 @@ public class loginController {
         } else {
             statusMessage.setText("Invalid username or password.");
         }
+    }
+
+    //will take you to register
+    public void handleRegister() throws Exception {
+        register screen = new register();
+        screen.start(new Stage());
+
     }
 }
