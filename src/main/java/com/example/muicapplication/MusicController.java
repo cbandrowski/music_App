@@ -1,35 +1,63 @@
 package com.example.muicapplication;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.net.URL;
-import java.nio.file.Paths;
-
 
 public class MusicController {
-    public ImageView albumArt;
     @FXML
-    private Label songTitle;
+    public ListView<String> currentPlaylist;
     @FXML
-    private Button playButton, pauseButton, nextButton, previousButton, themeToggleButton;
+    private ImageView albumArt, profileImage;
+    @FXML
+    private Label songTitle, usernameLabel, firstNameLabel, lastNameLabel, addressLabel;
+    @FXML
+    private Button playButton, pauseButton, nextButton, previousButton, themeToggleButton, paymentButton;
     @FXML
     private AnchorPane rootPane;
+    @FXML
+    private StackPane overlayPane;
+    @FXML
+    private BorderPane profilePane;
 
     private boolean isDarkMode = false;
     private MediaPlayer mediaPlayer;
 
+    // Variables for tracking drag offsets
+    private double xOffset = 0;
+    private double yOffset = 0;
+
+    // Make the profilePane draggable by adjusting translateX and translateY
+    private void makeProfilePaneDraggable() {
+        profilePane.setOnMousePressed(event -> {
+            // Capture the initial offset when mouse is pressed
+            xOffset = event.getSceneX() - profilePane.getTranslateX();
+            yOffset = event.getSceneY() - profilePane.getTranslateY();
+        });
+
+        profilePane.setOnMouseDragged(event -> {
+            // Adjust translateX and translateY based on current mouse position and offset
+            profilePane.setTranslateX(event.getSceneX() - xOffset);
+            profilePane.setTranslateY(event.getSceneY() - yOffset);
+        });
+    }
+
 
     public void initialize() {
         initializeMediaPlayer();
+        makeProfilePaneDraggable();
     }
-
 
     public void initializeMediaPlayer() {
         URL resource = getClass().getResource("/DemoSong.mp3");
@@ -48,18 +76,29 @@ public class MusicController {
         }
     }
 
+    @FXML
+    public void handleProfileAction(ActionEvent actionEvent) {
+        overlayPane.setVisible(true);
+        URL profileImageUrl = getClass().getResource("/ProfileImage.jpg");
+        if (profileImageUrl != null) {
+            profileImage.setImage(new Image(profileImageUrl.toExternalForm()));
+        }
+        usernameLabel.setText("johndoe123");
+        firstNameLabel.setText("John");
+        lastNameLabel.setText("Doe");
+        addressLabel.setText("123 Main St, Anytown, USA");
+    }
+
+    @FXML
+    public void closeProfilePane() {
+        overlayPane.setVisible(false);
+    }
+
+
     public void onPlayButtonClick() {
-        URL resource = getClass().getResource("/DemoSong.mp3");
         if (mediaPlayer != null) {
             System.out.println("Playing audio...");
             mediaPlayer.play();
-
-            // Extract the file name from the URL
-            String fileName = Paths.get(resource.getPath()).getFileName().toString();
-            songTitle.setText(fileName);
-
-        } else {
-            System.out.println("MediaPlayer is not initialized.");
         }
     }
 
@@ -90,5 +129,17 @@ public class MusicController {
             rootPane.getStylesheets().add(getClass().getResource("dark-theme.css").toExternalForm());
         }
         isDarkMode = !isDarkMode;
+    }
+
+    public void handlePreferencesAction(ActionEvent actionEvent) {
+    }
+
+    public void handleHelpAction(ActionEvent actionEvent) {
+    }
+
+    public void handleLogoutAction(ActionEvent actionEvent) {
+    }
+
+    public void handlePaymentAction(ActionEvent actionEvent) {
     }
 }

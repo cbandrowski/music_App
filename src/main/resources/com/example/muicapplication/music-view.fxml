@@ -3,34 +3,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+
 <AnchorPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.muicapplication.MusicController">
     <children>
-        <!-- Menu Bar at the Top Right -->
+        <!-- Main Application Content -->
         <MenuBar fx:id="menuBar" AnchorPane.topAnchor="10" AnchorPane.rightAnchor="10">
             <Menu text="Account">
-                <MenuItem text="Profile" />
-                <MenuItem text="Logout" />
-            </Menu>
-            <Menu text="Settings">
-                <MenuItem text="Preferences" />
-                <MenuItem text="Help" />
+                <MenuItem text="Profile" onAction="#handleProfileAction"/>
+                <MenuItem text="Preferences" onAction="#handlePreferencesAction"/>
+                <MenuItem text="Help" onAction="#handleHelpAction"/>
             </Menu>
         </MenuBar>
 
-        <!-- Search Bar at the Top Center -->
         <TextArea fx:id="searchBar" AnchorPane.topAnchor="10" layoutX="550" prefWidth="300" prefHeight="50" promptText="Enter Song, Artist, Album, or Genre" />
-
-        <!-- Current Playlist on the Left Side -->
         <ListView fx:id="currentPlaylist" layoutX="10" layoutY="100" />
-
-        <!-- Song Title at the Bottom Center -->
         <Label fx:id="songTitle" layoutX="140" layoutY="650" text="No song playing" />
-
-        <!-- Image View for Album Art Above the Song Title -->
         <ImageView fx:id="albumArt" layoutX="140" layoutY="550" fitWidth="100" fitHeight="100" />
 
-
-        <!-- Playback Controls Grouped in an HBox -->
         <HBox layoutX="10" layoutY="700" spacing="10">
             <Button fx:id="previousButton" text="Previous" onAction="#onPreviousButtonClick"/>
             <Button fx:id="playButton" text="Play" onAction="#onPlayButtonClick"/>
@@ -39,40 +28,35 @@
             <Button fx:id="shuffleButton" text="Shuffle" />
         </HBox>
 
-        <!-- Theme Toggle Button at the Top Right -->
         <Button fx:id="themeToggleButton" layoutX="950" layoutY="10" text="Toggle Theme" onAction="#onThemeToggleButtonClick" />
+
+        <StackPane fx:id="overlayPane" visible="false" style="-fx-background-color: rgba(0, 0, 0, 0.5);">
+            <BorderPane fx:id="profilePane" prefWidth="300" prefHeight="400" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 1;"
+                        translateX="0" translateY="0">
+                <top>
+                    <HBox alignment="CENTER_RIGHT">
+                        <!-- Close Button for the Pop-Up -->
+                        <Button text="X" onAction="#closeProfilePane" />
+                    </HBox>
+                </top>
+                <center>
+                    <VBox spacing="10" alignment="CENTER">
+                        <ImageView fx:id="profileImage" fitWidth="100" fitHeight="100" />
+                        <Label fx:id="usernameLabel" text="Username" />
+                        <HBox alignment="CENTER">
+                            <Label fx:id="firstNameLabel" text="First Name" />
+                            <Label text=" " />
+                            <Label fx:id="lastNameLabel" text="Last Name" />
+                        </HBox>
+                        <Label fx:id="addressLabel" text="Address" wrapText="true" />
+                    </VBox>
+                </center>
+                <bottom>
+                    <Button fx:id="paymentButton" text="Payment" onAction="#handlePaymentAction" BorderPane.alignment="CENTER" />
+                    <Button fx:id="logoutButton" text="Payment" onAction="#handleLogoutAction" BorderPane.alignment="CENTER" />
+
+                </bottom>
+            </BorderPane>
+        </StackPane>
     </children>
 </AnchorPane>
-
-        <!--<?xml version="1.0" encoding="UTF-8"?>-->
-<!--<?import javafx.scene.control.*?>-->
-<!--<?import javafx.scene.layout.*?>-->
-<!--<?import javafx.scene.shape.*?>-->
-
-<!--<AnchorPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.muicapplication.MusicController">-->
-<!--    <children>-->
-<!--        <ListView fx:id="currentPlaylist" layoutX="10" layoutY="100" />-->
-<!--        <Label fx:id="songTitle" layoutX="140" layoutY="650" text="No song playing" />-->
-<!--        <MenuBar fx:id="menuBar" AnchorPane.topAnchor="10" AnchorPane.rightAnchor="10">-->
-<!--            <Menu text="Account">-->
-<!--                <MenuItem text="Profile"  />-->
-<!--                <MenuItem text="Logout" />-->
-<!--            </Menu>-->
-<!--            <Menu text="Settings">-->
-<!--                <MenuItem text="Preferences" />-->
-<!--                <MenuItem text="Help"  />-->
-<!--            </Menu>-->
-<!--        </MenuBar>-->
-<!--        <TextArea fx:id="searchBar" layoutX="550" layoutY="10" prefWidth="300" prefHeight="50" promptText="Enter Song,Artist,Album,Album or Genre"/>-->
-
-<!--        <Button fx:id="playButton" layoutX="120" layoutY="700" text="Play" onAction="#onPlayButtonClick"/>-->
-<!--        <Button fx:id="pauseButton" layoutX="190" layoutY="700" text="Pause" onAction="#onPauseButtonClick"/>-->
-<!--        <Button fx:id="shuffleButton" layoutX="10" layoutY="740" text="Shuffle" onAction="#onPauseButtonClick"/>-->
-
-<!--        <Button fx:id="nextButton" layoutX="260" layoutY="700" text="Next" onAction="#onNextButtonClick"/>-->
-<!--        <Button fx:id="previousButton" layoutX="10" layoutY="700" text="Previous" onAction="#onPreviousButtonClick"/>-->
-
-<!--        <Button fx:id="themeToggleButton" layoutX="950" layoutY="10" text="Toggle Theme" onAction="#onThemeToggleButtonClick"/>-->
-<!--    </children>-->
-<!--</AnchorPane>-->
-
