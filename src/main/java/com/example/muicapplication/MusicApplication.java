@@ -1,12 +1,13 @@
 package com.example.muicapplication;
 
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MusicApplication {
+public class MusicApplication extends Application {
 
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MusicApplication.class.getResource("music-view.fxml"));
@@ -20,7 +21,7 @@ public class MusicApplication {
         stage.show();
     }
 
-//    public static void main(String[] args) {
-//        launch();
-//    }
+ public static void main(String[] args) {
+       launch();
+   }
 }
