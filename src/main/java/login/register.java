@@ -1,4 +1,4 @@
-package com.example.muicapplication;
+package login;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,7 +8,8 @@ import javafx.stage.Stage;
 public class register {
 
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("registeration.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/registeration.fxml"));
+        Parent root = loader.load();
         primaryStage.setTitle("Music App Registration");
         // Set a minimum width and height for the window
         primaryStage.setMinWidth(400);
