@@ -4,7 +4,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.muicapplication.MusicController">
+<AnchorPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.musicapp.MusicController">
     <children>
         <!-- Main Application Content -->
         <MenuBar fx:id="menuBar" AnchorPane.topAnchor="10" AnchorPane.rightAnchor="10">
