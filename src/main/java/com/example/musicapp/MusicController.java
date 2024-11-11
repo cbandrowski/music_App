@@ -1,4 +1,4 @@
-package com.example.muicapplication;
+package com.example.musicapp;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
