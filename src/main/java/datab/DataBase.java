@@ -9,6 +9,8 @@ import java.sql.Statement;
 public class DataBase {
     // Database connection constants
     final static String DB_NAME = "MusicApplication";
+
+    //iqbama311server.mysql.database.azure.com
     final static String SQL_SERVER_URL = "jdbc:mysql://bandrowskicsc311server.mysql.database.azure.com";
     final static String DB_URL = SQL_SERVER_URL + "/" + DB_NAME;
     final static String USERNAME = "bandrowskiadmin";
