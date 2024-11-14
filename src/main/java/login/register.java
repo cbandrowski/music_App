@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 public class register {
 
     public void start(Stage primaryStage) throws Exception {
+
+
+        //try user Id = s@gmail.com
+        //pass = 123
         // Load FXML for the registration screen
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/registeration.fxml"));
         Parent root = loader.load();
@@ -19,7 +23,7 @@ public class register {
 
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(300);
-        primaryStage.setScene(new Scene(root, 400, 300));
+        primaryStage.setScene(new Scene(root, 540, 480));
         primaryStage.show();
         // Set fixed width and height
 //        primaryStage.setScene(new Scene(root, 400, 370));

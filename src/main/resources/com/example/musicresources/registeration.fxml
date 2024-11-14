@@ -20,26 +20,27 @@
 
     <Label layoutX="25.0" layoutY="14.0" style="-fx-font-size: 24; -fx-text-fill: #333;" text="Register" />
 
-                <Label layoutX="204.0" layoutY="83.0" style="-fx-text-fill: black;" text="First Name:" />
-       <TextField fx:id="firstNameField" layoutX="324.0" layoutY="81.0" promptText="Enter your first name" styleClass="text-field" stylesheets="@reg.css" />
+                <Label layoutX="126.0" layoutY="85.0" style="-fx-text-fill: black;" text="First Name:" />
+       <TextField fx:id="firstNameField" layoutX="246.0" layoutY="83.0" promptText="Enter your first name" styleClass="text-field" stylesheets="@reg.css" />
 
-                <Label layoutX="205.0" layoutY="127.0" style="-fx-text-fill: black;" text="Last Name:" />
-       <TextField fx:id="lastNameField" layoutX="324.0" layoutY="125.0" promptText="Enter your last name" styleClass="text-field" stylesheets="@reg.css" />
+                <Label layoutX="127.0" layoutY="129.0" style="-fx-text-fill: black;" text="Last Name:" />
+       <TextField fx:id="lastNameField" layoutX="246.0" layoutY="127.0" promptText="Enter your last name" styleClass="text-field" stylesheets="@reg.css" />
 
-                <Label layoutX="239.0" layoutY="180.0" style="-fx-text-fill: black;" text="Email:" />
-       <TextField fx:id="emailField" layoutX="330.0" layoutY="176.0" promptText="Enter your email" styleClass="text-field" stylesheets="@reg.css" />
+                <Label layoutX="161.0" layoutY="182.0" style="-fx-text-fill: black;" text="Email:" />
+       <TextField fx:id="emailField" layoutX="252.0" layoutY="178.0" promptText="Enter your email" styleClass="text-field" stylesheets="@reg.css" />
 
-                <Label layoutX="209.0" layoutY="224.0" style="-fx-text-fill: black;" text="Password:" />
-       <PasswordField fx:id="passwordField" layoutX="330.0" layoutY="222.0" promptText="Enter your password" styleClass="text-field" stylesheets="@reg.css" />
+                <Label layoutX="131.0" layoutY="226.0" style="-fx-text-fill: black;" text="Password:" />
+       <PasswordField fx:id="passwordField" layoutX="252.0" layoutY="224.0" promptText="Enter your password" styleClass="text-field" stylesheets="@reg.css" />
 
-                <Label layoutX="149.0" layoutY="267.0" style="-fx-text-fill: black;" text="Confirm Password:" />
-       <PasswordField fx:id="confirmPasswordField" layoutX="330.0" layoutY="265.0" promptText="Confirm your password" styleClass="text-field" stylesheets="@reg.css" />
+                <Label layoutX="71.0" layoutY="269.0" style="-fx-text-fill: black;" text="Confirm Password:" />
+       <PasswordField fx:id="confirmPasswordField" layoutX="252.0" layoutY="267.0" promptText="Confirm your password" styleClass="text-field" stylesheets="@reg.css" />
 
-                <Button fx:id="registerButton" layoutX="208.0" layoutY="324.0" onAction="#handleRegister" prefHeight="18.0" prefWidth="98.0" style="-fx-background-color: #3498db; -fx-text-fill: white;" styleClass="button-d" stylesheets="@reg.css" text="Sign up" />
+                <Button fx:id="registerButton" layoutX="203.0" layoutY="344.0" onAction="#handleRegister" prefHeight="18.0" prefWidth="98.0" style="-fx-background-color: #3498db; -fx-text-fill: white;" styleClass="button-d" stylesheets="@reg.css" text="Sign up" />
 
-                <Button layoutX="92.0" layoutY="379.0" onAction="#handleBackToLogin" style="-fx-text-fill: black;" text="Already have an account? Click here to Login" />
+                <Button layoutX="99.0" layoutY="416.0" onAction="#handleBackToLogin" prefHeight="42.0" prefWidth="372.0" style="-fx-text-fill: white; -fx-background-color: transparent;" styleClass="button-d" stylesheets="@reg.css" text="Already have an account? Click           to Login" />
 
                 <Text fx:id="statusMessage" style="-fx-fill: red;" />
+   <Text fill="#130915" layoutX="348.0" layoutY="443.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Here" wrappingWidth="42.399999999999864" />
 
    <padding>
       <Insets bottom="25.0" left="60.0" right="20.0" top="10.0" />
