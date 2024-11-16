@@ -147,4 +147,27 @@ public class DataBase {
         }
         return null; // Return null if no user is found
     }
+
+    // Method to change the password for a user
+    public boolean changePassword(String email, String newPassword) {
+        String updatePasswordSQL = "UPDATE users SET password = ? WHERE email = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(updatePasswordSQL)) {
+
+            // Set the new password and email for the query
+            pstmt.setString(1, newPassword);
+            pstmt.setString(2, email);
+
+            // Execute the update
+            int rowsUpdated = pstmt.executeUpdate();
+
+            // If rowsUpdated is greater than 0, then the password was updated successfully
+            return rowsUpdated > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

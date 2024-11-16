@@ -26,6 +26,9 @@ public class MusicController {
     public ListView<String> currentPlaylist;
     @FXML
     private ImageView albumArt, profileImage;
+
+    @FXML
+    private ImageView profilePic; // next to the username should display a pic of the user and should be allowed to change it
     @FXML
     private Label songTitle, usernameLabel, firstNameLabel, lastNameLabel, addressLabel;
     @FXML
@@ -170,8 +173,6 @@ public class MusicController {
     public void handleHelpAction(ActionEvent actionEvent) {
     }
 
-    public void handleLogoutAction(ActionEvent actionEvent) {
-    }
 
     public void handlePaymentAction(ActionEvent actionEvent) {
     }
@@ -216,4 +217,29 @@ public class MusicController {
 
     public void handleHome_btn(ActionEvent event) {
     }
+
+    //should bring user back to the loin in screen
+    public void handleLogOutAction(ActionEvent event) {
+
+        try {
+            // Load the login screen FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/login.fxml"));
+            Parent loginRoot = loader.load();
+
+            // Get the current stage (window) from the button or any other control in the scene
+            Stage currentStage = (Stage) rootPane.getScene().getWindow();
+
+            // Set the new scene (login screen) on the current stage
+            currentStage.setScene(new Scene(loginRoot));
+
+            // Optional: Add title for the login screen
+            currentStage.setTitle("Login");
+
+        } catch (IOException e) {
+            System.err.println("Failed to load login screen: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
 }
