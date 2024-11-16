@@ -2,6 +2,7 @@ package com.example.musicapp;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -12,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 
@@ -30,6 +32,9 @@ public class MusicController {
     private StackPane overlayPane;
     @FXML
     private BorderPane profilePane;
+
+    @FXML
+    private Text nameId;
 
     private boolean isDarkMode = false;
     private MediaPlayer mediaPlayer;
@@ -58,6 +63,17 @@ public class MusicController {
         initializeMediaPlayer();
         makeProfilePaneDraggable();
     }
+
+    //displays name
+    public void setUserName(String userName) {
+        System.out.println("Setting user name: " + userName); // Debug line
+        if (nameId != null) {
+            nameId.setText(userName);
+        } else {
+            System.out.println("nameId is null!"); // Debug line
+        }
+    }
+
 
     public void initializeMediaPlayer() {
         URL resource = getClass().getResource("/DemoSong.mp3");
@@ -119,17 +135,30 @@ public class MusicController {
         songTitle.setText("Previous Song");
     }
 
+    //toggle for light and dark themes
     @FXML
     protected void onThemeToggleButtonClick() {
+        // Get the current scene
+        Scene scene = rootPane.getScene();
+
+        // Check if the current theme is dark or light
         if (isDarkMode) {
-            rootPane.getStylesheets().clear();
-            rootPane.getStylesheets().add(getClass().getResource("light-theme.css").toExternalForm());
+            System.out.println("LightMode Active");
+            // Remove the dark theme and add the light theme
+            scene.getStylesheets().clear(); // Clear existing stylesheets
+            scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm()); // Add light theme
         } else {
-            rootPane.getStylesheets().clear();
-            rootPane.getStylesheets().add(getClass().getResource("dark-theme.css").toExternalForm());
+            // Remove the light theme and add the dark theme
+            System.out.println("DarkMode Active");
+            scene.getStylesheets().clear(); // Clear existing stylesheets
+            scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/dark-theme.css").toExternalForm()); // Add dark theme
         }
+
+        // Toggle the theme mode flag
         isDarkMode = !isDarkMode;
     }
+
+
 
     public void handlePreferencesAction(ActionEvent actionEvent) {
     }
