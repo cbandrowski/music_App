@@ -27,46 +27,6 @@ public class loginController {
 
     @FXML
     private void handleLogin() {
-//        String email = usernameField.getText();
-//        String password = passwordField.getText();
-//
-//        // Use the database login verification
-//        if (database.loginUser(email, password)) {
-//            statusMessage.setText("Login successful!");
-//            System.out.println("Login successful");
-//
-//            try {
-//                // Launch the MusicApplication
-//
-//                // Fetch the user's full name from the database
-//                String fullName = database.getUserFullName(email);
-//                System.out.println("Retrieved user full name: " + fullName); // Debugging line
-//
-//                if (fullName != null) {
-//                    // Launch the MusicApplication with the user's name
-//                    MusicApplication musicApp = new MusicApplication(fullName);
-////                    mC.setUserName(fullName);
-//
-//                    // Get the controller from the FXMLLoader
-//                    MusicController musicController = loader.getController();
-//                    musicController.setUserName(fullName); // Set the full name in the controller
-//                    musicApp.start(new Stage());
-//
-//                    // Close the login stage
-//                    Stage loginStage = (Stage) usernameField.getScene().getWindow();
-//                    loginStage.close();
-//                } else {
-//                    statusMessage.setText("Error fetching user details.");
-//                }
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                statusMessage.setText("Failed to load Music Application.");
-//            }
-//        } else {
-//            statusMessage.setText("Invalid username or password.");
-//        }
-//    }
 
         String email = usernameField.getText();
         String password = passwordField.getText();

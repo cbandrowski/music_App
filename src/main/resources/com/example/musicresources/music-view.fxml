@@ -81,46 +81,36 @@
                   </Text>
                   <VBox layoutX="30.0" layoutY="145.0" prefHeight="171.0" prefWidth="100.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Home">
+                        <Button mnemonicParsing="false" onAction="#handleHome_btn" text="Home">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="search">
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleSearch_btn" text="Search">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="library">
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleLibrary_btn" text="Library">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PlayList">
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handlePlayList_btn" text="Play List">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Likes">
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleLikes_btn" text="Likes">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleSetting_btn" text="Settings">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
                   </VBox>
                   <Text fx:id="nameId" layoutX="50.0" layoutY="651.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />

@@ -27,7 +27,9 @@ public class Settings{
 
     public void initialize() {
         setupThemeToggle();
-        loadUserSettings();
+//        loadUserSettings();
+        loadSettings();  // Load the settings (without requiring user label)
+
     }
 
     private void setupThemeToggle() {
@@ -48,6 +50,12 @@ public class Settings{
     private void loadUserSettings() {
         usernameLabel.setText("musicapp");
         notificationsCheckBox.setSelected(true);
+    }
+
+    // Load settings (for now, it's just the dark mode toggle)
+    private void loadSettings() {
+        // You can load other settings here if needed
+        notificationsCheckBox.setSelected(true);  // Example of another setting
     }
 
     @FXML

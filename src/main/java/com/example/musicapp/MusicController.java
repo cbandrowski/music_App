@@ -2,6 +2,8 @@ package com.example.musicapp;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,7 +16,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class MusicController {
@@ -170,5 +174,46 @@ public class MusicController {
     }
 
     public void handlePaymentAction(ActionEvent actionEvent) {
+    }
+
+    public void handleSetting_btn(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/settings.fxml"));
+        Parent root = loader.load();
+
+//        // Get the controller from the FXMLLoader
+//        MusicController musicController = loader.getController();
+//        musicController.setUserName(fullName); // Set the full name in the controller
+
+        // Launch the MusicApplication
+        Stage settingsStage = new Stage();
+        settingsStage.setScene(new Scene(root));
+        settingsStage.show();
+
+    }
+
+    public void handleLikes_btn(ActionEvent event) {
+    }
+
+    public void handlePlayList_btn(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/playlist-view.fxml"));
+        Parent root = loader.load();
+
+//        // Get the controller from the FXMLLoader
+//        MusicController musicController = loader.getController();
+//        musicController.setUserName(fullName); // Set the full name in the controller
+
+        // Launch the MusicApplication
+        Stage playListStage = new Stage();
+        playListStage.setScene(new Scene(root));
+        playListStage.show();
+    }
+
+    public void handleLibrary_btn(ActionEvent event) {
+    }
+
+    public void handleSearch_btn(ActionEvent event) {
+    }
+
+    public void handleHome_btn(ActionEvent event) {
     }
 }
