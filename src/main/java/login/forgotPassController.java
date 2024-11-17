@@ -3,9 +3,16 @@ package login;
 import datab.DataBase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
-import javafx.scene.control.PasswordField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class forgotPassController {
 
@@ -29,11 +36,6 @@ public class forgotPassController {
         assert statusLabel != null : "statusLabel was not injected!";
     }
 
-    // Method to handle cancel action (you can implement the functionality later if needed)
-    public void handleCancelAction(ActionEvent event) {
-        // Add functionality for cancel action (if needed)
-    }
-
     // Method to handle the password reset action
     public void handleResetPasswordAction(ActionEvent event) {
         // Get the text values from the input fields
@@ -42,7 +44,7 @@ public class forgotPassController {
 
         // Check if both fields are filled
         if (email.isEmpty() || newPassword.isEmpty()) {
-            statusLabel.setText("Please fill in both fields.");
+            statusLabel.setText("Please fill in all the fields.");
             return;  // Exit the method if any field is empty
         }
 
@@ -54,6 +56,31 @@ public class forgotPassController {
             statusLabel.setText("Password updated successfully!");
         } else {
             statusLabel.setText("Failed to update password. Check the email.");
+        }
+    }
+
+
+    public void handleBackToLoginAction(ActionEvent event) {
+        try {
+            // Load the login screen FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/login.fxml"));
+            Parent loginRoot = loader.load();
+            System.out.println("back to login");
+
+            // Get the current stage from the ActionEvent
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Set the login scene on the current stage
+            currentStage.setScene(new Scene(loginRoot));
+
+            // Optional: Set the title for the login screen
+            currentStage.setTitle("Login");
+
+            // Show the stage (this step ensures the updated scene is displayed)
+            currentStage.show();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

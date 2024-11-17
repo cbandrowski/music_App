@@ -35,12 +35,12 @@
                 <Label layoutX="71.0" layoutY="269.0" style="-fx-text-fill: black;" text="Confirm Password:" />
        <PasswordField fx:id="confirmPasswordField" layoutX="252.0" layoutY="267.0" promptText="Confirm your password" styleClass="text-field" stylesheets="@reg.css" />
 
-                <Button fx:id="registerButton" layoutX="203.0" layoutY="344.0" onAction="#handleRegister" prefHeight="18.0" prefWidth="98.0" style="-fx-background-color: #3498db; -fx-text-fill: white;" styleClass="button-d" stylesheets="@reg.css" text="Sign up" />
+                <Button fx:id="registerButton" layoutX="249.0" layoutY="374.0" onAction="#handleRegister" prefHeight="18.0" prefWidth="98.0" style="-fx-background-color: #3498db; -fx-text-fill: white;" styleClass="button-d" stylesheets="@reg.css" text="Sign up" />
 
-                <Button layoutX="99.0" layoutY="416.0" onAction="#handleBackToLogin" prefHeight="42.0" prefWidth="372.0" style="-fx-text-fill: white; -fx-background-color: transparent;" styleClass="button-d" stylesheets="@reg.css" text="Already have an account? Click           to Login" />
+                <Button layoutX="112.0" layoutY="438.0" onAction="#handleBackToLogin" prefHeight="42.0" prefWidth="372.0" style="-fx-text-fill: white; -fx-background-color: transparent;" styleClass="button-d" stylesheets="@reg.css" text="Already have an account? Click           to Login" />
 
-                <Text fx:id="statusMessage" style="-fx-fill: red;" />
-   <Text fill="#130915" layoutX="348.0" layoutY="443.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Here" wrappingWidth="42.399999999999864" />
+                <Text fx:id="statusMessage" layoutX="164.0" layoutY="334.0" style="-fx-fill: red;" wrappingWidth="35.20002441406257" />
+   <Text fill="#130915" layoutX="361.0" layoutY="465.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Here" wrappingWidth="42.399999999999864" />
 
    <padding>
       <Insets bottom="25.0" left="60.0" right="20.0" top="10.0" />
