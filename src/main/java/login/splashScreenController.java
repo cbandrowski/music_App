@@ -1,21 +1,21 @@
-//package com.example.muicapplication;
+//package login;
 //
-// import javafx.animation.PauseTransition;
-// import javafx.application.Application;
-// import javafx.fxml.FXMLLoader;
-// import javafx.scene.Parent;
-// import javafx.scene.Scene;
-// import javafx.stage.Stage;
-// import javafx.util.Duration;
+//import javafx.animation.PauseTransition;
+//import javafx.application.Application;
+//import javafx.fxml.FXMLLoader;
+//import javafx.scene.Parent;
+//import javafx.scene.Scene;
+//import javafx.stage.Stage;
+//import javafx.util.Duration;
 //
-// //this is the starting part of the app
+////this is the starting part of the app
 //
 //public class splashScreenController extends Application {
 //
 //    @Override
 //    public void start(Stage primaryStage) throws Exception {
 //        // Load the FXML file for the splash screen
-//        Parent root = FXMLLoader.load(getClass().getResource("splashScreen.fxml"));
+//        Parent root = FXMLLoader.load(getClass().getResource("/com/example/musicresources/splashScreen.fxml"));
 //
 //        // Set up the scene
 //        Scene scene = new Scene(root, 600, 400);
@@ -37,9 +37,9 @@
 //        });
 //        pause.play();
 //    }
-//}
 //
-////    public static void main(String[] args) {
-////        launch(args);
-////    }
-////}
+//
+//    public static void main(String[] args) {
+//        launch(args);
+//    }
+//}

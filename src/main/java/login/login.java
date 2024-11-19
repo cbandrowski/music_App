@@ -15,7 +15,7 @@ public class login extends Application {
         Parent root = loader.load();
 
         primaryStage.setTitle("Music App Login");
-        primaryStage.setScene(new Scene(root, 600, 400));
+        primaryStage.setScene(new Scene(root, 697, 440));
         primaryStage.show();
     }
 
