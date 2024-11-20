@@ -52,7 +52,7 @@ public class loginController {
 
                     // Get the controller from the FXMLLoader
                     MusicController musicController = loader.getController();
-                    musicController.setUserName(fullName); // Set the full name in the controller
+                    musicController.setEmail(email);      // Optionally pass the email for future use
 
                     // Launch the MusicApplication
                     Stage musicStage = new Stage();

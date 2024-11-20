@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" prefWidth="400.0" stylesheets="@musicView.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicapp.MusicController">
+<AnchorPane fx:id="rootPane" prefWidth="400.0" stylesheets="@musicView.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicapp.MusicController">
     <children>
         <!-- Main Application Content -->
         <MenuBar fx:id="menuBar" stylesheets="@musicView.css" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
@@ -35,7 +24,17 @@
         </MenuBar>
 
                     <TextArea fx:id="searchBar" layoutX="550" prefHeight="7.0" prefWidth="300" promptText="Enter Song, Artist, Album, or Genre" AnchorPane.topAnchor="10" />
-        <ListView fx:id="currentPlaylist" layoutX="799.0" layoutY="86.0" />
+
+        <TableView fx:id="metadataTable" layoutX="592.0" layoutY="133.0" prefHeight="400.0" prefWidth="600.0">
+            <columns>
+                <TableColumn fx:id="songNameColumn" prefWidth="150.0" text="Song Name" />
+                <TableColumn fx:id="artistColumn" prefWidth="100.0" text="Artist" />
+                <TableColumn fx:id="durationColumn" prefWidth="75.0" text="Duration" />
+                <TableColumn fx:id="albumColumn" prefWidth="150.0" text="Album" />
+                <TableColumn fx:id="genreColumn" prefWidth="100.0" text="Genre" />
+            </columns>
+        </TableView>
+
         <Label fx:id="songTitle" layoutX="683.0" layoutY="656.0" style="-fx-text-fill: black;" text="No song playing" />
         <ImageView fx:id="albumArt" fitHeight="100" fitWidth="100" layoutX="683.0" layoutY="556.0" />
 
@@ -132,5 +131,6 @@
             </AnchorPane>
          </children>
       </VBox>
-    </children>1
+      <Button layoutX="799.0" layoutY="486.0" mnemonicParsing="false" onAction="#onRefresh" prefHeight="25.0" prefWidth="62.0" text="Refresh" />
+    </children>
 </AnchorPane>

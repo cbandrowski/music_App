@@ -1,7 +1,11 @@
 package com.example.musicapp;
 
 import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.models.BlobItem;
+import datab.DataBase;
 import datab.MusicDB;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -23,6 +28,8 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Metadata;
+import model.MetadataExtractor;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,10 +37,36 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Map;
 
 public class MusicController {
     private static final String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=musicappdb;AccountKey=/TxkG8DnJ6NGWCEnv/82FiqesEi04JLZ/s6qd5Ox78qGJuxETnxCrpVs6C42jsmTzNUQ65iZ5cLn+AStfJBFbw==;EndpointSuffix=core.windows.net";
     private static final String CONTAINER_NAME = "media-files";
+    @FXML
+    private TableView<Metadata> metadataTable;
+
+    @FXML
+    private TableColumn<Metadata, String> songNameColumn;
+
+    @FXML
+    private TableColumn<Metadata, String> artistColumn;
+
+    @FXML
+    private TableColumn<Metadata, String> durationColumn;
+
+    @FXML
+    private TableColumn<Metadata, String> albumColumn;
+
+    @FXML
+    private TableColumn<Metadata, String> genreColumn;
+
+
+    private MusicDB musicBlobDB;
+    private MusicController musicCt;
      MusicDB store = new MusicDB();
     @FXML
     public ListView<String> currentPlaylist;
@@ -55,6 +88,7 @@ public class MusicController {
 
     @FXML
     private Text nameId;
+    private String userEmail;
 
 
     private boolean isDarkMode = false;
@@ -83,18 +117,88 @@ public class MusicController {
     public void initialize() {
         initializeMediaPlayer();
         makeProfilePaneDraggable();
-    }
+        musicBlobDB = new MusicDB();
 
-    //displays name
-    public void setUserName(String userName) {
-        System.out.println("Setting user name: " + userName); // Debug line
-        if (nameId != null) {
-            nameId.setText(userName);
-        } else {
-            System.out.println("nameId is null!"); // Debug line
+        songNameColumn.setCellValueFactory(new PropertyValueFactory<>("songName"));
+        artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
+        genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
+
+        // Load metadata into the table
+        loadMetadataIntoTable();
+
+
+    }
+    private void loadMetadataIntoTable() {
+        ObservableList<Metadata> metadataList = FXCollections.observableArrayList();
+
+        // Fetch metadata from MusicDB
+        for (BlobItem blobItem : musicBlobDB.getContainerClient().listBlobs()) {
+            try {
+                // Create a BlobClient for the current blob
+                BlobClient blobClient = musicBlobDB.getContainerClient().getBlobClient(blobItem.getName());
+
+                // Fetch metadata explicitly
+                Map<String, String> metadata = blobClient.getProperties().getMetadata();
+                System.out.println("Blob Metadata for " + blobItem.getName() + ": " + metadata); // Debug log
+
+                // Extract metadata fields with fallback values
+                String title = metadata.getOrDefault("title", "Unknown Title");
+                String artist = metadata.getOrDefault("artist", "Unknown Artist");
+                String album = metadata.getOrDefault("album", "Unknown Album");
+                String genre = metadata.getOrDefault("genre", "Unknown Genre");
+                String duration = metadata.getOrDefault("duration", "0");
+
+                // Parse duration and handle errors gracefully
+                int durationInSeconds = 0;
+                try {
+                    durationInSeconds = Integer.parseInt(duration);
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid duration format for blob: " + blobItem.getName() + ". Using default value.");
+                }
+                String formattedDuration = String.format("%dm%ds", durationInSeconds / 60, durationInSeconds % 60);
+                System.out.println("Blob Metadata for " + blobItem.getName() + ": " + metadata);
+
+                // Add metadata to the list
+                metadataList.add(new Metadata(title, artist, formattedDuration, album, genre));
+            } catch (Exception e) {
+                // Log the error and continue processing other blobs
+                System.err.println("Error fetching metadata for blob: " + blobItem.getName() + " - " + e.getMessage());
+                e.printStackTrace();
+            }
         }
+
+        // Set the items for the table
+        metadataTable.setItems(metadataList);
+
+        // Show placeholder if the table is empty
+        if (metadataList.isEmpty()) {
+            metadataTable.setPlaceholder(new Label("No metadata available."));
+        }
+
+    }
+    // Method to refresh and display metadata in the ListView
+    @FXML
+    public void onRefresh(ActionEvent actionEvent) {
+        // Clear current playlist
+        currentPlaylist.getItems().clear();
+
+        // Fetch metadata table from MusicDB
+        String metadataTable = musicBlobDB.listAllBlobsMetadataOnly();
+
+        // Display metadata table in the ListView
+        currentPlaylist.getItems().add(metadataTable);
+
+        // Optionally, print metadata table to the console for debugging
+        System.out.println(metadataTable);
     }
 
+
+    // Method to set the user's email
+    public void setEmail(String email) {
+        this.userEmail = email;
+    }
 
     public void initializeMediaPlayer() {
         URL resource = getClass().getResource("/DemoSong.mp3");
@@ -256,20 +360,17 @@ public class MusicController {
     }
 
 
-    @FXML
+
     public void handleUpload_btn(ActionEvent actionEvent) {
-        // Open a file chooser for the user to select a file
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("All Files", "*.*"),
-                new FileChooser.ExtensionFilter("Text Files", "*.txt"),
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"),
-                new FileChooser.ExtensionFilter("Video Files", "*.mp4", "*.mkv")
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.mp4", "*.wav", "*.aac", "*.flac", "*.ogg", "*.wma", "*.m4a")
         );
+
         File selectedFile = fileChooser.showOpenDialog(((Node) actionEvent.getSource()).getScene().getWindow());
 
         if (selectedFile != null) {
-            // Create a progress bar and display it
+            // Progress dialog setup
             ProgressBar progressBar = new ProgressBar(0);
             Label statusLabel = new Label("Uploading...");
             VBox vbox = new VBox(statusLabel, progressBar);
@@ -281,36 +382,43 @@ public class MusicController {
             progressStage.initModality(Modality.APPLICATION_MODAL);
             progressStage.show();
 
-            // Create the upload task
             Task<Void> uploadTask = createUploadTask(selectedFile);
             progressBar.progressProperty().bind(uploadTask.progressProperty());
             statusLabel.textProperty().bind(uploadTask.messageProperty());
 
-            // Handle task completion
+            // Handle task success or failure
             uploadTask.setOnSucceeded(event -> {
-                progressStage.close(); // Close the progress window
+                progressStage.close();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "File uploaded successfully!", ButtonType.OK);
                 alert.showAndWait();
             });
 
             uploadTask.setOnFailed(event -> {
-                progressStage.close(); // Close the progress window
+                progressStage.close();
                 Alert alert = new Alert(Alert.AlertType.ERROR, "File upload failed: " + uploadTask.getException().getMessage(), ButtonType.OK);
                 alert.showAndWait();
-                System.out.println(uploadTask.getException().getMessage());
+                uploadTask.getException().printStackTrace(); // Log the exact error
             });
 
-            // Start the upload task in a new thread
+            // Start the upload task
             new Thread(uploadTask).start();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "No file selected!", ButtonType.OK);
+            alert.showAndWait();
         }
     }
-
 
     private Task<Void> createUploadTask(File file) {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                BlobClient blobClient = store.getContainerClient().getBlobClient(file.getName());
+                MusicDB musicDB = new MusicDB();
+                BlobClient blobClient = musicDB.getContainerClient().getBlobClient(file.getName());
+
+                // Extract metadata
+                Map<String, String> metadata = MetadataExtractor.extractMetadata(file);
+
+                // Upload file to Azure Blob Storage
                 long fileSize = Files.size(file.toPath());
                 long uploadedBytes = 0;
 
@@ -319,31 +427,50 @@ public class MusicController {
                 try (FileInputStream fileInputStream = new FileInputStream(file);
                      OutputStream blobOutputStream = blobClient.getBlockBlobClient().getBlobOutputStream()) {
 
-                    byte[] buffer = new byte[1024 * 1024]; // 1 MB buffer size
+                    byte[] buffer = new byte[1024 * 1024];
                     int bytesRead;
 
                     while ((bytesRead = fileInputStream.read(buffer)) != -1) {
                         blobOutputStream.write(buffer, 0, bytesRead);
                         uploadedBytes += bytesRead;
-
-                        // Calculate and update progress (range: 0.0 to 1.0)
                         updateProgress(uploadedBytes, fileSize);
-
-                        // Update status message
                         updateMessage(String.format("Uploading... %.2f%%", (uploadedBytes / (double) fileSize) * 100));
                     }
-                } catch (Exception e) {
-                    // Update the message if an error occurs
-                    updateMessage("File upload failed: " + e.getMessage());
-                    throw e;
                 }
 
-                // Update the message on success
+                // Set metadata after successful upload
+                blobClient.setMetadata(metadata);
+                System.out.println("Metadata set for blob: " + file.getName());
+
                 updateMessage("Upload complete");
                 return null;
             }
         };
     }
+
+    private void saveMetadataToDatabase(Map<String, String> metadata, String blobName, String userId) {
+        try (Connection conn = DriverManager.getConnection(DataBase.DB_URL, DataBase.USERNAME, DataBase.PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO UserSongs (user_id, blob_name, title, duration, artist, album, composer, year_recorded) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+
+            stmt.setString(1, userId);
+            stmt.setString(2, blobName);
+            stmt.setString(3, metadata.getOrDefault("title", "Unknown Title"));
+            stmt.setString(4, metadata.getOrDefault("duration", "0"));
+            stmt.setString(5, metadata.getOrDefault("artist", "Unknown Artist"));
+            stmt.setString(6, metadata.getOrDefault("album", "Unknown Album"));
+            stmt.setString(7, metadata.getOrDefault("composer", "Unknown Composer"));
+            stmt.setString(8, metadata.getOrDefault("year", "0"));
+
+            stmt.executeUpdate();
+            System.out.println("Metadata saved to database successfully!");
+
+        } catch (SQLException e) {
+            System.err.println("Failed to save metadata to database: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 
 
 

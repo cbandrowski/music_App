@@ -1,10 +1,6 @@
 package datab;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DataBase {
     // Database connection constants
@@ -13,29 +9,28 @@ public class DataBase {
     //iqbama311server.mysql.database.azure.com
     final static String SQL_SERVER_URL = "jdbc:mysql://bandrowskicsc311server.mysql.database.azure.com";
     public final static String DB_URL = SQL_SERVER_URL + "/" + DB_NAME;
-    final static String USERNAME = "bandrowskiadmin";
-    final static String PASSWORD = "Farmingdale24";
+    public final static String USERNAME = "bandrowskiadmin";
+    public final static String PASSWORD = "Farmingdale24";
 
     // Method to connect to the database and initialize tables if not already created
     public boolean connectToDatabase() {
         boolean hasRegisteredUsers = false;
+
         try {
+            // Load the MySQL JDBC driver
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
             // First, connect to MySQL server and create the database if not created
             try (Connection conn = DriverManager.getConnection(SQL_SERVER_URL, USERNAME, PASSWORD);
                  Statement statement = conn.createStatement()) {
                 statement.executeUpdate("CREATE DATABASE IF NOT EXISTS " + DB_NAME);
             }
 
-            // Connect to the specific database and create necessary tables
+            // Connect to the specific database
             try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
                  Statement statement = conn.createStatement()) {
 
@@ -48,39 +43,59 @@ public class DataBase {
                         "password VARCHAR(255) NOT NULL)";
                 statement.executeUpdate(createUserTable);
 
-                // Create songs table
-                String createSongsTable = "CREATE TABLE IF NOT EXISTS songs (" +
-                        "song_id INT PRIMARY KEY AUTO_INCREMENT," +
-                        "title VARCHAR(100) NOT NULL," +
-                        "artist VARCHAR(50)," +
-                        "album VARCHAR(50)," +
-                        "file_url VARCHAR(255))";
-                statement.executeUpdate(createSongsTable);
+                // Check if the 'local_storage_path' column exists
+                String checkColumnQuery = "SELECT COUNT(*) AS cnt " +
+                        "FROM INFORMATION_SCHEMA.COLUMNS " +
+                        "WHERE TABLE_SCHEMA = '" + DB_NAME + "' " +
+                        "AND TABLE_NAME = 'users' " +
+                        "AND COLUMN_NAME = 'local_storage_path'";
 
+                try (PreparedStatement checkStmt = conn.prepareStatement(checkColumnQuery);
+                     ResultSet rs = checkStmt.executeQuery()) {
+                    if (rs.next() && rs.getInt("cnt") == 0) {
+                        // Column does not exist, add it
+                        String addColumnQuery = "ALTER TABLE users ADD COLUMN local_storage_path VARCHAR(255)";
+                        statement.executeUpdate(addColumnQuery);
+                    }
+                }
                 // Create playlists table
                 String createPlaylistsTable = "CREATE TABLE IF NOT EXISTS playlists (" +
-                        "playlist_id INT PRIMARY KEY AUTO_INCREMENT," +
-                        "name VARCHAR(50) NOT NULL," +
-                        "user_id INT," +
+                        "id INT PRIMARY KEY AUTO_INCREMENT," +
+                        "name VARCHAR(100) NOT NULL," +
+                        "user_id INT NOT NULL," +
                         "FOREIGN KEY (user_id) REFERENCES users(id))";
                 statement.executeUpdate(createPlaylistsTable);
+                // Create UserSongs table with ON DELETE CASCADE
+                String createUserSongsTable = "CREATE TABLE IF NOT EXISTS UserSongs (" +
+                        "id INT PRIMARY KEY AUTO_INCREMENT," +
+                        "user_id INT NOT NULL," +
+                        "blob_name VARCHAR(255) NOT NULL," +
+                        "title VARCHAR(200)," +
+                        "duration DECIMAL(10, 2)," +
+                        "artist VARCHAR(200)," +
+                        "album VARCHAR(200)," +
+                        "composer VARCHAR(200)," +
+                        "year_recorded INT," +
+                        "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)";
+                statement.executeUpdate(createUserSongsTable);
 
-                // Create playlist_songs table
-                String createPlaylistSongsTable = "CREATE TABLE IF NOT EXISTS playlist_songs (" +
-                        "playlist_id INT," +
-                        "song_id INT," +
-                        "PRIMARY KEY (playlist_id, song_id)," +//composite primary key ensure each song once in playlist
-                        "FOREIGN KEY (playlist_id) REFERENCES playlists(playlist_id)," +
-                        "FOREIGN KEY (song_id) REFERENCES songs(song_id))";
+// Create PlaylistSongs table with ON DELETE CASCADE
+                String createPlaylistSongsTable = "CREATE TABLE IF NOT EXISTS PlaylistSongs (" +
+                        "id INT PRIMARY KEY AUTO_INCREMENT," +
+                        "playlist_id INT NOT NULL," +
+                        "user_song_id INT NOT NULL," +
+                        "FOREIGN KEY (playlist_id) REFERENCES playlists(id) ON DELETE CASCADE," +
+                        "FOREIGN KEY (user_song_id) REFERENCES UserSongs(id) ON DELETE CASCADE)";
                 statement.executeUpdate(createPlaylistSongsTable);
 
+
                 // Check if any users are already registered
-                ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM users");
-                if (resultSet.next()) {
-                    hasRegisteredUsers = resultSet.getInt(1) > 0;
+                try (ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM users")) {
+                    if (resultSet.next()) {
+                        hasRegisteredUsers = resultSet.getInt(1) > 0;
+                    }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,9 +103,11 @@ public class DataBase {
         return hasRegisteredUsers;
     }
 
+
+
     // Method for registering a new user
-    public boolean registerUser(String firstName, String lastName, String email, String password) {
-        String insertUserSQL = "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
+    public boolean registerUser(String firstName, String lastName, String email, String password, String local_Storage_Path) {
+        String insertUserSQL = "INSERT INTO users (first_name, last_name, email, password, local_storage_path) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(insertUserSQL)) {
@@ -99,6 +116,7 @@ public class DataBase {
             pstmt.setString(2, lastName);
             pstmt.setString(3, email);
             pstmt.setString(4, password);
+            pstmt.setString(5, local_Storage_Path);
 
             pstmt.executeUpdate();
             return true;
@@ -170,4 +188,20 @@ public class DataBase {
             return false;
         }
     }
+    public boolean saveStorageLocation(String email, String storagePath) {
+        String updateQuery = "UPDATE users SET local_storage_path = ? WHERE email = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = conn.prepareStatement(updateQuery)) {
+            preparedStatement.setString(1, storagePath);
+            preparedStatement.setString(2, email);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0; // Return true if the update was successful
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 }
