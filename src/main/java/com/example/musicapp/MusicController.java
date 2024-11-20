@@ -4,6 +4,7 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.models.BlobItem;
 import datab.DataBase;
 import datab.MusicDB;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -66,8 +67,7 @@ public class MusicController {
 
 
     private MusicDB musicBlobDB;
-    private MusicController musicCt;
-     MusicDB store = new MusicDB();
+    MusicDB store = new MusicDB();
     @FXML
     public ListView<String> currentPlaylist;
     @FXML
@@ -139,33 +139,14 @@ public class MusicController {
                 // Create a BlobClient for the current blob
                 BlobClient blobClient = musicBlobDB.getContainerClient().getBlobClient(blobItem.getName());
 
-                // Fetch metadata explicitly
-                Map<String, String> metadata = blobClient.getProperties().getMetadata();
-                System.out.println("Blob Metadata for " + blobItem.getName() + ": " + metadata); // Debug log
-
-                // Extract metadata fields with fallback values
-                String title = metadata.getOrDefault("title", "Unknown Title");
-                String artist = metadata.getOrDefault("artist", "Unknown Artist");
-                String album = metadata.getOrDefault("album", "Unknown Album");
-                String genre = metadata.getOrDefault("genre", "Unknown Genre");
-                String duration = metadata.getOrDefault("duration", "0");
-
-                // Parse duration and handle errors gracefully
-                int durationInSeconds = 0;
-                try {
-                    durationInSeconds = Integer.parseInt(duration);
-                } catch (NumberFormatException e) {
-                    System.err.println("Invalid duration format for blob: " + blobItem.getName() + ". Using default value.");
-                }
-                String formattedDuration = String.format("%dm%ds", durationInSeconds / 60, durationInSeconds % 60);
-                System.out.println("Blob Metadata for " + blobItem.getName() + ": " + metadata);
+                // Use MetadataExtractor to extract metadata from the blob
+                Metadata metadata = MetadataExtractor.extractMetadataDB(blobClient, blobItem.getName());
 
                 // Add metadata to the list
-                metadataList.add(new Metadata(title, artist, formattedDuration, album, genre));
+                metadataList.add(metadata);
             } catch (Exception e) {
                 // Log the error and continue processing other blobs
                 System.err.println("Error fetching metadata for blob: " + blobItem.getName() + " - " + e.getMessage());
-                e.printStackTrace();
             }
         }
 
@@ -176,23 +157,26 @@ public class MusicController {
         if (metadataList.isEmpty()) {
             metadataTable.setPlaceholder(new Label("No metadata available."));
         }
-
     }
+
+
     // Method to refresh and display metadata in the ListView
     @FXML
     public void onRefresh(ActionEvent actionEvent) {
-        // Clear current playlist
-        currentPlaylist.getItems().clear();
-
-        // Fetch metadata table from MusicDB
-        String metadataTable = musicBlobDB.listAllBlobsMetadataOnly();
-
-        // Display metadata table in the ListView
-        currentPlaylist.getItems().add(metadataTable);
-
-        // Optionally, print metadata table to the console for debugging
-        System.out.println(metadataTable);
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                // Reload metadata into the table
+                Platform.runLater(() -> {
+                    loadMetadataIntoTable();
+                });
+                return null;
+            }
+        };
+        new Thread(task).start();
     }
+
+
 
 
     // Method to set the user's email

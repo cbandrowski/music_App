@@ -1,5 +1,6 @@
 package model;
 
+import com.azure.storage.blob.BlobClient;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -43,5 +44,28 @@ public class MetadataExtractor {
         }
 
         return metadata;
+    }
+    public static Metadata extractMetadataDB(BlobClient blobClient, String blobName) {
+        try {
+            Map<String, String> metadata = blobClient.getProperties().getMetadata();
+            String title = metadata.getOrDefault("title", "Unknown Title");
+            String artist = metadata.getOrDefault("artist", "Unknown Artist");
+            String duration = metadata.getOrDefault("duration", "0");
+            String album = metadata.getOrDefault("album", "Unknown Album");
+            String genre = metadata.getOrDefault("genre", "Unknown Genre");
+
+            int durationInSeconds = 0;
+            try {
+                durationInSeconds = Integer.parseInt(duration);
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid duration format for blob: " + blobName + ". Using default value.");
+            }
+
+            String formattedDuration = String.format("%dm%ds", durationInSeconds / 60, durationInSeconds % 60);
+            return new Metadata(title, artist, formattedDuration, album, genre);
+        } catch (Exception e) {
+            System.err.println("Error fetching metadata for blob: " + blobName + " - " + e.getMessage());
+            return new Metadata("Na", "Na", "Na", "Na", "Na");
+        }
     }
 }

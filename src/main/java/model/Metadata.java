@@ -13,7 +13,7 @@ public class Metadata {
         this.songName = new SimpleStringProperty(songName);
         this.artist = new SimpleStringProperty(artist);
         this.duration = new SimpleStringProperty(duration);
-        this.album = new SimpleStringProperty(genre);
+        this.album = new SimpleStringProperty(album);
         this.genre = new SimpleStringProperty(genre);
     }
 
@@ -36,5 +36,6 @@ public class Metadata {
     public String getGenre() {
         return genre.get();
     }
+
 }
 

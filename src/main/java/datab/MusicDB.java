@@ -5,8 +5,8 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.azure.storage.blob.models.BlobItem;
-
-import java.util.Map;
+import model.Metadata;
+import model.MetadataExtractor;
 
 public class MusicDB {
 
@@ -41,23 +41,13 @@ public class MusicDB {
                 // Create a BlobClient for the current blob
                 BlobClient blobClient = containerClient.getBlobClient(blobItem.getName());
 
-                // Fetch metadata explicitly
-                Map<String, String> metadata = blobClient.getProperties().getMetadata();
-
-                // Extract specific metadata fields
-                String title = metadata.getOrDefault("title", "Unknown Title");
-                String artist = metadata.getOrDefault("artist", "Unknown Artist");
-                String album = metadata.getOrDefault("album", "Unknown Album");
-                String duration = metadata.getOrDefault("duration", "0"); // Duration in seconds
-                String genre = metadata.getOrDefault("genre", "Unknown Genre");
-
-                // Convert duration from seconds to XmYs format
-                int durationInSeconds = Integer.parseInt(duration);
-                String formattedDuration = String.format("%dm%ds", durationInSeconds / 60, durationInSeconds % 60);
+                // Use MetadataExtractor to extract metadata from the blob
+                Metadata metadata = MetadataExtractor.extractMetadataDB(blobClient, blobItem.getName());
 
                 // Append metadata row
                 metadataBuilder.append(String.format("%-20s %-20s %-10s %-20s %-20s\n",
-                        title, artist, formattedDuration, album, genre));
+                        metadata.getSongName(), metadata.getArtist(), metadata.getDuration(),
+                        metadata.getAlbum(), metadata.getGenre()));
             } catch (Exception e) {
                 // Append an error row for this blob
                 metadataBuilder.append(String.format("%-20s %-20s %-10s %-20s %-20s\n",
@@ -67,5 +57,7 @@ public class MusicDB {
 
         return metadataBuilder.toString();
     }
+
+
 
 }
