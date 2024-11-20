@@ -45,6 +45,7 @@ public class MetadataExtractor {
 
         return metadata;
     }
+
     public static Metadata extractMetadataDB(BlobClient blobClient, String blobName) {
         try {
             Map<String, String> metadata = blobClient.getProperties().getMetadata();
@@ -54,18 +55,11 @@ public class MetadataExtractor {
             String album = metadata.getOrDefault("album", "Unknown Album");
             String genre = metadata.getOrDefault("genre", "Unknown Genre");
 
-            int durationInSeconds = 0;
-            try {
-                durationInSeconds = Integer.parseInt(duration);
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid duration format for blob: " + blobName + ". Using default value.");
-            }
-
-            String formattedDuration = String.format("%dm%ds", durationInSeconds / 60, durationInSeconds % 60);
-            return new Metadata(title, artist, formattedDuration, album, genre);
+            // Pass blobName to Metadata
+            return new Metadata(title,blobName,artist, duration, album, genre);
         } catch (Exception e) {
             System.err.println("Error fetching metadata for blob: " + blobName + " - " + e.getMessage());
-            return new Metadata("Na", "Na", "Na", "Na", "Na");
+            return new Metadata("Na", "Na", "0", "Na", "Na", blobName);
         }
     }
 }

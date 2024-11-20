@@ -8,6 +8,7 @@ module com.example.muicapplication {
     requires com.azure.storage.blob;
     requires reactor.netty.core;
     requires org.apache.tika.core;
+    requires java.prefs;
 
 
     // Open packages that JavaFX needs to access via reflection

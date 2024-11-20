@@ -29,8 +29,10 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.Metadata;
 import model.MetadataExtractor;
+import service.UserSession;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,8 +49,25 @@ import java.util.Map;
 public class MusicController {
     private static final String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=musicappdb;AccountKey=/TxkG8DnJ6NGWCEnv/82FiqesEi04JLZ/s6qd5Ox78qGJuxETnxCrpVs6C42jsmTzNUQ65iZ5cLn+AStfJBFbw==;EndpointSuffix=core.windows.net";
     private static final String CONTAINER_NAME = "media-files";
+    public Button refreshUserLibButton;
+    @FXML
+    private TableView<Metadata> userLib;
+    private DataBase database = new DataBase(); // Database instance
+
+    @FXML
+    private TableColumn<Metadata, String> userLibSongNameColumn;
+
+    @FXML
+    private TableColumn<Metadata, String> userLibArtistColumn;
+
+    @FXML
+    private TableColumn<Metadata, String> userLibDurationColumn;
+
     @FXML
     private TableView<Metadata> metadataTable;
+    @FXML
+    private TableColumn<Metadata, Void> actionColumn;
+
 
     @FXML
     private TableColumn<Metadata, String> songNameColumn;
@@ -98,38 +117,72 @@ public class MusicController {
     private double xOffset = 0;
     private double yOffset = 0;
 
-    // Make the profilePane draggable by adjusting translateX and translateY
-    private void makeProfilePaneDraggable() {
-        profilePane.setOnMousePressed(event -> {
-            // Capture the initial offset when mouse is pressed
-            xOffset = event.getSceneX() - profilePane.getTranslateX();
-            yOffset = event.getSceneY() - profilePane.getTranslateY();
-        });
-
-        profilePane.setOnMouseDragged(event -> {
-            // Adjust translateX and translateY based on current mouse position and offset
-            profilePane.setTranslateX(event.getSceneX() - xOffset);
-            profilePane.setTranslateY(event.getSceneY() - yOffset);
-        });
-    }
-
 
     public void initialize() {
+        // Retrieve user session details
+        UserSession session = UserSession.getInstance();
+
+        // Use session details to load user-specific data
+        int userId = session.getUserId();
+        String email = session.getEmail();
+        String fullName = session.getUserName();
+
+
+        // Display user information
+        usernameLabel.setText(email);
+        nameId.setText(fullName);
+
+        // Load user-specific data (e.g., library, playlists)
+        loadUserLibrary(userId);
         initializeMediaPlayer();
         makeProfilePaneDraggable();
         musicBlobDB = new MusicDB();
+        // Set up columns for user library
+        userLibSongNameColumn.setCellValueFactory(new PropertyValueFactory<>("songName"));
+        userLibArtistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        userLibDurationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
+
+        // Set up property value factories for other columns
         songNameColumn.setCellValueFactory(new PropertyValueFactory<>("songName"));
         artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
         albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
         genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
+        durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
+
+        durationColumn.setCellFactory(new Callback<TableColumn<Metadata, String>, TableCell<Metadata, String>>() {
+            @Override
+            public TableCell<Metadata, String> call(TableColumn<Metadata, String> param) {
+                return new TableCell<Metadata, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            // Convert string to integer and format as "Xm Ys"
+                            try {
+                                int seconds = Integer.parseInt(item);
+                                int minutes = seconds / 60;
+                                int remainingSeconds = seconds % 60;
+                                setText(minutes + "m " + remainingSeconds + "s");
+                            } catch (NumberFormatException e) {
+                                setText("Invalid duration"); // Handle invalid data gracefully
+                            }
+                        }
+                    }
+                };
+            }
+        });
 
         // Load metadata into the table
         loadMetadataIntoTable();
-
-
+        addButtonToTable();
     }
+
+
+
+
     private void loadMetadataIntoTable() {
         ObservableList<Metadata> metadataList = FXCollections.observableArrayList();
 
@@ -158,6 +211,63 @@ public class MusicController {
             metadataTable.setPlaceholder(new Label("No metadata available."));
         }
     }
+    private void loadUserLibrary(int userId) {
+        // Fetch the user's library from the database
+        ObservableList<Metadata> library = FXCollections.observableArrayList(database.getUserLibrary(userId));
+
+        // Populate the userLib TableView
+        userLib.setItems(library);
+
+        // Show placeholder if the table is empty
+        if (library.isEmpty()) {
+            userLib.setPlaceholder(new Label("Your library is empty."));
+        }
+    }
+
+
+
+    private void addButtonToTable() {
+        actionColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button addButton = new Button("Add to Library");
+
+            {
+                addButton.setOnAction(event -> {
+                    Metadata metadata = getTableView().getItems().get(getIndex());
+                    int userId = UserSession.getInstance().getUserId(); // Fetch user ID from session
+
+                    // Add the song to the user's library
+
+                    database.addToUserSongs(userId, metadata);
+
+                    // Disable the button after adding
+                    addButton.setDisable(true);
+
+                    // Refresh the user library
+                    loadUserLibrary(userId);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null); // Clear the button if no data
+                } else {
+                    Metadata metadata = getTableView().getItems().get(getIndex());
+                    int userId = UserSession.getInstance().getUserId();
+
+                    // Check if the song is already in the user's library
+                    if (database.isSongInUserLibrary(userId, metadata.getBlobName())) {
+                        addButton.setDisable(true); // Disable if already in library
+                    } else {
+                        addButton.setDisable(false); // Enable otherwise
+                    }
+                    setGraphic(addButton);
+                }
+            }
+        });
+    }
+
 
 
     // Method to refresh and display metadata in the ListView
@@ -179,11 +289,20 @@ public class MusicController {
 
 
 
-    // Method to set the user's email
-    public void setEmail(String email) {
-        this.userEmail = email;
-    }
 
+    private void makeProfilePaneDraggable() {
+        profilePane.setOnMousePressed(event -> {
+            // Capture the initial offset when mouse is pressed
+            xOffset = event.getSceneX() - profilePane.getTranslateX();
+            yOffset = event.getSceneY() - profilePane.getTranslateY();
+        });
+
+        profilePane.setOnMouseDragged(event -> {
+            // Adjust translateX and translateY based on current mouse position and offset
+            profilePane.setTranslateX(event.getSceneX() - xOffset);
+            profilePane.setTranslateY(event.getSceneY() - yOffset);
+        });
+    }
     public void initializeMediaPlayer() {
         URL resource = getClass().getResource("/DemoSong.mp3");
         URL imageUrl = getClass().getResource("/DefaultAlbumCoverArt.jpg");
@@ -456,6 +575,11 @@ public class MusicController {
     }
 
 
-
-
+    @FXML
+    private void handleRefreshUserLibrary(ActionEvent event) {
+        // Logic to refresh the user library
+        int userId = UserSession.getInstance().getUserId();
+        ObservableList<Metadata> library = FXCollections.observableArrayList(database.getUserLibrary(userId));
+        userLib.setItems(library);
+    }
 }
