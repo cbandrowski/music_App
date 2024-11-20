@@ -8,6 +8,12 @@ public class Playlist {
     private String name;
     private ObservableList<Song> songs;
 
+    // No-argument constructor
+    public Playlist() {
+        this.id = 0; // Default ID
+        this.name = ""; // Default name
+        this.songs = FXCollections.observableArrayList(); // Initialize the list of songs
+    }
     // Constructor
     public Playlist(int id, String name) {
         this.id = id;

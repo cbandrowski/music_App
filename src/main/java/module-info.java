@@ -3,6 +3,8 @@ module com.example.muicapplication {
     requires javafx.fxml;
     requires javafx.media;
     requires java.sql;
+    requires com.azure.storage.blob;
+
 
     // Open packages that JavaFX needs to access via reflection
     opens com.example.musicapp to javafx.fxml;

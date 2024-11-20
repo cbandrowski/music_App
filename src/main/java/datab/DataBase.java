@@ -9,8 +9,10 @@ import java.sql.Statement;
 public class DataBase {
     // Database connection constants
     final static String DB_NAME = "MusicApplication";
+
+    //iqbama311server.mysql.database.azure.com
     final static String SQL_SERVER_URL = "jdbc:mysql://bandrowskicsc311server.mysql.database.azure.com";
-    final static String DB_URL = SQL_SERVER_URL + "/" + DB_NAME;
+    public final static String DB_URL = SQL_SERVER_URL + "/" + DB_NAME;
     final static String USERNAME = "bandrowskiadmin";
     final static String PASSWORD = "Farmingdale24";
 
@@ -119,6 +121,49 @@ public class DataBase {
 
             ResultSet resultSet = pstmt.executeQuery();
             return resultSet.next(); // Returns true if a user with the given email and password exists
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public String getUserFullName(String email) {
+        String getUserSQL = "SELECT first_name, last_name FROM users WHERE email = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(getUserSQL)) {
+
+            pstmt.setString(1, email);
+
+            ResultSet resultSet = pstmt.executeQuery();
+            if (resultSet.next()) {
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                return firstName + " " + lastName;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null; // Return null if no user is found
+    }
+
+    // Method to change the password for a user
+    public boolean changePassword(String email, String newPassword) {
+        String updatePasswordSQL = "UPDATE users SET password = ? WHERE email = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(updatePasswordSQL)) {
+
+            // Set the new password and email for the query
+            pstmt.setString(1, newPassword);
+            pstmt.setString(2, email);
+
+            // Execute the update
+            int rowsUpdated = pstmt.executeUpdate();
+
+            // If rowsUpdated is greater than 0, then the password was updated successfully
+            return rowsUpdated > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
