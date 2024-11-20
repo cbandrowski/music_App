@@ -116,6 +116,11 @@
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
                         </Button>
+                         <Button mnemonicParsing="false" onAction="#handleUpload_btn" text="Upload">
+                             <VBox.margin>
+                                 <Insets bottom="10.0" left="10.0" />
+                             </VBox.margin>
+                         </Button>
                      </children>
                   </VBox>
                   <Text fx:id="nameId" layoutX="81.0" layoutY="632.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
