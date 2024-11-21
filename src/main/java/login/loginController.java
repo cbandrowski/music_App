@@ -33,6 +33,7 @@ public class loginController {
     public void handleLogin() {
         String email = usernameField.getText().trim();
         String password = passwordField.getText().trim();
+        database.connectToDatabase();
 
         // Use the database login verification
         if (database.loginUser(email, password)) {

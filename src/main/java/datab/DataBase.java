@@ -62,9 +62,8 @@ public class DataBase {
                     }
                 }
 
-                // Create playlists table
                 String createPlaylistsTable = "CREATE TABLE IF NOT EXISTS playlists (" +
-                        "id INT PRIMARY KEY AUTO_INCREMENT," +
+                        "playlist_id INT PRIMARY KEY AUTO_INCREMENT," +
                         "name VARCHAR(100) NOT NULL," +
                         "user_id INT NOT NULL," +
                         "FOREIGN KEY (user_id) REFERENCES users(id))";
@@ -96,12 +95,11 @@ public class DataBase {
                     }
                 }
 
-                // Create PlaylistSongs table
                 String createPlaylistSongsTable = "CREATE TABLE IF NOT EXISTS PlaylistSongs (" +
                         "id INT PRIMARY KEY AUTO_INCREMENT," +
                         "playlist_id INT NOT NULL," +
                         "user_song_id INT NOT NULL," +
-                        "FOREIGN KEY (playlist_id) REFERENCES playlists(id) ON DELETE CASCADE," +
+                        "FOREIGN KEY (playlist_id) REFERENCES playlists(playlist_id) ON DELETE CASCADE," +
                         "FOREIGN KEY (user_song_id) REFERENCES UserSongs(id) ON DELETE CASCADE)";
                 statement.executeUpdate(createPlaylistSongsTable);
 
