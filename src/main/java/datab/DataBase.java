@@ -200,26 +200,40 @@ public class DataBase {
 
     public ObservableList<Metadata> getUserLibrary(int userId) {
         ObservableList<Metadata> library = FXCollections.observableArrayList();
-        String query = "SELECT title,blob_name, duration, artist, album, genre FROM UserSongs WHERE user_id = ?";
+        String query = "SELECT title, blob_name, duration, artist, album, genre FROM UserSongs WHERE user_id = ?";
+
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
              PreparedStatement stmt = connection.prepareStatement(query)) {
+
             stmt.setInt(1, userId);
+
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                library.add(new Metadata(
-                        rs.getString("title"),
-                        rs.getString("blob_name"),
-                        rs.getString("duration"),
-                        rs.getString("artist"),
-                        rs.getString("album"),
-                        rs.getString("genre") // Ensure this matches your Metadata class
-                ));
+                // Fetch fields from the database
+                String title = rs.getString("title");
+                String blobName = rs.getString("blob_name");
+                String duration = rs.getString("duration");
+                String artist = rs.getString("artist");
+                String album = rs.getString("album");
+                String genre = rs.getString("genre");
+
+                // Debugging: Print each field
+                System.out.println("Fetched Record - Title: " + title +
+                        ", Blob Name: " + blobName +
+                        ", Duration: " + duration +
+                        ", Artist: " + artist +
+                        ", Album: " + album +
+                        ", Genre: " + genre);
+
+                // Add the Metadata object to the list
+                library.add(new Metadata(title, blobName, duration, artist, album, genre));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return library;
     }
+
 
     // Method for registering a new user
     public boolean registerUser(String firstName, String lastName, String email, String password, String local_Storage_Path) {

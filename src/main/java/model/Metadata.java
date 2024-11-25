@@ -13,7 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
         private boolean downloaded;
 
 
-        public Metadata(String songName, String BlobName, String artist, String duration, String album, String genre) {
+        public Metadata(String songName, String BlobName, String duration, String artist, String album, String genre) {
             this.songName = new SimpleStringProperty(songName);
             this.BlobName = new SimpleStringProperty(BlobName);
             this.artist = new SimpleStringProperty(artist);

@@ -45,6 +45,7 @@
             </columns>
         </TableView>
         <Button fx:id="refreshUserLibButton" layoutX="200.0" layoutY="630.0" onAction="#handleRefreshUserLibrary" prefWidth="120.0" text="Refresh" />
+        <ProgressBar fx:id="downloadProgressBar" layoutX="284.0" layoutY="630.0" prefWidth="340.0" visible="false" />
 
 
         <Label fx:id="songTitle" layoutX="683.0" layoutY="656.0" style="-fx-text-fill: black;" text="No song playing" />

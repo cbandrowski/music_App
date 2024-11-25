@@ -44,6 +44,7 @@ public class MusicController {
     private static final String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=musicappdb;AccountKey=/TxkG8DnJ6NGWCEnv/82FiqesEi04JLZ/s6qd5Ox78qGJuxETnxCrpVs6C42jsmTzNUQ65iZ5cLn+AStfJBFbw==;EndpointSuffix=core.windows.net";
     private static final String CONTAINER_NAME = "media-files";
     public Button refreshUserLibButton;
+    public ProgressBar downloadProgressBar = new ProgressBar(0);;
 
     @FXML
     private TableView<Metadata> userLib;
@@ -82,7 +83,6 @@ public class MusicController {
 
 
     private MusicDB musicBlobDB;
-    MusicDB store = new MusicDB();
     @FXML
     public ListView<String> currentPlaylist;
     @FXML
@@ -127,21 +127,20 @@ public class MusicController {
         usernameLabel.setText(email);
         nameId.setText(fullName);
         // Set up the download column
-        addDownloadButtonToTable();
+        addOptionsMenuToTable();
 
         // Validate existing downloads
         validateDownloadedSongs();
 
         // Load user-specific data (e.g., library, playlists)
         loadUserLibrary(userId);
-        initializeMediaPlayer();
         makeProfilePaneDraggable();
         musicBlobDB = new MusicDB();
         // Set up columns for user library
         userLibSongNameColumn.setCellValueFactory(new PropertyValueFactory<>("songName"));
         userLibArtistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         userLibDurationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
-
+        addDoubleClickToPlay();
 
         // Set up property value factories for other columns
         songNameColumn.setCellValueFactory(new PropertyValueFactory<>("songName"));
@@ -238,18 +237,24 @@ public class MusicController {
         }
     }
 
-    private void addDownloadButtonToTable() {
-        userDownloadColumn.setCellFactory(param -> new TableCell<>() {
-            private final Button downloadButton = new Button("Download");
-            private final ProgressBar progressBar = new ProgressBar(0);
+    private void addOptionsMenuToTable() {
+        userDownloadColumn.setCellFactory(param -> new TableCell<Metadata, Void>() {
+            private final MenuButton optionsMenu = new MenuButton("Options");
+            private final MenuItem downloadOption = new MenuItem("Download");
+            private final MenuItem songOption1 = new MenuItem("SongOption 1");
+            private final MenuItem songOption2 = new MenuItem("SongOption 2");
+            private final MenuItem songOption3 = new MenuItem("SongOption 3");
 
             {
-                downloadButton.setOnAction(event -> {
+                // Add menu items to the MenuButton
+                optionsMenu.getItems().addAll(downloadOption, songOption1, songOption2, songOption3);
+
+                // Set up action for the download option
+                downloadOption.setOnAction(event -> {
                     Metadata metadata = getTableView().getItems().get(getIndex());
                     String blobName = metadata.getBlobName();
                     String localStoragePath = UserSession.getInstance().getLocalStoragePath();
 
-                    // Validate local storage path
                     if (localStoragePath == null || localStoragePath.isEmpty()) {
                         System.err.println("Local storage path is not set.");
                         return;
@@ -257,18 +262,16 @@ public class MusicController {
 
                     String filePath = localStoragePath + File.separator + blobName;
 
-                    // Task to handle the file download in the background
                     Task<Void> downloadTask = new Task<>() {
                         @Override
                         protected Void call() throws Exception {
                             try {
                                 updateProgress(0, 1);
-                                System.out.println("Starting download for blob: " + blobName);
+                                Platform.runLater(() -> downloadProgressBar.setVisible(true));
 
-                                // Download file with progress updates
                                 musicBlobDB.downloadFileWithProgress(blobName, filePath, this::updateProgress);
 
-                                updateProgress(1, 1); // Set progress to 100% on completion
+                                updateProgress(1, 1);
                                 return null;
                             } catch (Exception e) {
                                 System.err.println("Error during download: " + e.getMessage());
@@ -277,21 +280,25 @@ public class MusicController {
                         }
                     };
 
-                    progressBar.progressProperty().bind(downloadTask.progressProperty());
+                    downloadProgressBar.progressProperty().bind(downloadTask.progressProperty());
                     Thread downloadThread = new Thread(downloadTask);
                     downloadThread.setDaemon(true);
                     downloadThread.start();
 
-                    // Handle task completion
                     downloadTask.setOnSucceeded(event1 -> {
-                        downloadButton.setDisable(true);
-                        Platform.runLater(() -> System.out.println("Download complete: " + blobName));
+                        Platform.runLater(() -> {
+                            downloadProgressBar.setVisible(false);
+                            System.out.println("Download complete: " + blobName);
+                        });
                     });
 
                     downloadTask.setOnFailed(event1 -> {
-                        progressBar.progressProperty().unbind();
-                        progressBar.setProgress(0);
-                        System.err.println("Download failed for: " + blobName);
+                        Platform.runLater(() -> {
+                            downloadProgressBar.progressProperty().unbind();
+                            downloadProgressBar.setProgress(0);
+                            downloadProgressBar.setVisible(false);
+                            System.err.println("Download failed for: " + blobName);
+                        });
                     });
                 });
             }
@@ -299,24 +306,39 @@ public class MusicController {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    Metadata metadata = getTableView().getItems().get(getIndex());
-                    String blobName = metadata.getBlobName();
-                    String filePath = UserSession.getInstance().getLocalStoragePath() + File.separator + blobName;
-                    File file = new File(filePath);
 
-                    if (file.exists()) {
-                        downloadButton.setDisable(true);
+                if (empty || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
+                    setGraphic(null); // Hide MenuButton for empty or invalid rows
+                    return;
+                }
+
+                Metadata metadata = getTableView().getItems().get(getIndex());
+                int userId = UserSession.getInstance().getUserId();
+
+                // Check if the item should display the MenuButton
+                if (metadata == null || !isSongInLibrary(userId, metadata.getBlobName())) {
+                    setGraphic(null); // Hide the MenuButton if the song is not in the library
+                } else {
+                    setGraphic(optionsMenu); // Show the MenuButton for valid rows
+
+                    // Dynamically enable/disable the "Download" option
+                    String blobName = metadata.getBlobName();
+                    String localStoragePath = UserSession.getInstance().getLocalStoragePath();
+
+                    if (localStoragePath != null && !localStoragePath.isEmpty()) {
+                        File file = new File(localStoragePath + File.separator + blobName);
+                        downloadOption.setDisable(file.exists()); // Disable if the file already exists
                     } else {
-                        downloadButton.setDisable(false);
-                        HBox container = new HBox(5, downloadButton, progressBar);
-                        setGraphic(container);
+                        downloadOption.setDisable(true); // Disable if path is invalid
                     }
                 }
             }
         });
+    }
+
+    // Helper method to check if the song is in the user's library
+    private boolean isSongInLibrary(int userId, String blobName) {
+        return database.isSongInUserLibrary(userId, blobName);
     }
     private void addButtonToTable() {
         actionColumn.setCellFactory(param -> new TableCell<>() {
@@ -385,8 +407,26 @@ public class MusicController {
             profilePane.setTranslateY(event.getSceneY() - yOffset);
         });
     }
-    public void initializeMediaPlayer() {
-        URL resource = getClass().getResource("/DemoSong.mp3");
+    public void initializeMediaPlayer(String filePath, String songName, String artistName) {
+        if (filePath == null || filePath.isEmpty()) {
+            System.out.println("File path is invalid!");
+            return;
+        }
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            System.out.println("MP3 file not found at: " + filePath);
+            return;
+        }
+
+        if (mediaPlayer != null) {
+            mediaPlayer.stop(); // Stop the current song if playing
+        }
+
+        Media media = new Media(file.toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+
+        // Set default album art or metadata
         URL imageUrl = getClass().getResource("/DefaultAlbumCoverArt.jpg");
         if (imageUrl != null) {
             albumArt.setImage(new Image(imageUrl.toExternalForm()));
@@ -394,12 +434,39 @@ public class MusicController {
             System.out.println("Image file not found at /DefaultAlbumCoverArt.jpg");
         }
 
-        if (resource != null) {
-            Media media = new Media(resource.toString());
-            mediaPlayer = new MediaPlayer(media);
+        // Update song title and artist label
+        if (songName != null && !songName.isEmpty() && artistName != null && !artistName.isEmpty()) {
+            songTitle.setText(songName + " - " + artistName); // Display "Song Name - Artist Name"
+        } else if (songName != null && !songName.isEmpty()) {
+            songTitle.setText(songName); // Fallback to only song name
         } else {
-            System.out.println("MP3 file not found!");
+            songTitle.setText("Unknown Song"); // Fallback if no song name is provided
         }
+
+        System.out.println("Media player initialized with file: " + filePath + ", Song: " + songName + ", Artist: " + artistName);
+    }
+    private void addDoubleClickToPlay() {
+        userLib.setRowFactory(tv -> {
+            TableRow<Metadata> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Metadata metadata = row.getItem();
+                    String localStoragePath = UserSession.getInstance().getLocalStoragePath();
+                    if (localStoragePath == null || localStoragePath.isEmpty()) {
+                        System.out.println("Local storage path is not set!");
+                        return;
+                    }
+
+                    String filePath = localStoragePath + File.separator + metadata.getBlobName();
+                    String songName = metadata.getSongName(); // Get song name from Metadata object
+                    String artistName = metadata.getArtist(); // Get artist name from Metadata object
+
+                    initializeMediaPlayer(filePath, songName, artistName); // Pass songName and artistName
+                    onPlayButtonClick(); // Automatically play the song after selection
+                }
+            });
+            return row;
+        });
     }
     @FXML
     public void handleProfileAction(ActionEvent actionEvent) {
