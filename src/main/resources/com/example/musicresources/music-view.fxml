@@ -63,7 +63,7 @@
             <Button fx:id="playButton" onAction="#onPlayButtonClick" text="Play" />
             <Button fx:id="pauseButton" onAction="#onPauseButtonClick" text="Pause" />
             <Button fx:id="nextButton" onAction="#onNextButtonClick" text="Next" />
-            <Button fx:id="shuffleButton" text="Shuffle" />
+            <Button fx:id="shuffleButton" onAction="#onShuffleCLick" text="Shuffle" />
         </HBox>
 
         <Button fx:id="themeToggleButton" layoutX="870.0" layoutY="48.0" onAction="#onThemeToggleButtonClick" text="Toggle Theme" />

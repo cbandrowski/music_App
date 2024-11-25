@@ -339,6 +339,24 @@ public class DataBase {
 
         return playlists;
     }
+    public boolean deleteSongFromPlaylist(int userId, String blobName) {
+        String deleteQuery = "DELETE FROM PlaylistSongs " +
+                "WHERE playlist_id = (SELECT playlist_id FROM playlists WHERE user_id = ?) " +
+                "AND user_song_id = (SELECT id FROM UserSongs WHERE blob_name = ?)";
+
+        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement stmt = connection.prepareStatement(deleteQuery)) {
+
+            stmt.setInt(1, userId);
+            stmt.setString(2, blobName);
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0; // Return true if deletion was successful
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Return false if deletion fails
+        }
+    }
 
     // Method for registering a new user
     public boolean registerUser(String firstName, String lastName, String email, String password, String local_Storage_Path) {
