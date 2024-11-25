@@ -5,8 +5,14 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.azure.storage.blob.models.BlobItem;
+import com.azure.storage.blob.models.BlobStorageException;
 import model.Metadata;
 import model.MetadataExtractor;
+
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.function.BiConsumer;
 
 public class MusicDB {
 
@@ -27,7 +33,14 @@ public class MusicDB {
     public BlobContainerClient getContainerClient() {
         return containerClient;
     }
-
+    public boolean doesBlobExist(String blobName) {
+        for (BlobItem blobItem : this.containerClient.listBlobs()) {
+            if (blobItem.getName().equals(blobName)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public String listAllBlobsMetadataOnly() {
         StringBuilder metadataBuilder = new StringBuilder();
 
@@ -58,6 +71,55 @@ public class MusicDB {
         return metadataBuilder.toString();
     }
 
+    public void downloadFileWithProgress(String blobName, String destinationPath, BiConsumer<Long, Long> progressCallback) throws Exception {
+        MusicDB musicDB = new MusicDB();
+
+        // List available blobs to validate blobName
+        boolean blobExists = false;
+        for (BlobItem blobItem : musicDB.getContainerClient().listBlobs()) {
+            System.out.println("Available blob: " + blobItem.getName());
+            if (blobItem.getName().equals(blobName)) {
+                blobExists = true;
+            }
+        }
+
+        if (!blobExists) {
+            throw new IllegalArgumentException("Blob not found in container: " + blobName);
+        }
+
+        BlobClient blobClient = musicDB.getContainerClient().getBlobClient(blobName);
+        System.out.println("BlobClient initialized for: " + blobName);
+
+        try (InputStream inputStream = blobClient.openInputStream();
+             OutputStream outputStream = new FileOutputStream(destinationPath)) {
+
+            long totalBytes = blobClient.getProperties().getBlobSize();
+            long bytesDownloaded = 0;
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+                bytesDownloaded += bytesRead;
+
+                // Update progress
+                progressCallback.accept(bytesDownloaded, totalBytes);
+            }
+
+            System.out.println("Download complete: " + blobName);
+
+        } catch (BlobStorageException e) {
+            if (e.getStatusCode() == 404) {
+                System.err.println("Blob not found: " + blobName);
+            } else {
+                System.err.println("Error during blob download: " + e.getMessage());
+            }
+            throw e;
+        } catch (Exception e) {
+            System.err.println("Unexpected error during download: " + e.getMessage());
+            throw e;
+        }
+    }
 
 
 }

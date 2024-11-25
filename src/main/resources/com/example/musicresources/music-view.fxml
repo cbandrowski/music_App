@@ -36,14 +36,23 @@
 
             </columns>
         </TableView>
-        <TableView fx:id="userLib" layoutX="403.0" layoutY="117.0" prefHeight="506.0" prefWidth="243.0">
+        <!-- Label to indicate the current view (initially hidden) -->
+        <Label fx:id="headerLabel" layoutX="200.0" layoutY="20.0" text="My Playlists" style="-fx-font-size: 16px;" visible="false" />
+
+        <!-- ListView for displaying playlists (initially hidden) -->
+        <ListView fx:id="playlistListView" layoutX="200.0" layoutY="60.0" prefHeight="400.0" prefWidth="200.0" visible="false" />
+
+
+        <TableView fx:id="userLib" layoutX="284.0" layoutY="91.0" prefHeight="532.0" prefWidth="340.0">
             <columns>
                 <TableColumn fx:id="userLibSongNameColumn" prefWidth="100" text="Song Name" />
-                <TableColumn fx:id="userLibArtistColumn" prefWidth="70.0" text="Artist" />
+                <TableColumn fx:id="userLibArtistColumn" prefWidth="71.0" text="Artist" />
                 <TableColumn fx:id="userLibDurationColumn" prefWidth="73.0" text="Duration" />
+                <TableColumn fx:id="userDownloadColumn" prefWidth="96.0" text="download" />
             </columns>
         </TableView>
-        <Button fx:id="refreshUserLibButton" text="Refresh" layoutX="403.0" layoutY="630.0" prefWidth="243.0" onAction="#handleRefreshUserLibrary"/>
+        <Button fx:id="refreshUserLibButton" layoutX="200.0" layoutY="630.0" onAction="#handleRefreshUserLibrary" prefWidth="120.0" text="Refresh" />
+        <ProgressBar fx:id="downloadProgressBar" layoutX="284.0" layoutY="630.0" prefWidth="340.0" visible="false" />
 
 
         <Label fx:id="songTitle" layoutX="683.0" layoutY="656.0" style="-fx-text-fill: black;" text="No song playing" />
@@ -54,7 +63,7 @@
             <Button fx:id="playButton" onAction="#onPlayButtonClick" text="Play" />
             <Button fx:id="pauseButton" onAction="#onPauseButtonClick" text="Pause" />
             <Button fx:id="nextButton" onAction="#onNextButtonClick" text="Next" />
-            <Button fx:id="shuffleButton" text="Shuffle" />
+            <Button fx:id="shuffleButton" onAction="#onShuffleCLick" text="Shuffle" />
         </HBox>
 
         <Button fx:id="themeToggleButton" layoutX="870.0" layoutY="48.0" onAction="#onThemeToggleButtonClick" text="Toggle Theme" />
@@ -85,7 +94,7 @@
                 </bottom>
             </BorderPane>
         </StackPane>
-      <VBox layoutX="246.0" layoutY="32.0" prefHeight="433.0" prefWidth="138.0" style="-fx-background-color: pink;" AnchorPane.bottomAnchor="31.600000000000023">
+      <VBox layoutX="10" layoutY="32.0" prefHeight="433.0" prefWidth="138.0" style="-fx-background-color: pink;" AnchorPane.bottomAnchor="31.600000000000023">
          <children>
             <AnchorPane prefHeight="722.0" prefWidth="178.0">
                <children>

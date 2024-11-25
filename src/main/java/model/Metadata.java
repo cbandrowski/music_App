@@ -10,6 +10,8 @@ import javafx.beans.property.SimpleStringProperty;
         private final SimpleStringProperty duration;
         private final SimpleStringProperty album;
         private final SimpleStringProperty genre;
+        private boolean downloaded;
+
 
         public Metadata(String songName, String BlobName, String artist, String duration, String album, String genre) {
             this.songName = new SimpleStringProperty(songName);
@@ -39,6 +41,13 @@ import javafx.beans.property.SimpleStringProperty;
             return genre.get();
         }
         public String getBlobName() {   return BlobName.get(); }
+        public boolean isDownloaded() {
+            return downloaded;
+        }
+
+        public void setDownloaded(boolean downloaded) {
+            this.downloaded = downloaded;
+        }
 
 
     }
