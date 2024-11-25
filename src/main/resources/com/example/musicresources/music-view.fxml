@@ -36,6 +36,13 @@
 
             </columns>
         </TableView>
+        <!-- Label to indicate the current view (initially hidden) -->
+        <Label fx:id="headerLabel" layoutX="200.0" layoutY="20.0" text="My Playlists" style="-fx-font-size: 16px;" visible="false" />
+
+        <!-- ListView for displaying playlists (initially hidden) -->
+        <ListView fx:id="playlistListView" layoutX="200.0" layoutY="60.0" prefHeight="400.0" prefWidth="200.0" visible="false" />
+
+
         <TableView fx:id="userLib" layoutX="284.0" layoutY="91.0" prefHeight="532.0" prefWidth="340.0">
             <columns>
                 <TableColumn fx:id="userLibSongNameColumn" prefWidth="100" text="Song Name" />

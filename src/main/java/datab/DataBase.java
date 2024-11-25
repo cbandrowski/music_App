@@ -200,7 +200,7 @@ public class DataBase {
 
     public ObservableList<Metadata> getUserLibrary(int userId) {
         ObservableList<Metadata> library = FXCollections.observableArrayList();
-        String query = "SELECT title, blob_name, duration, artist, album, genre FROM UserSongs WHERE user_id = ?";
+        String query = "SELECT title, blob_name, artist, duration, album, genre FROM UserSongs WHERE user_id = ?";
 
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -226,14 +226,119 @@ public class DataBase {
                         ", Genre: " + genre);
 
                 // Add the Metadata object to the list
-                library.add(new Metadata(title, blobName, duration, artist, album, genre));
+                library.add(new Metadata(title, blobName, artist, duration, album, genre));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return library;
     }
+    public boolean createPlaylist(int userId, String playlistName) {
+        String query = "INSERT INTO playlists (name, user_id) VALUES (?, ?)";
+        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement stmt = connection.prepareStatement(query)) {
 
+            stmt.setString(1, playlistName); // Set the playlist name
+            stmt.setInt(2, userId); // Set the user ID
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0; // Return true if the playlist was created successfully
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Return false if there was an error
+        }
+    }
+    public boolean addSongToPlaylist(Metadata metadata, String playlistName) {
+        String getPlaylistIdQuery = "SELECT playlist_id FROM playlists WHERE name = ?";
+        String getSongIdQuery = "SELECT id FROM UserSongs WHERE blob_name = ?";
+        String insertQuery = "INSERT INTO PlaylistSongs (playlist_id, user_song_id) VALUES (?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement playlistStmt = connection.prepareStatement(getPlaylistIdQuery);
+             PreparedStatement songStmt = connection.prepareStatement(getSongIdQuery);
+             PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
+
+            // Get the playlist ID
+            playlistStmt.setString(1, playlistName);
+            ResultSet playlistResult = playlistStmt.executeQuery();
+            if (!playlistResult.next()) {
+                System.err.println("Playlist not found: " + playlistName);
+                return false; // Playlist does not exist
+            }
+            int playlistId = playlistResult.getInt("playlist_id");
+
+            // Get the song ID
+            songStmt.setString(1, metadata.getBlobName());
+            ResultSet songResult = songStmt.executeQuery();
+            if (!songResult.next()) {
+                System.err.println("Song not found: " + metadata.getBlobName());
+                return false; // Song does not exist
+            }
+            int songId = songResult.getInt("id");
+
+            // Add the song to the playlist
+            insertStmt.setInt(1, playlistId);
+            insertStmt.setInt(2, songId);
+            int rowsAffected = insertStmt.executeUpdate();
+            return rowsAffected > 0; // Return true if the song was added successfully
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Return false if there was an error
+        }
+    }
+    public ObservableList<Metadata> getSongsInPlaylist(int userId, String playlistName) {
+        ObservableList<Metadata> songs = FXCollections.observableArrayList();
+        String query = "SELECT us.title, us.blob_name, us.duration, us.artist, us.album, us.genre " +
+                "FROM UserSongs us " +
+                "JOIN PlaylistSongs ps ON us.id = ps.user_song_id " +
+                "JOIN playlists p ON ps.playlist_id = p.playlist_id " +
+                "WHERE p.user_id = ? AND p.name = ?";
+
+        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, userId);
+            stmt.setString(2, playlistName);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String blobName = rs.getString("blob_name");
+                String duration = rs.getString("duration");
+                String artist = rs.getString("artist");
+                String album = rs.getString("album");
+                String genre = rs.getString("genre");
+
+                songs.add(new Metadata(title, blobName, artist, duration, album, genre));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return songs;
+    }
+
+    public ObservableList<String> getUserPlaylists(int userId) {
+        ObservableList<String> playlists = FXCollections.observableArrayList();
+        String query = "SELECT name FROM playlists WHERE user_id = ?";
+
+        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                playlists.add(rs.getString("name")); // Add playlist names to the list
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return playlists;
+    }
 
     // Method for registering a new user
     public boolean registerUser(String firstName, String lastName, String email, String password, String local_Storage_Path) {
