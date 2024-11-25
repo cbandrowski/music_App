@@ -5,13 +5,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import service.UserSession;
 
 import java.io.File;
+import java.io.IOException;
 
 public class registerationController {
 
@@ -59,6 +62,11 @@ public class registerationController {
             return;
         }
 
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            statusMessage.setText("Please enter a valid email address.");
+            return;
+        }
+
         if (!password.equals(confirmPassword)) {
             statusMessage.setText("Passwords do not match.");
             return;
@@ -70,47 +78,35 @@ public class registerationController {
         }
 
         // Attempt to register the user
-        boolean registrationSuccess = database.registerUser(firstName, lastName, email, password, localStoragePath);
-        if (registrationSuccess) {
-            statusMessage.setText("Registration successful!");
+        try {
+            boolean registrationSuccess = database.registerUser(firstName, lastName, email, password, localStoragePath);
+            if (registrationSuccess) {
+                statusMessage.setText("Registration successful!");
 
-            // Clear fields after successful registration
-            firstNameField.clear();
-            lastNameField.clear();
-            emailField.clear();
-            passwordField.clear();
-            confirmPasswordField.clear();
-            localStoragePath = null;
+                // Redirect to login page after successful registration
 
-            // Trigger the success callback if available
-            if (onRegistrationSuccess != null) {
-                onRegistrationSuccess.run();
+
+            } else {
+                // Handle duplicate or other failure scenarios
+                statusMessage.setText("Registration failed. Email may already be in use.");
             }
-        } else {
-            statusMessage.setText("Registration failed. Email may already be in use.");
+        } catch (Exception e) {
+            // Catch unexpected errors
+            statusMessage.setText("An unexpected error occurred during registration.");
+            System.err.println("Registration error: " + e.getMessage());
         }
     }
 
-    public void handleBackToLogin(ActionEvent event) {
+    public void handleBackToLogin() {
         try {
-            // Load the login FXML file
-            login log  = new login();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/login.fxml"));
-            Parent loginRoot = loader.load();
-
-//            // Get the current stage (window) and set the login scene
-//            Stage stage = (Stage) statusMessage.getScene().getWindow();
-//            stage.setScene(new Scene(loginRoot));
-//            stage.setTitle("Music App Login");
-
-            // Get the current stage (registration window) and close it
+            // Example logic to load the login page
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+            Parent root = loader.load();
             Stage stage = (Stage) statusMessage.getScene().getWindow();
-            stage.close();
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            statusMessage.setText("Error loading login page.");
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login");
+        } catch (IOException e) {
+            System.err.println("Error loading login page: " + e.getMessage());
         }
     }
 
@@ -123,11 +119,20 @@ public class registerationController {
 
         if (selectedDirectory != null) {
             localStoragePath = selectedDirectory.getAbsolutePath();
-            statusMessage.setText("Selected storage location: " + localStoragePath);
+            UserSession session = UserSession.getInstance();
+
+            // Save the storage location in the database
+            if (database.saveStorageLocation(session.getEmail(), localStoragePath)) {
+                session.setLocalStoragePath(localStoragePath); // Update in session
+                statusMessage.setText("Storage location saved: " + localStoragePath);
+            } else {
+                statusMessage.setText("Failed to save storage location.");
+            }
         } else {
             statusMessage.setText("No directory selected.");
         }
     }
+
 
 }
 

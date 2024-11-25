@@ -1,5 +1,7 @@
 package service;
 
+import datab.DataBase;
+
 import java.util.prefs.Preferences;
 
 public class UserSession {
@@ -9,6 +11,8 @@ public class UserSession {
     private String email;
     private String userName;
     private String privileges;
+
+    private String filePath;
 
     private UserSession(int userId, String email, String userName) {
         this.userId = userId;
@@ -26,14 +30,19 @@ public class UserSession {
 
     }
 
-    public static UserSession getInstance(int userId, String email, String userName) {
+    public static synchronized UserSession getInstance(int userId, String email, String userName) {
         if (instance == null) {
             instance = new UserSession(userId, email, userName);
+            // Fetch file path from database
+            String localStoragePath = new DataBase().getUserStoragePath(email);
+            if (localStoragePath != null) {
+                instance.setLocalStoragePath(localStoragePath);
+            }
         }
         return instance;
     }
 
-    public static UserSession getInstance() {
+    public static synchronized UserSession getInstance() {
         if (instance == null) {
             Preferences userPreferences = Preferences.userRoot();
             int userId = userPreferences.getInt("USER_ID", 0);
@@ -78,5 +87,14 @@ public class UserSession {
                 ", email='" + email + '\'' +
                 ", userName='" + userName + '\'' +
                 '}';
+    }
+
+
+    public void setLocalStoragePath(String localStoragePath) {
+        filePath = localStoragePath;
+    }
+
+    public String getLocalStoragePath() {
+        return filePath;
     }
 }

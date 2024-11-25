@@ -117,22 +117,21 @@ public class DataBase {
         return hasRegisteredUsers;
     }
 
-
     // Method to check if a song exists in the UserSongs table
-        public boolean checkIfSongExists(String blobName) {
-            try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
-                 PreparedStatement stmt = connection.prepareStatement(
-                         "SELECT COUNT(*) FROM UserSongs WHERE blob_name = ?")) {
-                stmt.setString(1, blobName);
-                ResultSet resultSet = stmt.executeQuery();
-                if (resultSet.next()) {
-                    return resultSet.getInt(1) > 0;
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+    public boolean checkIfSongExists(String blobName) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement stmt = connection.prepareStatement(
+                     "SELECT COUNT(*) FROM UserSongs WHERE blob_name = ?")) {
+            stmt.setString(1, blobName);
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
             }
-            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return false;
+    }
 
     public void addToUserSongs(int userId, Metadata metadata) {
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
@@ -150,6 +149,7 @@ public class DataBase {
             e.printStackTrace();
         }
     }
+
     public boolean isSongInUserLibrary(int userId, String blobName) {
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
              PreparedStatement stmt = connection.prepareStatement(
@@ -166,6 +166,7 @@ public class DataBase {
         }
         return false; // Return false if there's an error or no result
     }
+
     public int getUserId(String email) {
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
              PreparedStatement stmt = connection.prepareStatement("SELECT id FROM Users WHERE email = ?")) {
@@ -197,18 +198,17 @@ public class DataBase {
         return null; // Return null if not found
     }
 
-
     public ObservableList<Metadata> getUserLibrary(int userId) {
         ObservableList<Metadata> library = FXCollections.observableArrayList();
-        String query = "SELECT blob_name, title, duration, artist, album, genre FROM UserSongs WHERE user_id = ?";
+        String query = "SELECT title,blob_name, duration, artist, album, genre FROM UserSongs WHERE user_id = ?";
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 library.add(new Metadata(
-                        rs.getString("blob_name"),
                         rs.getString("title"),
+                        rs.getString("blob_name"),
                         rs.getString("duration"),
                         rs.getString("artist"),
                         rs.getString("album"),
@@ -220,11 +220,6 @@ public class DataBase {
         }
         return library;
     }
-
-
-
-
-
 
     // Method for registering a new user
     public boolean registerUser(String firstName, String lastName, String email, String password, String local_Storage_Path) {
@@ -242,8 +237,14 @@ public class DataBase {
             pstmt.executeUpdate();
             return true;
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            // Handle duplicate email or other unique constraint violations
+            System.err.println("Error: Duplicate email - " + e.getMessage());
+            return false;
+
+        } catch (SQLException e) {
+            // Log and handle other SQL exceptions
+            System.err.println("SQL Error: " + e.getMessage());
             return false;
         }
     }
@@ -289,6 +290,7 @@ public class DataBase {
             return false;
         }
     }
+
     public boolean saveStorageLocation(String email, String storagePath) {
         String updateQuery = "UPDATE users SET local_storage_path = ? WHERE email = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
@@ -305,4 +307,18 @@ public class DataBase {
     }
 
 
+    public String getUserStoragePath(String email) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement stmt = connection.prepareStatement("SELECT local_storage_path FROM Users WHERE email = ?")) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("local_storage_path"); // Fetch the file path
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Return null if not found or an error occurs
+    }
 }

@@ -19,10 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
@@ -34,10 +31,7 @@ import model.Metadata;
 import model.MetadataExtractor;
 import service.UserSession;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.sql.Connection;
@@ -50,6 +44,7 @@ public class MusicController {
     private static final String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=musicappdb;AccountKey=/TxkG8DnJ6NGWCEnv/82FiqesEi04JLZ/s6qd5Ox78qGJuxETnxCrpVs6C42jsmTzNUQ65iZ5cLn+AStfJBFbw==;EndpointSuffix=core.windows.net";
     private static final String CONTAINER_NAME = "media-files";
     public Button refreshUserLibButton;
+
     @FXML
     private TableView<Metadata> userLib;
     private DataBase database = new DataBase(); // Database instance
@@ -67,6 +62,7 @@ public class MusicController {
     private TableView<Metadata> metadataTable;
     @FXML
     private TableColumn<Metadata, Void> actionColumn;
+    public TableColumn<Metadata, Void> userDownloadColumn;
 
 
     @FXML
@@ -117,7 +113,6 @@ public class MusicController {
     private double xOffset = 0;
     private double yOffset = 0;
 
-
     public void initialize() {
         // Retrieve user session details
         UserSession session = UserSession.getInstance();
@@ -131,6 +126,11 @@ public class MusicController {
         // Display user information
         usernameLabel.setText(email);
         nameId.setText(fullName);
+        // Set up the download column
+        addDownloadButtonToTable();
+
+        // Validate existing downloads
+        validateDownloadedSongs();
 
         // Load user-specific data (e.g., library, playlists)
         loadUserLibrary(userId);
@@ -179,10 +179,24 @@ public class MusicController {
         loadMetadataIntoTable();
         addButtonToTable();
     }
+    private void validateDownloadedSongs() {
+        ObservableList<Metadata> library = userLib.getItems();
 
+        for (Metadata metadata : library) {
+            String filePath = UserSession.getInstance().getLocalStoragePath() + File.separator + metadata.getBlobName();
+            File file = new File(filePath);
 
+            // Mark as downloaded if the file exists
+            if (file.exists()) {
+                metadata.setDownloaded(true);
+            } else {
+                metadata.setDownloaded(false);
+            }
+        }
 
-
+        // Refresh the table to update button states
+        userLib.refresh();
+    }
     private void loadMetadataIntoTable() {
         ObservableList<Metadata> metadataList = FXCollections.observableArrayList();
 
@@ -224,8 +238,86 @@ public class MusicController {
         }
     }
 
+    private void addDownloadButtonToTable() {
+        userDownloadColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button downloadButton = new Button("Download");
+            private final ProgressBar progressBar = new ProgressBar(0);
 
+            {
+                downloadButton.setOnAction(event -> {
+                    Metadata metadata = getTableView().getItems().get(getIndex());
+                    String blobName = metadata.getBlobName();
+                    String localStoragePath = UserSession.getInstance().getLocalStoragePath();
 
+                    // Validate local storage path
+                    if (localStoragePath == null || localStoragePath.isEmpty()) {
+                        System.err.println("Local storage path is not set.");
+                        return;
+                    }
+
+                    String filePath = localStoragePath + File.separator + blobName;
+
+                    // Task to handle the file download in the background
+                    Task<Void> downloadTask = new Task<>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            try {
+                                updateProgress(0, 1);
+                                System.out.println("Starting download for blob: " + blobName);
+
+                                // Download file with progress updates
+                                musicBlobDB.downloadFileWithProgress(blobName, filePath, this::updateProgress);
+
+                                updateProgress(1, 1); // Set progress to 100% on completion
+                                return null;
+                            } catch (Exception e) {
+                                System.err.println("Error during download: " + e.getMessage());
+                                throw e;
+                            }
+                        }
+                    };
+
+                    progressBar.progressProperty().bind(downloadTask.progressProperty());
+                    Thread downloadThread = new Thread(downloadTask);
+                    downloadThread.setDaemon(true);
+                    downloadThread.start();
+
+                    // Handle task completion
+                    downloadTask.setOnSucceeded(event1 -> {
+                        downloadButton.setDisable(true);
+                        Platform.runLater(() -> System.out.println("Download complete: " + blobName));
+                    });
+
+                    downloadTask.setOnFailed(event1 -> {
+                        progressBar.progressProperty().unbind();
+                        progressBar.setProgress(0);
+                        System.err.println("Download failed for: " + blobName);
+                    });
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    Metadata metadata = getTableView().getItems().get(getIndex());
+                    String blobName = metadata.getBlobName();
+                    String filePath = UserSession.getInstance().getLocalStoragePath() + File.separator + blobName;
+                    File file = new File(filePath);
+
+                    if (file.exists()) {
+                        downloadButton.setDisable(true);
+                    } else {
+                        downloadButton.setDisable(false);
+                        HBox container = new HBox(5, downloadButton, progressBar);
+                        setGraphic(container);
+                    }
+                }
+            }
+        });
+    }
     private void addButtonToTable() {
         actionColumn.setCellFactory(param -> new TableCell<>() {
             private final Button addButton = new Button("Add to Library");
@@ -255,7 +347,6 @@ public class MusicController {
                 } else {
                     Metadata metadata = getTableView().getItems().get(getIndex());
                     int userId = UserSession.getInstance().getUserId();
-
                     // Check if the song is already in the user's library
                     if (database.isSongInUserLibrary(userId, metadata.getBlobName())) {
                         addButton.setDisable(true); // Disable if already in library
@@ -267,10 +358,6 @@ public class MusicController {
             }
         });
     }
-
-
-
-    // Method to refresh and display metadata in the ListView
     @FXML
     public void onRefresh(ActionEvent actionEvent) {
         Task<Void> task = new Task<>() {
@@ -285,11 +372,6 @@ public class MusicController {
         };
         new Thread(task).start();
     }
-
-
-
-
-
     private void makeProfilePaneDraggable() {
         profilePane.setOnMousePressed(event -> {
             // Capture the initial offset when mouse is pressed
@@ -319,7 +401,6 @@ public class MusicController {
             System.out.println("MP3 file not found!");
         }
     }
-
     @FXML
     public void handleProfileAction(ActionEvent actionEvent) {
         overlayPane.setVisible(true);
@@ -332,38 +413,30 @@ public class MusicController {
         lastNameLabel.setText("Doe");
         addressLabel.setText("123 Main St, Anytown, USA");
     }
-
     @FXML
     public void closeProfilePane() {
         overlayPane.setVisible(false);
     }
-
-
     public void onPlayButtonClick() {
         if (mediaPlayer != null) {
             System.out.println("Playing audio...");
             mediaPlayer.play();
         }
     }
-
     public void onPauseButtonClick() {
         if (mediaPlayer != null) {
             System.out.println("Pausing audio...");
             mediaPlayer.pause();
         }
     }
-
     @FXML
     protected void onNextButtonClick() {
         songTitle.setText("Next Song");
     }
-
     @FXML
     protected void onPreviousButtonClick() {
         songTitle.setText("Previous Song");
     }
-
-    //toggle for light and dark themes
     @FXML
     protected void onThemeToggleButtonClick() {
         // Get the current scene
@@ -385,60 +458,35 @@ public class MusicController {
         // Toggle the theme mode flag
         isDarkMode = !isDarkMode;
     }
-
-
-
     public void handlePreferencesAction(ActionEvent actionEvent) {
     }
-
     public void handleHelpAction(ActionEvent actionEvent) {
     }
-
-
     public void handlePaymentAction(ActionEvent actionEvent) {
     }
-
     public void handleSetting_btn(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/settings.fxml"));
         Parent root = loader.load();
-
-//        // Get the controller from the FXMLLoader
-//        MusicController musicController = loader.getController();
-//        musicController.setUserName(fullName); // Set the full name in the controller
-
-        // Launch the MusicApplication
         Stage settingsStage = new Stage();
         settingsStage.setScene(new Scene(root));
         settingsStage.show();
 
     }
-
     public void handleLikes_btn(ActionEvent event) {
     }
-
     public void handlePlayList_btn(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/playlist-view.fxml"));
         Parent root = loader.load();
-
-//        // Get the controller from the FXMLLoader
-//        MusicController musicController = loader.getController();
-//        musicController.setUserName(fullName); // Set the full name in the controller
-
-        // Launch the MusicApplication
         Stage playListStage = new Stage();
         playListStage.setScene(new Scene(root));
         playListStage.show();
     }
-
     public void handleLibrary_btn(ActionEvent event) {
     }
-
     public void handleSearch_btn(ActionEvent event) {
     }
-
     public void handleHome_btn(ActionEvent event) {
     }
-
     //should bring user back to the loin in screen
     public void handleLogOutAction(ActionEvent event) {
 
@@ -461,9 +509,6 @@ public class MusicController {
             e.printStackTrace();
         }
     }
-
-
-
     public void handleUpload_btn(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
@@ -510,7 +555,6 @@ public class MusicController {
             alert.showAndWait();
         }
     }
-
     private Task<Void> createUploadTask(File file) {
         return new Task<>() {
             @Override
@@ -550,7 +594,6 @@ public class MusicController {
             }
         };
     }
-
     private void saveMetadataToDatabase(Map<String, String> metadata, String blobName, String userId) {
         try (Connection conn = DriverManager.getConnection(DataBase.DB_URL, DataBase.USERNAME, DataBase.PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(
@@ -573,8 +616,6 @@ public class MusicController {
             e.printStackTrace();
         }
     }
-
-
     @FXML
     private void handleRefreshUserLibrary(ActionEvent event) {
         // Logic to refresh the user library
