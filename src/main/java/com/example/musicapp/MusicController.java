@@ -19,7 +19,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
@@ -31,7 +34,10 @@ import model.Metadata;
 import model.MetadataExtractor;
 import service.UserSession;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.sql.Connection;
@@ -39,12 +45,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Optional;
 
 public class MusicController {
     private static final String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=musicappdb;AccountKey=/TxkG8DnJ6NGWCEnv/82FiqesEi04JLZ/s6qd5Ox78qGJuxETnxCrpVs6C42jsmTzNUQ65iZ5cLn+AStfJBFbw==;EndpointSuffix=core.windows.net";
     private static final String CONTAINER_NAME = "media-files";
     public Button refreshUserLibButton;
     public ProgressBar downloadProgressBar = new ProgressBar(0);;
+    @FXML
+    private ListView<String> playlistListView; // Displays playlist names
+
+    @FXML
+    private Label headerLabel; // A label above the table to indicate the current view context (e.g., "My Library" or "Playlist: <Name>")
 
     @FXML
     private TableView<Metadata> userLib;
@@ -112,6 +124,8 @@ public class MusicController {
     // Variables for tracking drag offsets
     private double xOffset = 0;
     private double yOffset = 0;
+    // Flag to track the visibility state of the playlist view
+    private boolean isPlaylistViewVisible = false;
 
     public void initialize() {
         // Retrieve user session details
@@ -122,6 +136,9 @@ public class MusicController {
         String email = session.getEmail();
         String fullName = session.getUserName();
 
+// Initially hide the playlist view and header label
+        headerLabel.setVisible(false);
+        playlistListView.setVisible(false);
 
         // Display user information
         usernameLabel.setText(email);
@@ -141,7 +158,10 @@ public class MusicController {
         userLibArtistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         userLibDurationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
         addDoubleClickToPlay();
+        loadUserPlaylists();
 
+        // Set default header label to "My Library"
+        headerLabel.setText("My Playlists");
         // Set up property value factories for other columns
         songNameColumn.setCellValueFactory(new PropertyValueFactory<>("songName"));
         artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
@@ -241,13 +261,13 @@ public class MusicController {
         userDownloadColumn.setCellFactory(param -> new TableCell<Metadata, Void>() {
             private final MenuButton optionsMenu = new MenuButton("Options");
             private final MenuItem downloadOption = new MenuItem("Download");
-            private final MenuItem songOption1 = new MenuItem("SongOption 1");
+            private final MenuItem createPlaylistOption = new MenuItem("Create Playlist"); // Updated option
             private final MenuItem songOption2 = new MenuItem("SongOption 2");
             private final MenuItem songOption3 = new MenuItem("SongOption 3");
 
             {
                 // Add menu items to the MenuButton
-                optionsMenu.getItems().addAll(downloadOption, songOption1, songOption2, songOption3);
+                optionsMenu.getItems().addAll(downloadOption, createPlaylistOption, songOption2, songOption3);
 
                 // Set up action for the download option
                 downloadOption.setOnAction(event -> {
@@ -301,6 +321,56 @@ public class MusicController {
                         });
                     });
                 });
+
+                // Set up action for "Create Playlist" option
+                createPlaylistOption.setOnAction(event -> {
+                    Metadata metadata = getTableView().getItems().get(getIndex());
+
+                    // Prompt user to enter playlist name
+                    TextInputDialog playlistNameDialog = new TextInputDialog();
+                    playlistNameDialog.setTitle("Create New Playlist");
+                    playlistNameDialog.setHeaderText("Create a new playlist");
+                    playlistNameDialog.setContentText("Enter the playlist name:");
+
+                    Optional<String> result = playlistNameDialog.showAndWait();
+                    result.ifPresent(playlistName -> {
+                        if (playlistName.isBlank()) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error");
+                            alert.setHeaderText("Invalid Playlist Name");
+                            alert.setContentText("The playlist name cannot be empty.");
+                            alert.showAndWait();
+                            return;
+                        }
+
+                        // Create a new playlist in the database
+                        boolean created = database.createPlaylist(UserSession.getInstance().getUserId(), playlistName);
+                        if (created) {
+                            // Add the current song to the newly created playlist
+                            boolean added = database.addSongToPlaylist(metadata, playlistName);
+                            if (added) {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Playlist Created");
+                                alert.setHeaderText("Playlist Created Successfully");
+                                alert.setContentText("Playlist '" + playlistName + "' created and '" +
+                                        metadata.getSongName() + "' added.");
+                                alert.showAndWait();
+                            } else {
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Error");
+                                alert.setHeaderText("Song Addition Failed");
+                                alert.setContentText("The song could not be added to the playlist.");
+                                alert.showAndWait();
+                            }
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error");
+                            alert.setHeaderText("Playlist Creation Failed");
+                            alert.setContentText("The playlist could not be created.");
+                            alert.showAndWait();
+                        }
+                    });
+                });
             }
 
             @Override
@@ -335,6 +405,62 @@ public class MusicController {
             }
         });
     }
+    private void loadUserPlaylists() {
+        int userId = UserSession.getInstance().getUserId();
+        ObservableList<String> playlists = database.getUserPlaylists(userId);
+
+        // Populate the ListView with playlist names
+        playlistListView.setItems(playlists);
+
+        // Add double-click listener to load the selected playlist into the TableView
+        playlistListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && !playlistListView.getSelectionModel().isEmpty()) {
+                String selectedPlaylist = playlistListView.getSelectionModel().getSelectedItem();
+                loadPlaylistIntoTable(selectedPlaylist);
+            }
+        });
+    }
+    private void loadPlaylistIntoTable(String playlistName) {
+        int userId = UserSession.getInstance().getUserId();
+
+        // Fetch songs in the selected playlist
+        ObservableList<Metadata> playlistSongs = database.getSongsInPlaylist(userId, playlistName);
+
+        // Update the TableView with the playlist songs
+        userLib.setItems(playlistSongs);
+
+        // Update the header label to show the current playlist name
+        headerLabel.setText("Playlist: " + playlistName);
+    }
+    @FXML
+    public void handlePlayList_btn(ActionEvent event) {
+        if (isPlaylistViewVisible) {
+            // Hide the playlist view and reset header label
+            headerLabel.setVisible(false);
+            playlistListView.setVisible(false);
+            isPlaylistViewVisible = false;
+        } else {
+            // Fetch user playlists from the database
+            int userId = UserSession.getInstance().getUserId();
+            ObservableList<String> playlists = database.getUserPlaylists(userId);
+
+            // Populate the ListView with playlist names
+            playlistListView.setItems(playlists);
+
+            // Show the playlist view and header label
+            headerLabel.setText("Playlists");
+            headerLabel.setVisible(true);
+            playlistListView.setVisible(true);
+
+            // Bring the components to the top of the Z-order
+            headerLabel.toFront();
+            playlistListView.toFront();
+
+            isPlaylistViewVisible = true;
+
+        }
+    }
+
 
     // Helper method to check if the song is in the user's library
     private boolean isSongInLibrary(int userId, String blobName) {
@@ -541,13 +667,7 @@ public class MusicController {
     }
     public void handleLikes_btn(ActionEvent event) {
     }
-    public void handlePlayList_btn(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/playlist-view.fxml"));
-        Parent root = loader.load();
-        Stage playListStage = new Stage();
-        playListStage.setScene(new Scene(root));
-        playListStage.show();
-    }
+
     public void handleLibrary_btn(ActionEvent event) {
     }
     public void handleSearch_btn(ActionEvent event) {
