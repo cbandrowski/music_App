@@ -1,4 +1,6 @@
 **Melodify Application**
+
+
 **Project Overview**
 The Music Application project is designed to provide an intuitive platform for users to browse, play, and download music seamlessly. Built with JavaFX for the frontend and a robust backend, this application aims to deliver a smooth user experience with a clean and modern interface styled with a blue theme.
 
@@ -7,6 +9,8 @@ Develop a user-friendly music library interface.
 Implement functionality for browsing and downloading music.
 Ensure a cohesive design with a blue-themed interface.
 Create a test implementation for functionality verification if the music files are not yet finalized.
+
+
 **Team Roles and Responsibilities**
 Team Member	Responsibilities
 Muhammad	Backend setup, FXML page creation, frontend styling
@@ -14,6 +18,8 @@ Ranveer	FXML layout creation, frontend styling, library page
 Cody C	FXML layout creation, frontend styling
 Cody B	Backend assistance, exploring JAR files for music library
 Mian	Music library exploration, JAR file setup
+
+
 **Progress Timeline**
 11/04/2024 – Initial Planning & Role Assignment
 Held the first team meeting to establish project objectives and assign roles:
@@ -21,6 +27,8 @@ Backend setup: Muhammad
 FXML layout creation: Ranveer and Cody C
 Music library exploration: Mian and Cody B
 11/10/2024 – End of Week Progress
+
+
 **Achievements:**
 Ranveer completed the library page layout.
 Cody B assisted Muhammad with backend setup.
@@ -50,6 +58,8 @@ Clone the repository:
 bash
 Copy code
 git clone <repository-url>
+
+
 **Set up dependencies:**
 Ensure JavaFX SDK is configured.
 Include required JAR files for music functionality.
