@@ -107,6 +107,15 @@ public class MusicController {
     private BorderPane profilePane;
 
     @FXML
+    private TextArea searchBar; //used to search up songs
+
+    @FXML
+    private ListView<String> resultsList; //displays the result
+
+    private ObservableList<String> data; // Sample data for demonstration
+
+
+    @FXML
     private Text nameId;
     private String userEmail;
 
@@ -125,6 +134,11 @@ public class MusicController {
 
 
     public void initialize() {
+
+//working on search bar
+        displayingSearchBar();
+
+
         // Retrieve user session details
         UserSession session = UserSession.getInstance();
 
@@ -1114,5 +1128,53 @@ public class MusicController {
         userLib.setItems(library);
     }
 
+
+    //method to handle search in the search bar
+    public void handleSearch(ActionEvent event) {
+        ///dummy data
+        String query = searchBar.getText().toLowerCase().trim();
+        if (query.isEmpty()) {
+            resultsList.setItems(data); // Show all items if search is empty
+            return;
+        }
+
+        // Filter data based on the query
+        ObservableList<String> filteredData = data.filtered(item -> item.toLowerCase().contains(query));
+        resultsList.setItems(filteredData); // Update ListView with filtered results
+    }
+
+    private void displayingSearchBar() {
+        // Initialize sample data
+        data = FXCollections.observableArrayList(
+                "Java", "JavaFX", "FXML", "Search Bar", "Controller", "Database", "Login", "Registration"
+        );
+
+        // Initially hide the ListView
+        resultsList.setVisible(false);
+
+        // Add a listener to detect changes in the TextArea
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+            String query = newValue.toLowerCase().trim();
+
+            if (query.isEmpty()) {
+                resultsList.setVisible(false); // Hide the ListView if the SearchBar is empty
+                return;
+            }
+
+            // Filter data based on the query
+            ObservableList<String> filteredData = data.filtered(item -> item.toLowerCase().contains(query));
+            resultsList.setItems(filteredData);
+
+            // Show the ListView only if there are matching results
+            resultsList.setVisible(!filteredData.isEmpty());
+        });
+
+        // Add a focus listener to hide the ListView when the SearchBar loses focus
+        searchBar.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) { // If focus is lost
+                resultsList.setVisible(false);
+            }
+        });
+    }
 
 }
