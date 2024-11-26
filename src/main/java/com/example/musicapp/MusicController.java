@@ -134,12 +134,9 @@ public class MusicController {
 
 
     public void initialize() {
-        ///to display serach bar
-        musicDB = new MusicDB();
-        allSongs = FXCollections.observableArrayList();
-        populateSongListView();
-        setupSearchBarBehavior();
-/////////////////////
+
+        ///to display search bar
+        displaySearchBar();
 
         // Retrieve user session details
         UserSession session = UserSession.getInstance();
@@ -1210,4 +1207,10 @@ public class MusicController {
         });
     }
 
+    void displaySearchBar(){
+        musicDB = new MusicDB();
+        allSongs = FXCollections.observableArrayList();
+        populateSongListView();
+        setupSearchBarBehavior();
+    }
 }
