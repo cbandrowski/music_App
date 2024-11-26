@@ -4,6 +4,7 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.models.BlobItem;
 import datab.DataBase;
 import datab.MusicDB;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,6 +31,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import model.Metadata;
 import model.MetadataExtractor;
 import service.UserSession;
@@ -52,6 +54,20 @@ public class MusicController {
     private static final String CONTAINER_NAME = "media-files";
     public Button refreshUserLibButton;
     public ProgressBar downloadProgressBar = new ProgressBar(0);;
+    public TextArea searchBar;
+    @FXML
+    public TableColumn nameResultColumn;
+    @FXML
+    public TableColumn artistResultColumn;
+    @FXML
+    public TableColumn albumResultColumn;
+    @FXML
+    public ComboBox<String> sourceComboBox;
+    @FXML
+    private StackPane searchPane;
+
+    @FXML
+    public TableView resultsTable;
     @FXML
     private ListView<String> playlistListView; // Displays playlist names
 
@@ -156,6 +172,7 @@ public class MusicController {
         userLibDurationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
         addDoubleClickToPlay();
         loadUserPlaylists();
+        initializeSearchTable();
 
         // Set default header label to "My Library"
         headerLabel.setText("My Playlists");
@@ -195,6 +212,113 @@ public class MusicController {
         loadMetadataIntoTable();
         addButtonToTable();
     }
+    public void initializeSearchTable(){
+        nameResultColumn.setCellValueFactory(new PropertyValueFactory<>("songName"));
+        artistResultColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        albumResultColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
+        resultsTable.setVisible(false);
+        // Add a listener to the searchBar to detect text changes
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.trim().isEmpty()) {
+                resultsTable.setVisible(false); // Hide the table if the search bar is empty
+            }
+        });
+        rootPane.setOnMouseClicked(event -> {
+            // Check if the click occurred outside the table
+            if (!resultsTable.isHover()) {
+                hideTableWithFade();
+            }
+        });
+        // Set placeholder for empty results
+        resultsTable.setPlaceholder(new Label("No results found."));
+
+    }
+    @FXML
+    private void performSearch() {
+        String query = searchBar.getText().trim();
+        if (query.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Invalid Search");
+            alert.setContentText("Please enter a search query.");
+            alert.showAndWait();
+            return;
+        }
+
+        ObservableList<Metadata> results = searchBlobStorage(query); // Example search function
+        resultsTable.setItems(results);
+
+        if (results.isEmpty()) {
+            resultsTable.setPlaceholder(new Label("No results found."));
+        }
+
+        // Show the table with a fade-in effect
+        showTableWithFade();
+    }
+
+    private void showTableWithFade() {
+        resultsTable.setVisible(true);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), resultsTable);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+    }
+
+    private void hideTableWithFade() {
+        if (resultsTable.isVisible()) {
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), resultsTable);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(event -> resultsTable.setVisible(false));
+            fadeOut.play();
+        }
+    }
+    private ObservableList<Metadata> searchBlobStorage(String query) {
+        ObservableList<Metadata> metadataList = FXCollections.observableArrayList();
+
+        // Normalize the query for case-insensitive matching
+        String normalizedQuery = query.toLowerCase();
+
+        // Fetch metadata from Blob Storage
+        for (BlobItem blobItem : musicBlobDB.getContainerClient().listBlobs()) {
+            try {
+                // Create a BlobClient for the current blob
+                BlobClient blobClient = musicBlobDB.getContainerClient().getBlobClient(blobItem.getName());
+
+                // Use MetadataExtractor to extract metadata from the blob
+                Metadata metadata = MetadataExtractor.extractMetadataDB(blobClient, blobItem.getName());
+
+                // Check if the metadata matches the query
+                if (matchesQuery(metadata, normalizedQuery)) {
+                    metadataList.add(metadata); // Add matching metadata to the list
+                }
+            } catch (Exception e) {
+                // Log the error and continue processing other blobs
+                System.err.println("Error fetching metadata for blob: " + blobItem.getName() + " - " + e.getMessage());
+            }
+        }
+
+        return metadataList;
+    }
+    private boolean matchesQuery(Metadata metadata, String query) {
+        return (metadata.getSongName() != null && metadata.getSongName().toLowerCase().contains(query)) ||
+                (metadata.getArtist() != null && metadata.getArtist().toLowerCase().contains(query)) ||
+                (metadata.getAlbum() != null && metadata.getAlbum().toLowerCase().contains(query));
+    }
+
+
+    private ObservableList<Metadata> searchUserLibrary(int userId, String query) {
+        // Split the query into parts (e.g., "Song Name;Artist;Album Name")
+        String[] queryParts = query.split(";");
+        String songName = queryParts.length > 0 ? queryParts[0].trim() : null;
+        String artist = queryParts.length > 1 ? queryParts[1].trim() : null;
+        String albumName = queryParts.length > 2 ? queryParts[2].trim() : null;
+
+        // Delegate the search to the database class
+        return database.searchSongInUserLibrary(userId, songName, artist, albumName);
+    }
+
+
     private void validateDownloadedSongs() {
         ObservableList<Metadata> library = userLib.getItems();
 
@@ -557,7 +681,6 @@ public class MusicController {
         }
     });
 }
-
 
     private void loadUserPlaylists() {
         int userId = UserSession.getInstance().getUserId();
@@ -1115,4 +1238,6 @@ public class MusicController {
     }
 
 
+    public void performSearch(ActionEvent actionEvent) {
+    }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -23,7 +24,30 @@
          </styleClass>
         </MenuBar>
 
-                    <TextArea fx:id="searchBar" layoutX="550" prefHeight="7.0" prefWidth="300" promptText="Enter Song, Artist, Album, or Genre" AnchorPane.topAnchor="10" />
+
+            <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="200" prefWidth="600" spacing="10" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="-22.0" AnchorPane.topAnchor="10.0">
+                <HBox alignment="TOP_CENTER" layoutX="400" prefHeight="126.0" prefWidth="1096.0" spacing="10">
+                    <ComboBox fx:id="sourceComboBox" promptText="Select Source">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="UserLibrary" />
+                            <String fx:value="BlobStorage" />
+                        </FXCollections>
+                    </items>
+                    </ComboBox>
+                <TextArea fx:id="searchBar" layoutX="150" prefHeight="81.0" prefWidth="500" promptText="Search by song name, artist, or album" />
+                    <Button onAction="#performSearch" text="Search" />
+      
+              <Button fx:id="themeToggleButton" onAction="#onThemeToggleButtonClick" text="Toggle Theme" />
+                </HBox>
+                <TableView fx:id="resultsTable" opacity="0" visible="false">
+                    <columns>
+                        <TableColumn fx:id="nameResultColumn" text="Song Name" />
+                        <TableColumn fx:id="artistResultColumn" text="Artist" />
+                        <TableColumn fx:id="albumResultColumn" text="Album" />
+                    </columns>
+                </TableView>
+            </VBox>
 
         <TableView fx:id="metadataTable" layoutX="674.0" layoutY="110.0" prefHeight="423.0" prefWidth="514.0">
             <columns>
@@ -37,7 +61,7 @@
             </columns>
         </TableView>
         <!-- Label to indicate the current view (initially hidden) -->
-        <Label fx:id="headerLabel" layoutX="200.0" layoutY="20.0" text="My Playlists" style="-fx-font-size: 16px;" visible="false" />
+        <Label fx:id="headerLabel" layoutX="200.0" layoutY="20.0" style="-fx-font-size: 16px;" text="My Playlists" visible="false" />
 
         <!-- ListView for displaying playlists (initially hidden) -->
         <ListView fx:id="playlistListView" layoutX="200.0" layoutY="60.0" prefHeight="400.0" prefWidth="200.0" visible="false" />
@@ -65,8 +89,6 @@
             <Button fx:id="nextButton" onAction="#onNextButtonClick" text="Next" />
             <Button fx:id="shuffleButton" onAction="#onShuffleCLick" text="Shuffle" />
         </HBox>
-
-        <Button fx:id="themeToggleButton" layoutX="870.0" layoutY="48.0" onAction="#onThemeToggleButtonClick" text="Toggle Theme" />
 
         <StackPane fx:id="overlayPane" style="-fx-background-color: rgba(0, 0, 0, 0.5);" visible="false">
             <BorderPane fx:id="profilePane" prefHeight="400" prefWidth="300" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 1;" translateX="0" translateY="0">
