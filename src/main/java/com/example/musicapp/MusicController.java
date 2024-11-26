@@ -63,6 +63,7 @@ public class MusicController {
     public TableColumn albumResultColumn;
     @FXML
     public ComboBox<String> sourceComboBox;
+    public Button searchBtn;
     @FXML
     private StackPane searchPane;
 
@@ -234,7 +235,7 @@ public class MusicController {
 
     }
     @FXML
-    private void performSearch() {
+    private void performSearchDBS() {
         String query = searchBar.getText().trim();
         if (query.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -245,18 +246,24 @@ public class MusicController {
             return;
         }
 
-        ObservableList<Metadata> results = searchBlobStorage(query); // Example search function
-        resultsTable.setItems(results);
+        System.out.println("Performing search with query: " + query); // Debug log
+
+        ObservableList<Metadata> results = searchBlobStorage(query);
 
         if (results.isEmpty()) {
+            System.out.println("No results found for query: " + query); // Debug log
             resultsTable.setPlaceholder(new Label("No results found."));
+        } else {
+            System.out.println("Results found: " + results.size()); // Debug log
         }
 
-        // Show the table with a fade-in effect
-        showTableWithFade();
+        resultsTable.setItems(results);
+        showTableWithFade(); // Make table visible with fade animation
     }
 
+
     private void showTableWithFade() {
+        resultsTable.toFront();
         resultsTable.setVisible(true);
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), resultsTable);
         fadeIn.setFromValue(0);
@@ -996,7 +1003,6 @@ public class MusicController {
         File file = new File(filePath);
         return file.exists();
     }
-
     private void playCurrentSong() {
         if (currentPlaylist.isEmpty() || currentIndex < 0 || currentIndex >= currentPlaylist.size()) {
             songTitle.setText("No valid songs to play.");
@@ -1015,9 +1021,6 @@ public class MusicController {
 
         initializeMediaPlayer(filePath, currentSong.getSongName(), currentSong.getArtist());
     }
-
-
-
     private void skipToNextAvailableSong() {
         int startIndex = currentIndex;
         do {
@@ -1035,8 +1038,6 @@ public class MusicController {
 
         System.out.println("No valid songs available to play.");
     }
-
-
     @FXML
     protected void onThemeToggleButtonClick() {
         // Get the current scene
@@ -1074,7 +1075,6 @@ public class MusicController {
     }
     public void handleLikes_btn(ActionEvent event) {
     }
-
     @FXML
     public void handleLibrary_btn(ActionEvent event) {
         // Get the user ID from the session
@@ -1095,7 +1095,6 @@ public class MusicController {
         headerLabel.setVisible(true); // Show the header label if you want it visible
         System.out.println("Switched to User Library.");
     }
-
     public void handleSearch_btn(ActionEvent event) {
     }
     public void handleHome_btn(ActionEvent event) {

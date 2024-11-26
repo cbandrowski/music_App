@@ -24,8 +24,8 @@
          </styleClass>
         </MenuBar>
 
-
-            <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="200" prefWidth="600" spacing="10" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="-22.0" AnchorPane.topAnchor="10.0">
+            <StackPane>
+            <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="200" prefWidth="900" spacing="10"  AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="10.0">
                 <HBox alignment="TOP_CENTER" layoutX="400" prefHeight="126.0" prefWidth="1096.0" spacing="10">
                     <ComboBox fx:id="sourceComboBox" promptText="Select Source">
                     <items>
@@ -36,8 +36,8 @@
                     </items>
                     </ComboBox>
                 <TextArea fx:id="searchBar" layoutX="150" prefHeight="81.0" prefWidth="500" promptText="Search by song name, artist, or album" />
-                    <Button onAction="#performSearch" text="Search" />
-      
+                    <Button fx:id="searchBtn"   onAction="#performSearchDBS" text="Search" />
+
               <Button fx:id="themeToggleButton" onAction="#onThemeToggleButtonClick" text="Toggle Theme" />
                 </HBox>
                 <TableView fx:id="resultsTable" opacity="0" visible="false">
@@ -48,7 +48,7 @@
                     </columns>
                 </TableView>
             </VBox>
-
+            </StackPane>
         <TableView fx:id="metadataTable" layoutX="674.0" layoutY="110.0" prefHeight="423.0" prefWidth="514.0">
             <columns>
                 <TableColumn fx:id="songNameColumn" prefWidth="146.0" text="Song Name" />
@@ -57,7 +57,6 @@
                 <TableColumn fx:id="albumColumn" prefWidth="63.0" text="Album" />
                 <TableColumn fx:id="genreColumn" prefWidth="42.0" text="Genre" />
                 <TableColumn fx:id="actionColumn" prefWidth="127.0" text="Actions" />
-
             </columns>
         </TableView>
         <!-- Label to indicate the current view (initially hidden) -->
