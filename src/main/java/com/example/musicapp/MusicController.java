@@ -124,6 +124,15 @@ public class MusicController {
     private BorderPane profilePane;
 
     @FXML
+    private TextArea searchBar; //used to search up songs
+
+    @FXML
+    private ListView<String> songListView; //displays the result
+
+    private ObservableList<String> allSongs; // Complete list of songs
+
+    private MusicDB musicDB; // Reference to your MusicDB class
+    @FXML
     private Text nameId;
     private String userEmail;
 
@@ -142,6 +151,10 @@ public class MusicController {
 
 
     public void initialize() {
+
+        ///to display search bar
+        displaySearchBar();
+
         // Retrieve user session details
         UserSession session = UserSession.getInstance();
 
@@ -1236,7 +1249,4 @@ public class MusicController {
         userLib.setItems(library);
     }
 
-
-    public void performSearch(ActionEvent actionEvent) {
-    }
 }

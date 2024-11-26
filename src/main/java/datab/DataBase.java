@@ -414,9 +414,10 @@ public class DataBase {
 
     // Method for registering a new user
     public boolean registerUser(String firstName, String lastName, String email, String password, String local_Storage_Path) {
-        String insertUserSQL = "INSERT INTO users (first_name, last_name, email, password, local_storage_path) VALUES (?, ?, ?, ?)";
+        String insertUserSQL = "INSERT INTO users (first_name, last_name, email, password, local_storage_path) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+
              PreparedStatement pstmt = conn.prepareStatement(insertUserSQL)) {
 
             pstmt.setString(1, firstName);
@@ -428,7 +429,8 @@ public class DataBase {
             pstmt.executeUpdate();
             return true;
 
-        } catch (SQLIntegrityConstraintViolationException e) {
+        }
+        catch (SQLIntegrityConstraintViolationException e) {
             // Handle duplicate email or other unique constraint violations
             System.err.println("Error: Duplicate email - " + e.getMessage());
             return false;
