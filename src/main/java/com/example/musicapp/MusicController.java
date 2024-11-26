@@ -325,7 +325,6 @@ public class MusicController {
                     });
                 });
 
-                // Create Playlist Option
                 createPlaylistOption.setOnAction(event -> {
                     Metadata metadata = getTableView().getItems().get(getIndex());
 
@@ -346,11 +345,14 @@ public class MusicController {
                             return;
                         }
 
+                        // Get the current user ID
+                        int userId = UserSession.getInstance().getUserId();
+
                         // Create a new playlist in the database
-                        boolean created = database.createPlaylist(UserSession.getInstance().getUserId(), playlistName);
+                        boolean created = database.createPlaylist(userId, playlistName);
                         if (created) {
                             // Add the current song to the newly created playlist
-                            boolean added = database.addSongToPlaylist(metadata, playlistName);
+                            boolean added = database.addSongToPlaylist(metadata, playlistName, userId);
                             if (added) {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("Playlist Created");
@@ -374,6 +376,7 @@ public class MusicController {
                         }
                     });
                 });
+
 
                 // Add to Existing Playlist Option
                 addToPlaylistOption.setOnAction(event -> {
@@ -409,7 +412,7 @@ public class MusicController {
                     Optional<String> result = dialog.showAndWait();
                     result.ifPresent(playlistName -> {
                         // Add song to the selected playlist
-                        boolean added = database.addSongToPlaylist(metadata, playlistName);
+                        boolean added = database.addSongToPlaylist(metadata, playlistName, userId);
                         if (added) {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("Success");
@@ -495,6 +498,10 @@ public class MusicController {
                     if (result.isPresent() && result.get() == ButtonType.OK) {
                         // Perform deletion from database
                         boolean deleted = database.deleteSongFromPlaylist(userId, metadata.getBlobName());
+                        System.out.println(deleted);
+                        System.out.println(userId);
+                        System.out.println(metadata.getSongName());
+                        System.out.println(metadata.getBlobName());
                         if (deleted) {
                             // Remove the song from the current TableView
                             getTableView().getItems().remove(metadata);

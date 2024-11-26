@@ -248,10 +248,10 @@ public class DataBase {
             return false; // Return false if there was an error
         }
     }
-    public boolean addSongToPlaylist(Metadata metadata, String playlistName) {
-        String getPlaylistIdQuery = "SELECT playlist_id FROM playlists WHERE name = ?";
+    public boolean addSongToPlaylist(Metadata metadata, String playlistName, int userId) {
+        String getPlaylistIdQuery = "SELECT playlist_id FROM playlists WHERE name = ? AND user_id = ?";
         String getSongIdQuery = "SELECT id FROM UserSongs WHERE blob_name = ?";
-        String insertQuery = "INSERT INTO PlaylistSongs (playlist_id, user_song_id) VALUES (?, ?)";
+        String insertQuery = "INSERT INTO PlaylistSongs (playlist_id, user_song_id, user_id) VALUES (?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
              PreparedStatement playlistStmt = connection.prepareStatement(getPlaylistIdQuery);
@@ -260,10 +260,11 @@ public class DataBase {
 
             // Get the playlist ID
             playlistStmt.setString(1, playlistName);
+            playlistStmt.setInt(2, userId);
             ResultSet playlistResult = playlistStmt.executeQuery();
             if (!playlistResult.next()) {
                 System.err.println("Playlist not found: " + playlistName);
-                return false; // Playlist does not exist
+                return false; // Playlist does not exist for the user
             }
             int playlistId = playlistResult.getInt("playlist_id");
 
@@ -279,6 +280,7 @@ public class DataBase {
             // Add the song to the playlist
             insertStmt.setInt(1, playlistId);
             insertStmt.setInt(2, songId);
+            insertStmt.setInt(3, userId); // Include the user ID
             int rowsAffected = insertStmt.executeUpdate();
             return rowsAffected > 0; // Return true if the song was added successfully
 
@@ -341,14 +343,14 @@ public class DataBase {
     }
     public boolean deleteSongFromPlaylist(int userId, String blobName) {
         String deleteQuery = "DELETE FROM PlaylistSongs " +
-                "WHERE playlist_id = (SELECT playlist_id FROM playlists WHERE user_id = ?) " +
-                "AND user_song_id = (SELECT id FROM UserSongs WHERE blob_name = ?)";
+                "WHERE user_id = ? " +
+                "AND user_song_id = (SELECT id FROM UserSongs WHERE blob_name = ? LIMIT 1);";
 
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
              PreparedStatement stmt = connection.prepareStatement(deleteQuery)) {
 
-            stmt.setInt(1, userId);
-            stmt.setString(2, blobName);
+            stmt.setInt(1, userId); // Set the user ID directly
+            stmt.setString(2, blobName); // Set the blob name for the song
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0; // Return true if deletion was successful
@@ -357,6 +359,17 @@ public class DataBase {
             return false; // Return false if deletion fails
         }
     }
+//1. Relationships Summary
+//    From your output:
+//
+//    playlists.user_id → users.id
+//    Each playlist belongs to a user.
+//    PlaylistSongs.playlist_id → playlists.playlist_id
+//    Each entry in PlaylistSongs is associated with a playlist.
+//            PlaylistSongs.user_song_id → UserSongs.id
+//    Each entry in PlaylistSongs references a specific song from UserSongs.
+//    UserSongs.user_id → users.id
+//    Each song in UserSongs is associated with a user.
 
     // Method for registering a new user
     public boolean registerUser(String firstName, String lastName, String email, String password, String local_Storage_Path) {
