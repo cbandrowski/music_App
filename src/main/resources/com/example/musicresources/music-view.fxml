@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+=======
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -37,8 +45,32 @@
          </styleClass>
         </MenuBar>
 
-                    <TextArea fx:id="searchBar" layoutX="550" prefHeight="26.0" prefWidth="300" promptText="Enter Song, Artist, Album, or Genre" AnchorPane.topAnchor="10" />
+            <StackPane>
+            <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="200" prefWidth="900" spacing="10"  AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="10.0">
+                <HBox alignment="TOP_CENTER" layoutX="400" prefHeight="126.0" prefWidth="1096.0" spacing="10">
+                    <ComboBox fx:id="sourceComboBox" promptText="Select Source">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="UserLibrary" />
+                            <String fx:value="BlobStorage" />
+                        </FXCollections>
+                    </items>
+                    </ComboBox>
+                <TextArea fx:id="searchBar" layoutX="150" prefHeight="81.0" prefWidth="500" promptText="Search by song name, artist, or album" />
+                    <Button fx:id="searchBtn"   onAction="#performSearchDBS" text="Search" />
 
+
+              <Button fx:id="themeToggleButton" onAction="#onThemeToggleButtonClick" text="Toggle Theme" />
+                </HBox>
+                <TableView fx:id="resultsTable" opacity="0" visible="false">
+                    <columns>
+                        <TableColumn fx:id="nameResultColumn" text="Song Name" />
+                        <TableColumn fx:id="artistResultColumn" text="Artist" />
+                        <TableColumn fx:id="albumResultColumn" text="Album" />
+                    </columns>
+                </TableView>
+            </VBox>
+            </StackPane>
         <TableView fx:id="metadataTable" layoutX="674.0" layoutY="110.0" prefHeight="423.0" prefWidth="514.0">
             <columns>
                 <TableColumn fx:id="songNameColumn" prefWidth="146.0" text="Song Name" />
@@ -47,7 +79,6 @@
                 <TableColumn fx:id="albumColumn" prefWidth="63.0" text="Album" />
                 <TableColumn fx:id="genreColumn" prefWidth="42.0" text="Genre" />
                 <TableColumn fx:id="actionColumn" prefWidth="127.0" text="Actions" />
-
             </columns>
         </TableView>
         <!-- Label to indicate the current view (initially hidden) -->
@@ -79,8 +110,6 @@
             <Button fx:id="nextButton" onAction="#onNextButtonClick" text="Next" />
             <Button fx:id="shuffleButton" onAction="#onShuffleCLick" text="Shuffle" />
         </HBox>
-
-        <Button fx:id="themeToggleButton" layoutX="870.0" layoutY="48.0" onAction="#onThemeToggleButtonClick" text="Toggle Theme" />
 
         <StackPane fx:id="overlayPane" style="-fx-background-color: rgba(0, 0, 0, 0.5);" visible="false">
             <BorderPane fx:id="profilePane" prefHeight="400" prefWidth="300" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 1;" translateX="0" translateY="0">

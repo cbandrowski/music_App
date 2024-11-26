@@ -166,6 +166,47 @@ public class DataBase {
         }
         return false; // Return false if there's an error or no result
     }
+    public ObservableList<Metadata> searchSongInUserLibrary(int userId, String songName, String artist, String albumName) {
+        String searchQuery = "SELECT title, blob_name, artist, album " +
+                "FROM UserSongs WHERE user_id = ?" +
+                (songName != null && !songName.isBlank() ? " AND title LIKE ?" : "") +
+                (artist != null && !artist.isBlank() ? " AND artist LIKE ?" : "") +
+                (albumName != null && !albumName.isBlank() ? " AND album LIKE ?" : "");
+
+        ObservableList<Metadata> results = FXCollections.observableArrayList();
+
+        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement stmt = connection.prepareStatement(searchQuery)) {
+
+            int paramIndex = 1;
+            stmt.setInt(paramIndex++, userId);
+
+            if (songName != null && !songName.isBlank()) {
+                stmt.setString(paramIndex++, "%" + songName + "%");
+            }
+            if (artist != null && !artist.isBlank()) {
+                stmt.setString(paramIndex++, "%" + artist + "%");
+            }
+            if (albumName != null && !albumName.isBlank()) {
+                stmt.setString(paramIndex++, "%" + albumName + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String blobName = rs.getString("blob_name");
+                String songArtist = rs.getString("artist");
+                String songAlbum = rs.getString("album");
+
+                results.add(new Metadata(title, blobName, songArtist, "", songAlbum, ""));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return results;
+    }
+
 
     public int getUserId(String email) {
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
