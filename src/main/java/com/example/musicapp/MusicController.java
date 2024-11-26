@@ -61,25 +61,18 @@ public class MusicController {
     @FXML
     private TableView<Metadata> userLib;
     private boolean isUserLibrary = true; // Flag to differentiate between library and playlist
-    private String currentPlaylistNameForDisplay = "User Library";
     private DataBase database = new DataBase(); // Database instance
-
     @FXML
     private TableColumn<Metadata, String> userLibSongNameColumn;
-
     @FXML
     private TableColumn<Metadata, String> userLibArtistColumn;
-
     @FXML
     private TableColumn<Metadata, String> userLibDurationColumn;
-
     @FXML
     private TableView<Metadata> metadataTable;
     @FXML
     private TableColumn<Metadata, Void> actionColumn;
     public TableColumn<Metadata, Void> userDownloadColumn;
-
-
     @FXML
     private TableColumn<Metadata, String> songNameColumn;
 
@@ -251,7 +244,7 @@ public class MusicController {
     private void loadUserLibrary(int userId) {
         // Fetch the user's library from the database
         ObservableList<Metadata> library = FXCollections.observableArrayList(database.getUserLibrary(userId));
-
+        currentIndex = 0;
         // Populate the userLib TableView
         userLib.setItems(library);
         setCurrentPlaylist(library); // Set the user library as the current playlist
@@ -332,7 +325,6 @@ public class MusicController {
                     });
                 });
 
-                // Create Playlist Option
                 createPlaylistOption.setOnAction(event -> {
                     Metadata metadata = getTableView().getItems().get(getIndex());
 
@@ -353,11 +345,14 @@ public class MusicController {
                             return;
                         }
 
+                        // Get the current user ID
+                        int userId = UserSession.getInstance().getUserId();
+
                         // Create a new playlist in the database
-                        boolean created = database.createPlaylist(UserSession.getInstance().getUserId(), playlistName);
+                        boolean created = database.createPlaylist(userId, playlistName);
                         if (created) {
                             // Add the current song to the newly created playlist
-                            boolean added = database.addSongToPlaylist(metadata, playlistName);
+                            boolean added = database.addSongToPlaylist(metadata, playlistName, userId);
                             if (added) {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("Playlist Created");
@@ -381,6 +376,7 @@ public class MusicController {
                         }
                     });
                 });
+
 
                 // Add to Existing Playlist Option
                 addToPlaylistOption.setOnAction(event -> {
@@ -416,7 +412,7 @@ public class MusicController {
                     Optional<String> result = dialog.showAndWait();
                     result.ifPresent(playlistName -> {
                         // Add song to the selected playlist
-                        boolean added = database.addSongToPlaylist(metadata, playlistName);
+                        boolean added = database.addSongToPlaylist(metadata, playlistName, userId);
                         if (added) {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("Success");
@@ -502,6 +498,10 @@ public class MusicController {
                     if (result.isPresent() && result.get() == ButtonType.OK) {
                         // Perform deletion from database
                         boolean deleted = database.deleteSongFromPlaylist(userId, metadata.getBlobName());
+                        System.out.println(deleted);
+                        System.out.println(userId);
+                        System.out.println(metadata.getSongName());
+                        System.out.println(metadata.getBlobName());
                         if (deleted) {
                             // Remove the song from the current TableView
                             getTableView().getItems().remove(metadata);
@@ -687,44 +687,45 @@ public class MusicController {
     }
     public void initializeMediaPlayer(String filePath, String songName, String artistName) {
         if (filePath == null || filePath.isEmpty()) {
-            System.out.println("Error: File path is invalid!");
+            songTitle.setText("Error: Invalid file path!");
+            skipToNextAvailableSong();
             return;
         }
 
         File file = new File(filePath);
         if (!file.exists()) {
-            System.out.println("Error: MP3 file not found at: " + filePath);
+            songTitle.setText("Error: File not found at: " + filePath);
+            skipToNextAvailableSong();
             return;
         }
 
         if (mediaPlayer != null) {
-            mediaPlayer.stop(); // Stop the current song if playing
+            mediaPlayer.stop(); // Stop the current song if one is already playing
         }
 
         try {
             Media media = new Media(file.toURI().toString());
             mediaPlayer = new MediaPlayer(media);
 
-            // Asynchronous preparation
+            // Prepare media player asynchronously
             mediaPlayer.setOnReady(() -> {
                 songTitle.setText(songName + " - " + artistName);
-                System.out.println("Media player ready for: " + songName + " by " + artistName);
+                songTitle.setText("Now playing: " + songName + " by " + artistName);
                 mediaPlayer.play();
             });
 
             // Handle playback errors
             mediaPlayer.setOnError(() -> {
-                System.out.println("Error during playback: " + mediaPlayer.getError().getMessage());
+                songTitle.setText("Playback error: " + mediaPlayer.getError().getMessage());
                 skipToNextAvailableSong();
             });
 
-            System.out.println("Initialized media player with file: " + filePath);
-
         } catch (Exception e) {
-            System.out.println("Error initializing media player: " + e.getMessage());
-            skipToNextAvailableSong(); // Fallback on error
+            songTitle.setText("Error initializing playback.");
+            skipToNextAvailableSong();
         }
     }
+
     private void addDoubleClickToPlay() {
         userLib.setRowFactory(tv -> {
             TableRow<Metadata> row = new TableRow<>();
@@ -875,7 +876,7 @@ public class MusicController {
 
     private void playCurrentSong() {
         if (currentPlaylist.isEmpty() || currentIndex < 0 || currentIndex >= currentPlaylist.size()) {
-            System.out.println("No valid songs to play.");
+            songTitle.setText("No valid songs to play.");
             return;
         }
 
@@ -883,15 +884,16 @@ public class MusicController {
         String filePath = UserSession.getInstance().getLocalStoragePath() + File.separator + currentSong.getBlobName();
         File file = new File(filePath);
 
-        if (isUserLibrary && !file.exists()) {
-            System.out.println("File not found: " + currentSong.getSongName() + ". Skipping...");
+        if (!file.exists()) {
+            songTitle.setText("File not found: " + currentSong.getSongName() + ". Skipping...");
             skipToNextAvailableSong();
             return;
         }
 
-        System.out.println("Now playing: " + currentSong.getSongName() + " by " + currentSong.getArtist());
         initializeMediaPlayer(filePath, currentSong.getSongName(), currentSong.getArtist());
     }
+
+
 
     private void skipToNextAvailableSong() {
         int startIndex = currentIndex;

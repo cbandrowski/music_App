@@ -2,6 +2,7 @@ package login;
 
 import com.example.musicapp.MusicController;
 import datab.DataBase;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,50 +34,70 @@ public class loginController {
     public void handleLogin() {
         String email = usernameField.getText().trim();
         String password = passwordField.getText().trim();
-        database.connectToDatabase();
 
-        // Use the database login verification
-        if (database.loginUser(email, password)) {
-            statusMessage.setText("Login successful!");
-            System.out.println("Login successful");
+        // Asynchronous login task
+        Task<Boolean> loginTask = new Task<>() {
+            private int userId;
+            private String fullName;
 
-            try {
-                // Fetch user details from the database
-                int userId = database.getUserId(email); // Fetch user ID
-                String fullName = database.getUserFullName(email); // Fetch full name
-                // Validate fetched data
-                if (userId > 0 && fullName != null) {
-                    // Store user session data
+            @Override
+            protected Boolean call() throws Exception {
+                database.connectToDatabase();
+
+                // Verify user credentials
+                if (database.loginUser(email, password)) {
+                    // Fetch user details
+                    userId = database.getUserId(email);
+                    fullName = database.getUserFullName(email);
+
+                    // Ensure valid user data is fetched
+                    return userId > 0 && fullName != null;
+                }
+                return false; // Invalid login credentials
+            }
+
+            @Override
+            protected void succeeded() {
+                if (getValue()) {
+                    // Login successful, set up the user session
                     UserSession session = UserSession.getInstance(userId, email, fullName);
 
-                    // Load the MusicApplication FXML file
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/music-view.fxml"));
-                    Parent root = loader.load();
+                    statusMessage.setText("Login successful!");
 
-                    // Get the controller from the FXMLLoader
-                    MusicController musicController = loader.getController();
+                    try {
+                        // Load the MusicApplication FXML
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/music-view.fxml"));
+                        Parent root = loader.load();
 
-                    // Launch the MusicApplication
-                    Stage musicStage = new Stage();
-                    musicStage.setScene(new Scene(root));
-                    musicStage.show();
+                        // Launch the MusicApplication
+                        Stage musicStage = new Stage();
+                        musicStage.setScene(new Scene(root));
+                        musicStage.show();
 
-                    // Close the login stage
-                    Stage loginStage = (Stage) usernameField.getScene().getWindow();
-                    loginStage.close();
+                        // Close the login stage
+                        Stage loginStage = (Stage) usernameField.getScene().getWindow();
+                        loginStage.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        statusMessage.setText("Failed to load Music Application.");
+                    }
                 } else {
-                    statusMessage.setText("Error fetching user details.");
-                    System.out.println("Error fetching user details: userId=" + userId + ", fullName=" + fullName);
+                    statusMessage.setText("Invalid username or password.");
+                    System.out.println("Invalid login attempt for email: " + email);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                statusMessage.setText("Failed to load Music Application.");
             }
-        } else {
-            statusMessage.setText("Invalid username or password.");
-            System.out.println("Invalid login attempt for email: " + email);
-        }
+
+            @Override
+            protected void failed() {
+                statusMessage.setText("An error occurred during login.");
+                getException().printStackTrace();
+            }
+        };
+
+        // Run the task on a background thread
+        new Thread(loginTask).start();
     }
+
 
 
     // Method to open the registration screen
