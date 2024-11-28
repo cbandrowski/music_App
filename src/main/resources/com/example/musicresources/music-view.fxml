@@ -26,7 +26,19 @@
 
 <AnchorPane fx:id="rootPane" prefHeight="675.0" prefWidth="986.0" styleClass="pane-alt" stylesheets="@musicView.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicapp.MusicController">
     <children>
-        <TableView fx:id="metadataTable" layoutX="439.0" layoutY="93.0" prefHeight="423.0" prefWidth="514.0">
+      <HBox layoutX="218.0" layoutY="92.0" prefHeight="145.0" prefWidth="827.0" style="-fx-background-color: white;">
+         <children>
+            <ImageView fx:id="DASHBORDPIC" fitHeight="150.0" fitWidth="544.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@com/example/images/splashScreen.jpg" />
+               </image>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </ImageView>
+         </children>
+      </HBox>
+        <TableView fx:id="metadataTable" layoutX="238.0" layoutY="280.0" prefHeight="359.0" prefWidth="538.0">
             <columns>
                 <TableColumn fx:id="songNameColumn" prefWidth="146.0" text="Song Name" />
                 <TableColumn fx:id="artistColumn" prefWidth="85.0" text="Artist" />
@@ -44,31 +56,31 @@
         <ProgressBar fx:id="downloadProgressBar" layoutX="284.0" layoutY="630.0" prefWidth="340.0" visible="false" />
 
 
-        <Label fx:id="songTitle" layoutX="752.0" layoutY="650.0" style="-fx-text-fill: black;" text="No song playing" />
+        <Label fx:id="songTitle" layoutX="898.0" layoutY="648.0" style="-fx-text-fill: black;" text="No song playing" />
         <ImageView fx:id="albumArt" fitHeight="100" fitWidth="100" layoutX="707.0" layoutY="543.0" />
 
-        <HBox layoutX="415.0" layoutY="617.0" spacing="10">
-         <ImageView fitHeight="21.0" fitWidth="20.0" onMouseClicked="#handleOnPrevious_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+        <HBox layoutX="807.0" layoutY="593.0" prefHeight="30.0" prefWidth="227.0" spacing="10">
+         <ImageView fitHeight="35.0" fitWidth="43.0" onMouseClicked="#handleOnPrevious_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
             <image>
                <Image url="@icons/previous_icon.png" />
             </image>
          </ImageView>
-         <ImageView fitHeight="21.0" fitWidth="20.0" onMouseClicked="#handleOnPlay_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+         <ImageView fitHeight="35.0" fitWidth="43.0" onMouseClicked="#handleOnPlay_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
             <image>
                <Image url="@icons/play_icon.png" />
             </image>
          </ImageView>
-         <ImageView fitHeight="21.0" fitWidth="20.0" onMouseClicked="#handleOnPause_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+         <ImageView fitHeight="35.0" fitWidth="43.0" onMouseClicked="#handleOnPause_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
             <image>
                <Image url="@icons/pause_icon.png" />
             </image>
          </ImageView>
-         <ImageView fitHeight="21.0" fitWidth="20.0" onMouseClicked="#handleOnNext_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+         <ImageView fitHeight="35.0" fitWidth="43.0" onMouseClicked="#handleOnNext_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
             <image>
                <Image url="@icons/next_icon.png" />
             </image>
          </ImageView>
-         <ImageView fitHeight="21.0" fitWidth="20.0" onMouseClicked="#handleOnShuffle_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+         <ImageView fitHeight="35.0" fitWidth="43.0" onMouseClicked="#handleOnShuffle_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
             <image>
                <Image url="@icons/shuffle_icon.png" />
             </image>
@@ -162,7 +174,7 @@
                          </Button>
                      </children>
                   </VBox>
-                  <Text fx:id="nameId" fill="#f4ebeb" layoutX="14.0" layoutY="631.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
+                  <Text fx:id="nameId" fill="#f4ebeb" layoutX="12.0" layoutY="625.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
                      <font>
                         <Font name="System Bold Italic" size="14.0" />
                      </font></Text>
@@ -218,9 +230,9 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
-      <Button layoutX="834.0" layoutY="549.0" mnemonicParsing="false" onAction="#onRefresh" prefHeight="0.0" prefWidth="88.0" styleClass="button-d" text="Refresh" />
+      <Button layoutX="948.0" layoutY="440.0" mnemonicParsing="false" onAction="#onRefresh" prefHeight="0.0" prefWidth="88.0" styleClass="button-d" text="Refresh" />
       <ListView fx:id="songListView" layoutX="167.0" layoutY="33.0" prefHeight="200.0" prefWidth="340.0" visible="false" />
-      <Button layoutX="591.0" layoutY="549.0" mnemonicParsing="false" onAction="#handleUserLib" styleClass="button-d" text="userLib" />
+      <Button layoutX="948.0" layoutY="523.0" mnemonicParsing="false" onAction="#handleUserLib" styleClass="button-d" text="userLib" />
       <VBox fx:id="userLib_vbox" layoutX="177.0" layoutY="178.0" prefHeight="400.0" prefWidth="340.0" visible="false">
          <children>
       
@@ -243,7 +255,7 @@
             </Button>
          </children>
       </VBox>
-          <HBox alignment="TOP_CENTER" layoutX="174.0" prefHeight="46.0" prefWidth="886.0">
+          <HBox alignment="TOP_CENTER" layoutX="208.0" layoutY="14.0" prefHeight="70.0" prefWidth="886.0">
           <TextArea fx:id="searchBar" layoutX="150" prefHeight="22.0" prefWidth="320.0" promptText="Search by song name, artist, or album">
             <HBox.margin>
                <Insets bottom="30.0" top="10.0" />

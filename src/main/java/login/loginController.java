@@ -111,6 +111,8 @@ public class loginController {
 
 
 
+
+
     // Method to open the registration screen
     public void handleRegister() throws Exception {
         register screen = new register();
