@@ -24,70 +24,8 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootPane" prefHeight="675.0" prefWidth="986.0" stylesheets="@musicView.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicapp.MusicController">
+<AnchorPane fx:id="rootPane" prefHeight="675.0" prefWidth="986.0" styleClass="pane-alt" stylesheets="@musicView.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicapp.MusicController">
     <children>
-
-            <StackPane layoutX="68.0" layoutY="1.0" prefHeight="85.0" prefWidth="910.0">
-            <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="48.0" prefWidth="910.0" spacing="10" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="10.0">
-                <HBox alignment="TOP_CENTER" layoutX="400" prefHeight="126.0" prefWidth="1096.0">
-                <TextArea fx:id="searchBar" layoutX="150" prefHeight="47.0" prefWidth="328.0" promptText="Search by song name, artist, or album">
-                  <HBox.margin>
-                     <Insets left="100.0" />
-                  </HBox.margin>
-               </TextArea>
-               <AnchorPane prefHeight="45.0" prefWidth="52.0" style="-fx-background-color: black;">
-                  <children>
-                          <Button fx:id="searchBtn" layoutX="4.0" layoutY="7.0" onAction="#performSearchDBS" prefHeight="26.0" prefWidth="47.0" style="-fx-background-color: transparent;" styleClass="button-d" />
-                     <ImageView fitHeight="21.0" fitWidth="20.0" layoutX="17.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
-                        <image>
-                           <Image url="@icons/search_icon.png" />
-                        </image>
-                     </ImageView>
-                  </children>
-               </AnchorPane>
-      
-      
-              <Button fx:id="themeToggleButton" onAction="#onThemeToggleButtonClick" prefHeight="42.0" prefWidth="122.0" styleClass="button-d" text="Dark Mode">
-                  <HBox.margin>
-                     <Insets left="40.0" top="10.0" />
-                  </HBox.margin>
-               </Button>
-                    <ComboBox fx:id="sourceComboBox" prefHeight="49.0" prefWidth="138.0" promptText="Select Source" styleClass="button-d">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="UserLibrary" />
-                            <String fx:value="BlobStorage" />
-                        </FXCollections>
-                    </items>
-                  <HBox.margin>
-                     <Insets bottom="5.0" left="10.0" top="10.0" />
-                  </HBox.margin>
-                    </ComboBox>
-                 <!-- Main Application Content -->
-                 <MenuBar fx:id="menuBar" prefHeight="48.0" prefWidth="106.0" style="-fx-background-color: black;" styleClass="button-d" stylesheets="@musicView.css">
-                     <Menu text="Account">
-                         <MenuItem onAction="#handleProfileAction" text="Profile" />
-                         <MenuItem onAction="#handlePreferencesAction" text="Preferences" />
-                         <MenuItem onAction="#handleHelpAction" text="Help" />
-                     <MenuItem onAction="#handleLogOutAction" text="Logout" />
-                     </Menu>
-                  <HBox.margin>
-                     <Insets left="10.0" top="10.0" />
-                  </HBox.margin>
-                 </MenuBar>
-               <padding>
-                  <Insets right="10.0" />
-               </padding>
-                </HBox>
-                <TableView fx:id="resultsTable" opacity="0" visible="false">
-                    <columns>
-                        <TableColumn fx:id="nameResultColumn" text="Song Name" />
-                        <TableColumn fx:id="artistResultColumn" text="Artist" />
-                        <TableColumn fx:id="albumResultColumn" text="Album" />
-                    </columns>
-                </TableView>
-            </VBox>
-            </StackPane>
         <TableView fx:id="metadataTable" layoutX="439.0" layoutY="93.0" prefHeight="423.0" prefWidth="514.0">
             <columns>
                 <TableColumn fx:id="songNameColumn" prefWidth="146.0" text="Song Name" />
@@ -110,11 +48,31 @@
         <ImageView fx:id="albumArt" fitHeight="100" fitWidth="100" layoutX="707.0" layoutY="543.0" />
 
         <HBox layoutX="415.0" layoutY="617.0" spacing="10">
-            <Button fx:id="previousButton" onAction="#onPreviousButtonClick" text="Previous" />
-            <Button fx:id="playButton" onAction="#onPlayButtonClick" text="Play" />
-            <Button fx:id="pauseButton" onAction="#onPauseButtonClick" text="Pause" />
-            <Button fx:id="nextButton" onAction="#onNextButtonClick" text="Next" />
-            <Button fx:id="shuffleButton" onAction="#onShuffleCLick" text="Shuffle" />
+         <ImageView fitHeight="21.0" fitWidth="20.0" onMouseClicked="#handleOnPrevious_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <image>
+               <Image url="@icons/previous_icon.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="21.0" fitWidth="20.0" onMouseClicked="#handleOnPlay_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <image>
+               <Image url="@icons/play_icon.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="21.0" fitWidth="20.0" onMouseClicked="#handleOnPause_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <image>
+               <Image url="@icons/pause_icon.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="21.0" fitWidth="20.0" onMouseClicked="#handleOnNext_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <image>
+               <Image url="@icons/next_icon.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="21.0" fitWidth="20.0" onMouseClicked="#handleOnShuffle_icon" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <image>
+               <Image url="@icons/shuffle_icon.png" />
+            </image>
+         </ImageView>
         </HBox>
 
         <StackPane fx:id="overlayPane" style="-fx-background-color: rgba(0, 0, 0, 0.5);" visible="false">
@@ -143,7 +101,7 @@
                 </bottom>
             </BorderPane>
         </StackPane>
-      <VBox layoutY="36.200000000000045" prefHeight="654.0" prefWidth="159.0" style="-fx-background-color: #0d3c6e;" AnchorPane.bottomAnchor="21.0">
+      <VBox layoutX="-1.0" minHeight="-Infinity" prefHeight="670.0" prefWidth="147.0" styleClass="pane" AnchorPane.bottomAnchor="0.0">
          <children>
             <AnchorPane prefHeight="654.0" prefWidth="179.0">
                <children>
@@ -152,9 +110,9 @@
                         <Font name="System Bold Italic" size="30.0" />
                      </font>
                   </Text>
-                  <VBox layoutX="43.0" layoutY="145.0" prefHeight="298.0" prefWidth="87.0">
+                  <VBox layoutX="43.0" layoutY="145.0" prefHeight="285.0" prefWidth="87.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#handleHome_btn" style="-fx-background-color: trasnparent;" stylesheets="@musicView.css" text="Home" textFill="#d7cbcb">
+                        <Button mnemonicParsing="false" onAction="#handleHome_btn" style="-fx-background-color: trasnparent;" styleClass="button_sideBar" stylesheets="@musicView.css" text="Home" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
@@ -162,7 +120,7 @@
                               <Font name="System Bold Italic" size="14.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#handleSearch_btn" style="-fx-background-color: transparent;" stylesheets="@musicView.css" text="Search" textFill="#ece8e8">
+                        <Button mnemonicParsing="false" onAction="#handleSearch_btn" style="-fx-background-color: transparent;" styleClass="button_sideBar" stylesheets="@musicView.css" text="Search" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
@@ -170,7 +128,7 @@
                               <Font name="System Bold Italic" size="14.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#handlePlayList_btn" style="-fx-background-color: transparent;" stylesheets="@musicView.css" text="Play List" textFill="#ece8e8">
+                        <Button mnemonicParsing="false" onAction="#handlePlayList_btn" style="-fx-background-color: transparent;" styleClass="button_sideBar" stylesheets="@musicView.css" text="Play List" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
@@ -178,7 +136,7 @@
                               <Font name="System Bold Italic" size="14.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#handleLikes_btn" style="-fx-background-color: transparent;" stylesheets="@musicView.css" text="Likes" textFill="#ece8e8">
+                        <Button mnemonicParsing="false" onAction="#handleLikes_btn" style="-fx-background-color: transparent;" styleClass="button_sideBar" stylesheets="@musicView.css" text="Likes" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
@@ -186,7 +144,7 @@
                               <Font name="System Bold Italic" size="14.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#handleSetting_btn" style="-fx-background-color: transparent;" stylesheets="@musicView.css" text="Settings" textFill="#ece8e8">
+                        <Button mnemonicParsing="false" onAction="#handleSetting_btn" style="-fx-background-color: transparent;" styleClass="button_sideBar" stylesheets="@musicView.css" text="Settings" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
@@ -194,7 +152,7 @@
                               <Font name="System Bold Italic" size="14.0" />
                            </font>
                         </Button>
-                         <Button mnemonicParsing="false" onAction="#handleUpload_btn" style="-fx-background-color: transparent;" stylesheets="@musicView.css" text="Upload" textFill="#ece8e8">
+                         <Button mnemonicParsing="false" onAction="#handleUpload_btn" style="-fx-background-color: transparent;" styleClass="button_sideBar" stylesheets="@musicView.css" text="Upload" textFill="WHITE">
                              <VBox.margin>
                                  <Insets bottom="10.0" left="10.0" />
                              </VBox.margin>
@@ -204,11 +162,11 @@
                          </Button>
                      </children>
                   </VBox>
-                  <Text fx:id="nameId" fill="#f4ebeb" layoutX="68.0" layoutY="632.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
+                  <Text fx:id="nameId" fill="#f4ebeb" layoutX="14.0" layoutY="631.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
                      <font>
                         <Font name="System Bold Italic" size="14.0" />
                      </font></Text>
-                  <ImageView fx:id="profilePic" fitHeight="52.0" fitWidth="62.0" layoutX="9.0" layoutY="600.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="profilePic" fitHeight="52.0" fitWidth="62.0" layoutX="7.0" layoutY="558.0" onMouseClicked="#handleimportImage" pickOnBounds="true" preserveRatio="true" />
                   <VBox layoutX="26.0" layoutY="149.0" prefHeight="238.0" prefWidth="27.0">
                      <padding>
                         <Insets bottom="4.0" />
@@ -256,15 +214,18 @@
                </VBox.margin>
             </AnchorPane>
          </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
       </VBox>
       <Button layoutX="834.0" layoutY="549.0" mnemonicParsing="false" onAction="#onRefresh" prefHeight="0.0" prefWidth="88.0" styleClass="button-d" text="Refresh" />
       <ListView fx:id="songListView" layoutX="167.0" layoutY="33.0" prefHeight="200.0" prefWidth="340.0" visible="false" />
       <Button layoutX="591.0" layoutY="549.0" mnemonicParsing="false" onAction="#handleUserLib" styleClass="button-d" text="userLib" />
-      <VBox layoutX="177.0" layoutY="178.0" prefHeight="400.0" prefWidth="340.0">
+      <VBox fx:id="userLib_vbox" layoutX="177.0" layoutY="178.0" prefHeight="400.0" prefWidth="340.0" visible="false">
          <children>
       
                               
-                                      <TableView fx:id="userLib" prefHeight="349.0" prefWidth="377.0" visible="false">
+                                      <TableView fx:id="userLib" prefHeight="349.0" prefWidth="377.0">
                   <columns>
                       <TableColumn fx:id="userLibSongNameColumn" prefWidth="100.0" text="Song Name" />
                       <TableColumn fx:id="userLibArtistColumn" prefWidth="71.0" text="Artist" />
@@ -275,12 +236,64 @@
                   <Insets />
                </VBox.margin>
               </TableView>
-              <Button fx:id="refreshUserLibButton" onAction="#handleRefreshUserLibrary" prefWidth="120.0" text="Refresh_UserLib" visible="false">
+              <Button fx:id="refreshUserLibButton" onAction="#handleRefreshUserLibrary" prefWidth="120.0" text="Refresh_UserLib">
                <VBox.margin>
                   <Insets left="80.0" top="10.0" />
                </VBox.margin>
             </Button>
          </children>
       </VBox>
+          <HBox alignment="TOP_CENTER" layoutX="174.0" prefHeight="46.0" prefWidth="886.0">
+          <TextArea fx:id="searchBar" layoutX="150" prefHeight="22.0" prefWidth="320.0" promptText="Search by song name, artist, or album">
+            <HBox.margin>
+               <Insets bottom="30.0" top="10.0" />
+            </HBox.margin>
+         </TextArea>
+         <AnchorPane prefHeight="31.0" prefWidth="35.0" style="-fx-background-color: black;">
+            <children>
+               <ImageView fitHeight="21.0" fitWidth="20.0" layoutX="5.0" layoutY="9.0" onMouseClicked="#handleIconSearch" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+                  <image>
+                     <Image url="@icons/search_icon.png" />
+                  </image>
+               </ImageView>
+            </children>
+            <HBox.margin>
+               <Insets bottom="30.0" right="60.0" top="10.0" />
+            </HBox.margin>
+         </AnchorPane>
+
+      
+              <Button fx:id="themeToggleButton" onAction="#onThemeToggleButtonClick" prefHeight="42.0" prefWidth="122.0" styleClass="button-d" text="Dark Mode">
+            <HBox.margin>
+               <Insets left="40.0" top="10.0" />
+            </HBox.margin>
+         </Button>
+              <ComboBox fx:id="sourceComboBox" prefHeight="49.0" prefWidth="138.0" promptText="Select Source" styleClass="button-d">
+              <items>
+                  <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="UserLibrary" />
+                      <String fx:value="BlobStorage" />
+                  </FXCollections>
+              </items>
+            <HBox.margin>
+               <Insets bottom="5.0" left="10.0" top="10.0" />
+            </HBox.margin>
+              </ComboBox>
+           <!-- Main Application Content -->
+           <MenuBar fx:id="menuBar" prefHeight="48.0" prefWidth="106.0" style="-fx-background-color: black;" styleClass="button-d" stylesheets="@musicView.css">
+               <Menu text="Account">
+                   <MenuItem onAction="#handleProfileAction" text="Profile" />
+                   <MenuItem onAction="#handlePreferencesAction" text="Preferences" />
+                   <MenuItem onAction="#handleHelpAction" text="Help" />
+               <MenuItem onAction="#handleLogOutAction" text="Logout" />
+               </Menu>
+            <HBox.margin>
+               <Insets left="10.0" top="10.0" />
+            </HBox.margin>
+           </MenuBar>
+         <padding>
+            <Insets right="10.0" />
+         </padding>
+          </HBox>
     </children>
 </AnchorPane>

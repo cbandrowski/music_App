@@ -19,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -51,7 +52,10 @@ public class MusicController {
     private static final String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=musicappdb;AccountKey=/TxkG8DnJ6NGWCEnv/82FiqesEi04JLZ/s6qd5Ox78qGJuxETnxCrpVs6C42jsmTzNUQ65iZ5cLn+AStfJBFbw==;EndpointSuffix=core.windows.net";
     private static final String CONTAINER_NAME = "media-files";
     public Button refreshUserLibButton;
-    public ProgressBar downloadProgressBar = new ProgressBar(0);;
+    @FXML
+    private VBox userLib_vbox;
+    public ProgressBar downloadProgressBar = new ProgressBar(0);
+    ;
     @FXML
     private ListView<String> playlistListView; // Displays playlist names
 
@@ -228,6 +232,7 @@ public class MusicController {
         // Refresh the table to update button states
         userLib.refresh();
     }
+
     private void loadMetadataIntoTable() {
         ObservableList<Metadata> metadataList = FXCollections.observableArrayList();
 
@@ -256,6 +261,7 @@ public class MusicController {
             metadataTable.setPlaceholder(new Label("No metadata available."));
         }
     }
+
     private void loadUserLibrary(int userId) {
         // Fetch the user's library from the database
         ObservableList<Metadata> library = FXCollections.observableArrayList(database.getUserLibrary(userId));
@@ -269,6 +275,7 @@ public class MusicController {
             userLib.setPlaceholder(new Label("Your library is empty."));
         }
     }
+
     @FXML
     private void openPlaylist(String playlistName) {
         ObservableList<Metadata> playlistSongs = database.getSongsInPlaylist(UserSession.getInstance().getUserId(), playlistName);
@@ -540,38 +547,38 @@ public class MusicController {
                 });
             }
 
-        @Override
-        protected void updateItem(Void item, boolean empty) {
-            super.updateItem(item, empty);
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
 
-            if (empty || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
-                setGraphic(null); // Hide MenuButton for empty or invalid rows
-                return;
-            }
+                if (empty || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
+                    setGraphic(null); // Hide MenuButton for empty or invalid rows
+                    return;
+                }
 
-            Metadata metadata = getTableView().getItems().get(getIndex());
-            int userId = UserSession.getInstance().getUserId();
+                Metadata metadata = getTableView().getItems().get(getIndex());
+                int userId = UserSession.getInstance().getUserId();
 
-            // Check if the item should display the MenuButton
-            if (metadata == null || !isSongInLibrary(userId, metadata.getBlobName())) {
-                setGraphic(null); // Hide the MenuButton if the song is not in the library
-            } else {
-                setGraphic(optionsMenu); // Show the MenuButton for valid rows
-
-                // Dynamically enable/disable the "Download" option
-                String blobName = metadata.getBlobName();
-                String localStoragePath = UserSession.getInstance().getLocalStoragePath();
-
-                if (localStoragePath != null && !localStoragePath.isEmpty()) {
-                    File file = new File(localStoragePath + File.separator + blobName);
-                    downloadOption.setDisable(file.exists()); // Disable if the file already exists
+                // Check if the item should display the MenuButton
+                if (metadata == null || !isSongInLibrary(userId, metadata.getBlobName())) {
+                    setGraphic(null); // Hide the MenuButton if the song is not in the library
                 } else {
-                    downloadOption.setDisable(true); // Disable if path is invalid
+                    setGraphic(optionsMenu); // Show the MenuButton for valid rows
+
+                    // Dynamically enable/disable the "Download" option
+                    String blobName = metadata.getBlobName();
+                    String localStoragePath = UserSession.getInstance().getLocalStoragePath();
+
+                    if (localStoragePath != null && !localStoragePath.isEmpty()) {
+                        File file = new File(localStoragePath + File.separator + blobName);
+                        downloadOption.setDisable(file.exists()); // Disable if the file already exists
+                    } else {
+                        downloadOption.setDisable(true); // Disable if path is invalid
+                    }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
 
     private void loadUserPlaylists() {
@@ -589,6 +596,7 @@ public class MusicController {
             }
         });
     }
+
     private void loadPlaylistIntoTable(String playlistName) {
         int userId = UserSession.getInstance().getUserId();
 
@@ -601,6 +609,7 @@ public class MusicController {
         // Update the header label to show the current playlist name
         headerLabel.setText("Playlist: " + playlistName);
     }
+
     @FXML
     public void handlePlayList_btn(ActionEvent event) {
         if (isPlaylistViewVisible) {
@@ -629,10 +638,12 @@ public class MusicController {
 
         }
     }
+
     // Helper method to check if the song is in the user's library
     private boolean isSongInLibrary(int userId, String blobName) {
         return database.isSongInUserLibrary(userId, blobName);
     }
+
     private void addButtonToTable() {
         actionColumn.setCellFactory(param -> new TableCell<>() {
             private final Button addButton = new Button("Add to Library");
@@ -673,6 +684,7 @@ public class MusicController {
             }
         });
     }
+
     @FXML
     public void onRefresh(ActionEvent actionEvent) {
         Task<Void> task = new Task<>() {
@@ -687,6 +699,7 @@ public class MusicController {
         };
         new Thread(task).start();
     }
+
     private void makeProfilePaneDraggable() {
         profilePane.setOnMousePressed(event -> {
             // Capture the initial offset when mouse is pressed
@@ -700,6 +713,7 @@ public class MusicController {
             profilePane.setTranslateY(event.getSceneY() - yOffset);
         });
     }
+
     public void initializeMediaPlayer(String filePath, String songName, String artistName) {
         if (filePath == null || filePath.isEmpty()) {
             songTitle.setText("Error: Invalid file path!");
@@ -769,6 +783,7 @@ public class MusicController {
             return row;
         });
     }
+
     @FXML
     public void handleProfileAction(ActionEvent actionEvent) {
         overlayPane.setVisible(true);
@@ -781,108 +796,117 @@ public class MusicController {
         lastNameLabel.setText("Doe");
         addressLabel.setText("123 Main St, Anytown, USA");
     }
+
     @FXML
     public void closeProfilePane() {
         overlayPane.setVisible(false);
     }
-    @FXML
-    protected void onPlayButtonClick() {
-        if (currentPlaylist.isEmpty()) {
-            System.out.println("No songs available to play.");
-            return;
-        }
 
-        if (mediaPlayer == null || mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED) {
-            // Play the current song
-            playCurrentSong();
-        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
-            // Resume the song if it's paused
-            mediaPlayer.play();
-            System.out.println("Resuming playback...");
-        } else {
-            System.out.println("Already playing...");
-        }
-    }
-    @FXML
-    protected void onPauseButtonClick() {
-        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            mediaPlayer.pause();
-            System.out.println("Playback paused.");
-        } else {
-            System.out.println("No song is currently playing.");
-        }
-    }
     public void setCurrentPlaylist(ObservableList<Metadata> playlist) {
         currentPlaylist = playlist;
         currentIndex = 0; // Reset to the first song
         playCurrentSong(); // Start playing the first song
     }
-    @FXML
-    protected void onNextButtonClick() {
-        if (currentPlaylist.isEmpty()) {
-            System.out.println("No songs available in the playlist.");
-            return;
-        }
 
-        int startIndex = currentIndex; // Save the current index to avoid infinite loops
-        do {
-            // Move to the next song
-            currentIndex = (currentIndex + 1) % currentPlaylist.size();
-            Metadata nextSong = currentPlaylist.get(currentIndex);
+    //beginning of play buttons
+    /// Icons works same as buttons.
+    //will delete this in the future
 
-            if (!isUserLibrary || isSongFileAvailable(nextSong)) {
-                playCurrentSong();
-                return;
-            }
-        } while (currentIndex != startIndex); // Stop if we've looped back to the original song
+//    @FXML
+//    protected void onPlayButtonClick() {
+//        if (currentPlaylist.isEmpty()) {
+//            System.out.println("No songs available to play.");
+//            return;
+//        }
+//
+//        if (mediaPlayer == null || mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED) {
+//            // Play the current song
+//            playCurrentSong();
+//        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
+//            // Resume the song if it's paused
+//            mediaPlayer.play();
+//            System.out.println("Resuming playback...");
+//        } else {
+//            System.out.println("Already playing...");
+//        }
+//    }
+//    @FXML
+//    protected void onPauseButtonClick() {
+//        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+//            mediaPlayer.pause();
+//            System.out.println("Playback paused.");
+//        } else {
+//            System.out.println("No song is currently playing.");
+//        }
+//    }
+//    @FXML
+//    protected void onNextButtonClick() {
+//        if (currentPlaylist.isEmpty()) {
+//            System.out.println("No songs available in the playlist.");
+//            return;
+//        }
+//
+//        int startIndex = currentIndex; // Save the current index to avoid infinite loops
+//        do {
+//            // Move to the next song
+//            currentIndex = (currentIndex + 1) % currentPlaylist.size();
+//            Metadata nextSong = currentPlaylist.get(currentIndex);
+//
+//            if (!isUserLibrary || isSongFileAvailable(nextSong)) {
+//                playCurrentSong();
+//                return;
+//            }
+//        } while (currentIndex != startIndex); // Stop if we've looped back to the original song
+//
+//        System.out.println("No valid songs available in the playlist.");
+//    }
+//    @FXML
+//    protected void onPreviousButtonClick() {
+//        if (currentPlaylist.isEmpty()) {
+//            System.out.println("No songs available in the playlist.");
+//            return;
+//        }
+//
+//        int startIndex = currentIndex; // Save the current index to avoid infinite loops
+//        do {
+//            // Move to the previous song
+//            currentIndex = (currentIndex - 1 + currentPlaylist.size()) % currentPlaylist.size();
+//            Metadata previousSong = currentPlaylist.get(currentIndex);
+//
+//            if (!isUserLibrary || isSongFileAvailable(previousSong)) {
+//                playCurrentSong();
+//                return;
+//            }
+//        } while (currentIndex != startIndex); // Stop if we've looped back to the original song
+//
+//        System.out.println("No valid songs available in the playlist.");
+//    }
+//    @FXML
+//    public void onShuffleCLick(ActionEvent actionEvent) {
+//        if (currentPlaylist.isEmpty()) {
+//            System.out.println("No songs available to shuffle.");
+//            return;
+//        }
+//
+//        if (isUserLibrary) {
+//            // Filter out non-downloaded songs in the user library
+//            currentPlaylist = FXCollections.observableArrayList(
+//                    currentPlaylist.filtered(this::isSongFileAvailable)
+//            );
+//        } else {
+//            // Make a mutable copy for shuffling
+//            currentPlaylist = FXCollections.observableArrayList(currentPlaylist);
+//        }
+//
+//        // Shuffle the mutable playlist
+//        FXCollections.shuffle(currentPlaylist);
+//
+//        // Reset to the first song in the shuffled playlist
+//        currentIndex = 0;
+//        playCurrentSong();
+//    }
 
-        System.out.println("No valid songs available in the playlist.");
-    }
-    @FXML
-    protected void onPreviousButtonClick() {
-        if (currentPlaylist.isEmpty()) {
-            System.out.println("No songs available in the playlist.");
-            return;
-        }
-
-        int startIndex = currentIndex; // Save the current index to avoid infinite loops
-        do {
-            // Move to the previous song
-            currentIndex = (currentIndex - 1 + currentPlaylist.size()) % currentPlaylist.size();
-            Metadata previousSong = currentPlaylist.get(currentIndex);
-
-            if (!isUserLibrary || isSongFileAvailable(previousSong)) {
-                playCurrentSong();
-                return;
-            }
-        } while (currentIndex != startIndex); // Stop if we've looped back to the original song
-
-        System.out.println("No valid songs available in the playlist.");
-    }
-    @FXML
-    public void onShuffleCLick(ActionEvent actionEvent) {
-        if (currentPlaylist.isEmpty()) {
-            System.out.println("No songs available to shuffle.");
-            return;
-        }
-
-        if (isUserLibrary) {
-            // Filter out non-downloaded songs in the user library
-            currentPlaylist = FXCollections.observableArrayList(
-                    currentPlaylist.filtered(this::isSongFileAvailable)
-            );
-        } else {
-            // Make a mutable copy for shuffling
-            currentPlaylist = FXCollections.observableArrayList(currentPlaylist);
-        }
-
-        // Shuffle the mutable playlist
-        FXCollections.shuffle(currentPlaylist);
-
-        // Reset to the first song in the shuffled playlist
-        currentIndex = 0;
-        playCurrentSong();
-    }
+    ////////////end of play buttons
     private boolean isSongFileAvailable(Metadata song) {
         String filePath = UserSession.getInstance().getLocalStoragePath() + File.separator + song.getBlobName();
         File file = new File(filePath);
@@ -907,7 +931,6 @@ public class MusicController {
 
         initializeMediaPlayer(filePath, currentSong.getSongName(), currentSong.getArtist());
     }
-
 
 
     private void skipToNextAvailableSong() {
@@ -950,12 +973,16 @@ public class MusicController {
         // Toggle the theme mode flag
         isDarkMode = !isDarkMode;
     }
+
     public void handlePreferencesAction(ActionEvent actionEvent) {
     }
+
     public void handleHelpAction(ActionEvent actionEvent) {
     }
+
     public void handlePaymentAction(ActionEvent actionEvent) {
     }
+
     public void handleSetting_btn(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/settings.fxml"));
         Parent root = loader.load();
@@ -964,6 +991,7 @@ public class MusicController {
         settingsStage.show();
 
     }
+
     public void handleLikes_btn(ActionEvent event) {
     }
 
@@ -990,8 +1018,10 @@ public class MusicController {
 
     public void handleSearch_btn(ActionEvent event) {
     }
+
     public void handleHome_btn(ActionEvent event) {
     }
+
     //should bring user back to the loin in screen
     public void handleLogOutAction(ActionEvent event) {
 
@@ -1014,6 +1044,7 @@ public class MusicController {
             e.printStackTrace();
         }
     }
+
     public void handleUpload_btn(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
@@ -1060,6 +1091,7 @@ public class MusicController {
             alert.showAndWait();
         }
     }
+
     private Task<Void> createUploadTask(File file) {
         return new Task<>() {
             @Override
@@ -1099,6 +1131,7 @@ public class MusicController {
             }
         };
     }
+
     private void saveMetadataToDatabase(Map<String, String> metadata, String blobName, String userId) {
         try (Connection conn = DriverManager.getConnection(DataBase.DB_URL, DataBase.USERNAME, DataBase.PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(
@@ -1121,6 +1154,7 @@ public class MusicController {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void handleRefreshUserLibrary(ActionEvent event) {
         // Logic to refresh the user library
@@ -1128,22 +1162,6 @@ public class MusicController {
         ObservableList<Metadata> library = FXCollections.observableArrayList(database.getUserLibrary(userId));
         userLib.setItems(library);
     }
-
-
-    //method to handle search in the search bar
-    public void handleSearch(ActionEvent event) {
-//        ///dummy data
-//        String query = searchBar.getText().toLowerCase().trim();
-//        if (query.isEmpty()) {
-//            resultsList.setItems(data); // Show all items if search is empty
-//            return;
-//        }
-//
-//        // Filter data based on the query
-//        ObservableList<String> filteredData = data.filtered(item -> item.toLowerCase().contains(query));
-//        resultsList.setItems(filteredData); // Update ListView with filtered results
-    }
-
 
 
     ///this is to see is list can be worked with database
@@ -1209,32 +1227,175 @@ public class MusicController {
         });
     }
 
-    void displaySearchBar(){
+    void displaySearchBar() {
         musicDB = new MusicDB();
         allSongs = FXCollections.observableArrayList();
         populateSongListView();
         setupSearchBarBehavior();
     }
 
-    public void performSearchDBS(ActionEvent event) {
-    }
 
-//    public Button refreshUserLibButton;
-
+    //makes user lib appear. This helps organize the page a bit better
     public void handleUserLib(ActionEvent event) {
         System.out.println("userLib clicked");
 
-        //for refreshUserLibButton button to appear
-        boolean isCurrentlyVisible_btn = refreshUserLibButton.isVisible();
-        refreshUserLibButton.setVisible(!isCurrentlyVisible_btn);
+        boolean isCurrentlyVisible_vbox = userLib_vbox.isVisible();
+        userLib_vbox.setVisible(!isCurrentlyVisible_vbox);
 
-        //for userLib view to display
-        boolean isCurrentlyVisible = userLib.isVisible();
-        userLib.setVisible(!isCurrentlyVisible);
 
-        // If making it visible, also validate downloaded songs
-        if (!isCurrentlyVisible && !isCurrentlyVisible_btn) {
+        if (!isCurrentlyVisible_vbox) {
             validateDownloadedSongs();
         }
+
+
     }
+
+    /**
+     * icons for search and playing music
+     *
+     * @param event
+     */
+    //search method with icon image
+    public void handleIconSearch(MouseEvent event) {
+        System.out.println("Icon clicked");
+    }
+
+    public void handleOnPrevious_icon(MouseEvent event) {
+        if (currentPlaylist.isEmpty()) {
+            System.out.println("No songs available in the playlist.");
+            return;
+        }
+
+        int startIndex = currentIndex; // Save the current index to avoid infinite loops
+        do {
+            // Move to the previous song
+            currentIndex = (currentIndex - 1 + currentPlaylist.size()) % currentPlaylist.size();
+            Metadata previousSong = currentPlaylist.get(currentIndex);
+
+            if (!isUserLibrary || isSongFileAvailable(previousSong)) {
+                playCurrentSong();
+                return;
+            }
+        } while (currentIndex != startIndex); // Stop if we've looped back to the original song
+
+        System.out.println("No valid songs available in the playlist.");
+    }
+
+    public void handleOnPlay_icon(MouseEvent event) {
+        if (currentPlaylist.isEmpty()) {
+            System.out.println("No songs available to play.");
+            return;
+        }
+
+        if (mediaPlayer == null || mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED) {
+            // Play the current song
+            playCurrentSong();
+        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
+            // Resume the song if it's paused
+            mediaPlayer.play();
+            System.out.println("Resuming playback...");
+        } else {
+            System.out.println("Already playing...");
+        }
+    }
+
+    public void handleOnPause_icon(MouseEvent event) {
+        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            mediaPlayer.pause();
+            System.out.println("Playback paused.");
+        } else {
+            System.out.println("No song is currently playing.");
+        }
+    }
+
+    public void handleOnNext_icon(MouseEvent event) {
+        if (currentPlaylist.isEmpty()) {
+            System.out.println("No songs available in the playlist.");
+            return;
+        }
+
+        int startIndex = currentIndex; // Save the current index to avoid infinite loops
+        do {
+            // Move to the next song
+            currentIndex = (currentIndex + 1) % currentPlaylist.size();
+            Metadata nextSong = currentPlaylist.get(currentIndex);
+
+            if (!isUserLibrary || isSongFileAvailable(nextSong)) {
+                playCurrentSong();
+                return;
+            }
+        } while (currentIndex != startIndex); // Stop if we've looped back to the original song
+
+        System.out.println("No valid songs available in the playlist.");
+    }
+
+    public void handleOnShuffle_icon(MouseEvent event) {
+        if (currentPlaylist.isEmpty()) {
+            System.out.println("No songs available to shuffle.");
+            return;
+        }
+
+        if (isUserLibrary) {
+            // Filter out non-downloaded songs in the user library
+            currentPlaylist = FXCollections.observableArrayList(
+                    currentPlaylist.filtered(this::isSongFileAvailable)
+            );
+        } else {
+            // Make a mutable copy for shuffling
+            currentPlaylist = FXCollections.observableArrayList(currentPlaylist);
+        }
+
+        // Shuffle the mutable playlist
+        FXCollections.shuffle(currentPlaylist);
+
+        // Reset to the first song in the shuffled playlist
+        currentIndex = 0;
+        playCurrentSong();
+    }
+
+
+//    private ImageView profilePic; // next to the username should display a pic of the user and should be allowed to change it
+
+    //displaying profile picture
+        public void displayUserProfileImage(String imageUrl) {
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                // Load the image from the URL or local path
+                Image image = new Image(imageUrl);
+                profilePic.setImage(image);
+            } else {
+
+
+                File file = new File("src/main/resources/com/example/musicresources/icons/user_icon.png");
+                if (file.exists()) {
+                    profilePic.setImage(new Image(file.toURI().toString()));
+                } else {
+                    // Fallback or default action if the image is not found
+                    System.out.println("Default image not found");
+                }
+
+            }
+    }
+
+    // Handle image import
+
+    // Handle image import
+    public void handleimportImage(MouseEvent event) {
+
+        if (profilePic != null) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+            File selectedFile = fileChooser.showOpenDialog(null);
+
+            if (selectedFile != null) {
+                Image image = new Image(selectedFile.toURI().toString());
+                profilePic.setImage(image);
+
+                // Update profile image in database
+                database.updateProfileImageInDatabase(selectedFile.toURI().toString());
+            }
+        } else {
+            System.out.println("profileImageView is not initialized!");
+        }
+    }
+
 }

@@ -3,6 +3,7 @@ package datab;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Metadata;
+import service.UserSession;
 
 import java.sql.*;
 
@@ -39,13 +40,33 @@ public class DataBase {
             try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
                  Statement statement = conn.createStatement()) {
 
+
+                // Check if the 'profile_image_url' column exists
+                String checkColumnQuery = "SELECT COUNT(*) AS cnt " +
+                        "FROM INFORMATION_SCHEMA.COLUMNS " +
+                        "WHERE TABLE_SCHEMA = '" + DB_NAME + "' " +
+                        "AND TABLE_NAME = 'users' " +
+                        "AND COLUMN_NAME = 'profile_image_url'";
+
+                try (PreparedStatement checkStmt = conn.prepareStatement(checkColumnQuery);
+                     ResultSet rs = checkStmt.executeQuery()) {
+
+                    if (rs.next() && rs.getInt("cnt") == 0) {
+                        // Column doesn't exist, so we add it
+                        String alterTableQuery = "ALTER TABLE users ADD COLUMN profile_image_url VARCHAR(255)";
+                        statement.executeUpdate(alterTableQuery);
+                    }
+                }
+
                 // Create users table
                 String createUserTable = "CREATE TABLE IF NOT EXISTS users (" +
                         "id INT(10) NOT NULL PRIMARY KEY AUTO_INCREMENT," +
                         "first_name VARCHAR(200) NOT NULL," +
                         "last_name VARCHAR(200) NOT NULL," +
                         "email VARCHAR(200) NOT NULL UNIQUE," +
-                        "password VARCHAR(255) NOT NULL)";
+                        "password VARCHAR(255) NOT NULL," +
+                        "profile_image_url VARCHAR(255))";  // Correctly added the profile_image_url column
+
                 statement.executeUpdate(createUserTable);
 
                 // Check if the 'local_storage_path' column exists and add if not
@@ -514,4 +535,47 @@ public class DataBase {
         }
         return null; // Return null if not found or an error occurs
     }
+
+
+    //method to save profile image
+    // Method to update the profile image URL in the database
+    public void updateProfileImageInDatabase(String imageUrl) {
+        // Assuming you have a connection to the database
+        int userId = UserSession.getUserId();
+        String updateQuery = "UPDATE users SET profile_image_url = ? WHERE id = ?";  // Replace ? with the user's ID
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
+            stmt.setString(1, imageUrl);  // Set the image URL
+            stmt.setInt(2, userId);  // Assuming you have the user's ID in a variable (replace userId with the actual variable)
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Profile image updated successfully!");
+            } else {
+                System.out.println("Failed to update profile image.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //get the profile image
+    public String getUserProfileImageUrl(int userId) {
+        String query = "SELECT profile_image_url FROM users WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("profile_image_url");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Return null if no profile image is found
+    }
+
+
 }
