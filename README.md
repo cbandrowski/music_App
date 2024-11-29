@@ -14,7 +14,6 @@
     - [Clone the Repository](#clone-the-repository)  
     - [Build the Project](#build-the-project)  
     - [Configure Azure Blob Storage](#configure-azure-blob-storage)  
-    - [Run the Application](#run-the-application)  
 6. [Folder Structure](#folder-structure)  
 ---
 
@@ -99,12 +98,6 @@ git clone <repository-url>
   private static final String CONNECTION_STRING = "<Your_Azure_Connection_String>";
   ```  
 - Ensure the Container Name is media-files.  
-
-## Run the Application  
-- Use your IDE to run the Main class or package the application as a JAR file:  
-  ```bash
-  java -jar Melodify.jar
-  ```
 
 ---
 
