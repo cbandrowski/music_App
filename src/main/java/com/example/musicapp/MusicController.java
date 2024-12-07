@@ -123,9 +123,7 @@ public class MusicController {
     @FXML
     private BorderPane profilePane;
 
-    @FXML
-    private TextArea searchBar; //used to search up songs
-
+    
     @FXML
     private ListView<String> songListView; //displays the result
 
@@ -151,10 +149,6 @@ public class MusicController {
 
 
     public void initialize() {
-
-        ///to display search bar
-        displaySearchBar();
-
         // Retrieve user session details
         UserSession session = UserSession.getInstance();
 

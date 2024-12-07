@@ -24,12 +24,10 @@ public class MusicDB {
                 .containerName("media-files")
                 .buildClient();
     }
-
     public void uploadFile(String filePath, String blobName) {
         BlobClient blobClient = containerClient.getBlobClient(blobName);
         blobClient.uploadFromFile(filePath);
     }
-
     public BlobContainerClient getContainerClient() {
         return containerClient;
     }
@@ -70,7 +68,6 @@ public class MusicDB {
 
         return metadataBuilder.toString();
     }
-
     public void downloadFileWithProgress(String blobName, String destinationPath, BiConsumer<Long, Long> progressCallback) throws Exception {
         MusicDB musicDB = new MusicDB();
 
