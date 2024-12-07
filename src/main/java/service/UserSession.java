@@ -7,7 +7,7 @@ import java.util.prefs.Preferences;
 public class UserSession {
     private static UserSession instance;
 
-    private int userId; // Add user ID for database interactions
+    private static int userId; // Add user ID for database interactions
     private String email;
     private String userName;
     private String privileges;
@@ -54,7 +54,7 @@ public class UserSession {
         return instance;
     }
 
-    public int getUserId() {
+    public static int getUserId() {
         return userId;
     }
 

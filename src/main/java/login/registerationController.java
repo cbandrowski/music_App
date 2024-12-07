@@ -99,16 +99,17 @@ public class registerationController {
 
     public void handleBackToLogin() {
         try {
-            // Example logic to load the login page
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+            // Correct path to FXML file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/login.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) statusMessage.getScene().getWindow();
+            Stage stage = (Stage) statusMessage.getScene().getWindow(); // Or another reference to your stage
             stage.setScene(new Scene(root));
             stage.setTitle("Login");
         } catch (IOException e) {
             System.err.println("Error loading login page: " + e.getMessage());
         }
     }
+
 
     public void pickStorageLocation(ActionEvent actionEvent) {
         DirectoryChooser directoryChooser = new DirectoryChooser();

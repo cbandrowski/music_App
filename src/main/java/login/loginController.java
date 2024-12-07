@@ -40,6 +40,9 @@ public class loginController {
             private int userId;
             private String fullName;
 
+            private String profileImageUrl; // holds the profile image URL
+
+
             @Override
             protected Boolean call() throws Exception {
                 database.connectToDatabase();
@@ -49,6 +52,8 @@ public class loginController {
                     // Fetch user details
                     userId = database.getUserId(email);
                     fullName = database.getUserFullName(email);
+                    profileImageUrl = database.getUserProfileImageUrl(userId); // gets profile image URL
+
 
                     // Ensure valid user data is fetched
                     return userId > 0 && fullName != null;
@@ -68,6 +73,12 @@ public class loginController {
                         // Load the MusicApplication FXML
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/music-view.fxml"));
                         Parent root = loader.load();
+
+                        // Access MusicController from the FXMLLoader
+                        MusicController musicController = loader.getController();
+
+                        // Set the profile image URL in MusicController
+                        musicController.displayUserProfileImage(profileImageUrl);
 
                         // Launch the MusicApplication
                         Stage musicStage = new Stage();
@@ -97,6 +108,8 @@ public class loginController {
         // Run the task on a background thread
         new Thread(loginTask).start();
     }
+
+
 
 
 

@@ -1,78 +1,117 @@
-**Melodify Application**
+### Melodify Application
 
 
-**Project Overview**
-The Music Application project is designed to provide an intuitive platform for users to browse, play, and download music seamlessly. Built with JavaFX for the frontend and a robust backend, this application aims to deliver a smooth user experience with a clean and modern interface styled with a blue theme.
+## Table of Contents
 
-**Project Goals**
-Develop a user-friendly music library interface.
-Implement functionality for browsing and downloading music.
-Ensure a cohesive design with a blue-themed interface.
-Create a test implementation for functionality verification if the music files are not yet finalized.
+1. [Project Overview](#project-overview)  
+2. [Project Goals](#project-goals)  
+3. [Key Features](#key-features)  
+4. [Technologies Used](#technologies-used)  
+    - [Frontend](#frontend)  
+    - [Backend](#backend)  
+    - [Version Control](#version-control)  
+5. [Setup Instructions](#setup-instructions)  
+    - [Clone the Repository](#clone-the-repository)  
+    - [Build the Project](#build-the-project)  
+    - [Configure Azure Blob Storage](#configure-azure-blob-storage)  
+6. [Folder Structure](#folder-structure)  
+---
 
+## Project Overview
 
-**Team Roles and Responsibilities**
-Team Member	Responsibilities
-Muhammad	Backend setup, FXML page creation, frontend styling
-Ranveer	FXML layout creation, frontend styling, library page
-Cody C	FXML layout creation, frontend styling
-Cody B	Backend assistance, exploring JAR files for music library
-Mian	Music library exploration, JAR file setup
+The Melodify Application is a feature-rich music platform offering users a seamless experience to browse, play, and download music. Built using JavaFX for the frontend and a robust backend, the application provides an intuitive interface styled with a clean blue-themed design. The application integrates cloud services for music storage and user data management, ensuring scalability and reliability.
 
+---
 
-**Progress Timeline**
-11/04/2024 – Initial Planning & Role Assignment
-Held the first team meeting to establish project objectives and assign roles:
-Backend setup: Muhammad
-FXML layout creation: Ranveer and Cody C
-Music library exploration: Mian and Cody B
-11/10/2024 – End of Week Progress
+## Project Goals
 
+- Develop a user-friendly interface for music browsing and library management.  
+- Provide a robust backend to handle music playback and downloads.  
+- Integrate Azure Blob Storage for storing and retrieving music files.  
+- Use Microsoft Azure for user data, playlists, and metadata storage.  
+- Ensure cohesive styling using Material Design 3 for a modern blue-themed interface.  
 
-**Achievements:**
-Ranveer completed the library page layout.
-Cody B assisted Muhammad with backend setup.
-11/11/2024 – Second Team Meeting
-Decisions:
-Finalized the project theme as Blue.
-Weekly Goals:
-Explore JAR files for music functionality (Cody B and Mian).
-Create most/all pages for the application (Muhammad, Ranveer, and Cody C).
-Work on frontend styling (Muhammad, Ranveer, and Cody C).
-11/19/2024 – Progress Updates
-Style and make FXML pages functional (frontend development).
-Implement a feature for downloading music.
-Plan a test implementation with a preset number of music files if necessary.
-Explore the Material Design 3 library for a compatible blue theme.
-Key Features
-Music Library: A dedicated page to browse and select music.
-Download Feature: Enables users to download selected tracks.
-Blue Themed Design: Ensures a visually appealing and consistent UI.
-Technologies Used
-Frontend: JavaFX, FXML
-Backend: Java
-Styling: Material Design 3, CSS
-Version Control: GitHub
-Setup Instructions
-Clone the repository:
-bash
-Copy code
+---
+
+## Key Features
+
+1. Music Library  
+   A dedicated page for browsing and managing music.  
+
+2. Download Feature  
+   Allows users to download selected tracks to their local devices.  
+
+3. Playlist Management  
+   Create, edit, and manage playlists, with options to add or remove tracks.  
+
+4. Dynamic UI Styling  
+   Switch between light and dark themes with a toggle button.  
+
+5. Azure Integration  
+   - Blob Storage: Uploads and downloads music files with progress tracking.  
+   - Database: Handles user playlists, music metadata, and profiles.  
+
+6. Search Functionality  
+   Comprehensive search for songs, albums, and artists using database and Azure Blob Storage metadata.  
+
+7. Playback Features  
+   Shuffle, play, pause, skip tracks, and view song details.  
+
+---
+
+## Technologies Used
+
+## Frontend  
+- JavaFX with FXML for UI development  
+- Material Design 3 for styling  
+- CSS for theme consistency  
+
+## Backend  
+- Java for core application logic  
+- Azure Blob Storage for media file management  
+- Azure SQL Database for user and metadata storage  
+
+## Version Control  
+- GitHub for repository management  
+
+---
+
+## Setup Instructions
+
+## Clone the Repository  
+```bash
 git clone <repository-url>
+```
+
+## Build the Project  
+- Ensure Java 17+ and Maven are installed.  
+- Open the project in an IDE such as IntelliJ IDEA or Eclipse.  
+- Run the Maven build using:  
+  ```bash
+  mvn clean install
+  ```
+
+## Configure Azure Blob Storage  
+- Set up your Azure Blob Storage account.  
+- Update the connection string in MusicController:  
+  ```java
+  private static final String CONNECTION_STRING = "<Your_Azure_Connection_String>";
+  ```  
+- Ensure the Container Name is media-files.  
+
+---
+
+## Folder Structure
+
+src/main/java  
+- controllers/: JavaFX controllers for managing UI  
+- models/: Data models for songs, playlists, and metadata  
+- services/: Azure Blob Storage and database interaction logic  
+
+src/main/resources  
+- fxml/: FXML files for the UI  
+- css/: Stylesheets for themes and design  
 
 
-**Set up dependencies:**
-Ensure JavaFX SDK is configured.
-Include required JAR files for music functionality.
-Run the application:
-Open the project in IntelliJ IDEA.
-Build and execute the main class.
-Future Plans
-Enhance functionality to support dynamic music libraries.
-Expand design to include additional themes.
-Implement user authentication for personalized features.
-Contributors
-Muhammad
-Ranveer
-Cody C
-Cody B
-Mian
+ 
+
