@@ -18,3 +18,82 @@
 .menu-item:hover {
     -fx-background-color: #2980b9; /* Example: Darker blue on hover */
 }
+/*Button */
+
+.button-d{
+     -fx-background-color: linear-gradient(to bottom, #3a5256, #2d4044); /* Dark gradient */
+        -fx-text-fill: #ffffff; /* White text for contrast */
+        -fx-font-size: 13px; /* Slightly larger font size */
+        -fx-font-weight: bold;
+        -fx-padding: 10px 15px;
+        -fx-background-radius: 8px;
+        -fx-border-radius: 8px;
+        -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 5, 0.2, 0, 2); /* Subtle shadow */
+        -fx-cursor: hand;
+        -fx-transition: all 0.3s ease; /* Smooth transition */
+}
+
+.button-d:hover{
+ -fx-background-color: linear-gradient(to bottom, #2d4044, #3a5256); /* Slightly lighter gradient on hover */
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.5), 8, 0.3, 0, 3); /* Stronger shadow on hover */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05; /* Small scaling for emphasis */
+}
+/*less intense button*/
+.button_sideBar{
+ -fx-background-color: linear-gradient(to bottom, #3a5256, #2d4044); /* Dark gradient */
+        -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 5, 0.2, 0, 2); /* Subtle shadow */
+        -fx-cursor: hand;
+        -fx-transition: all 0.3s ease; /* Smooth transition */
+}
+.button_sideBar:hover{
+ -fx-background-color: linear-gradient(to bottom, #2d4044, #3a5256); /* Slightly lighter gradient on hover */
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.5), 8, 0.3, 0, 3); /* Stronger shadow on hover */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05; /* Small scaling for emphasis */
+}
+
+
+/*side bar pain style*/
+.pane {
+    -fx-background-color: linear-gradient(to bottom right, #001f3f, #1a002b, #4d003b);
+    -fx-border-color: #ff77d4;
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-effect:
+        innershadow(gaussian, rgba(255, 255, 255, 0.2), 20, 0.5, 2, 2),
+        innershadow(gaussian, rgba(0, 0, 0, 0.5), 30, 0.3, -4, -4),
+        dropshadow(gaussian, rgba(0, 0, 0, 0.8), 25, 0.6, 0, 0);
+    -fx-padding: 15;
+}
+
+.pane::content {
+    -fx-opacity: 0.95; /* Slightly foggy look */
+}
+
+/*main pain style*/
+.pane-alt {
+    -fx-background-color: linear-gradient(to bottom right, #1a1a2e, #16213e, #0f3460, #533483);
+    -fx-border-color: rgba(255, 85, 165, 0.7);
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+
+    -fx-effect:
+        innershadow(gaussian, rgba(255, 255, 255, 0.15), 15, 0.5, 3, 3),
+        innershadow(gaussian, rgba(0, 0, 0, 0.4), 20, 0.3, -3, -3),
+        dropshadow(gaussian, rgba(0, 0, 0, 0.5), 25, 0.5, 0, 0),
+        dropshadow(gaussian, rgba(255, 85, 165, 0.3), 15, 0.5, 0, 0);
+
+    -fx-padding: 15;
+    -fx-opacity: 0.9; /* Adds a translucent glassy effect */
+    -fx-background-blur: 10; /* Creates a frosted glass effect */
+}
+
+.pane-alt::content {
+    -fx-opacity: 0.95; /* Slightly foggy content */
+    -fx-text-fill: #ffffff; /* Ensures text is readable on the translucent background */
+}
+
+
