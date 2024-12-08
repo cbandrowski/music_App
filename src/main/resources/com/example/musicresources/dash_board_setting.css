@@ -1,0 +1,103 @@
+/* Global styles */
+.root {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-background-color: linear-gradient(to bottom, #0a1a33, #1a2c4b);
+    -fx-text-fill: white;
+}
+
+/* Button styles */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #2c3e50, #34495e);
+    -fx-text-fill: white;
+    -fx-border-color: #d35400;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 1, 1);
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #34495e, #2c3e50);
+    -fx-border-color: #e67e22;
+}
+
+.button:pressed {
+    -fx-background-color: #1c2833;
+    -fx-effect: none;
+}
+
+/* TextField styles */
+.text-field {
+    -fx-background-color: #2c3e50;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #95a5a6;
+    -fx-border-color: #34495e;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 5 10;
+}
+
+.text-field:focused {
+    -fx-border-color: #d35400;
+}
+
+/* Label styles */
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: medium;
+}
+
+/* ToggleButton styles */
+.toggle-button {
+    -fx-background-color: #34495e;
+    -fx-text-fill: white;
+    -fx-border-color: #2c3e50;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.toggle-button:selected {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: black;
+}
+
+/* Slider styles */
+.slider .track {
+    -fx-background-color: #95a5a6;
+    -fx-padding: 0.5em;
+}
+
+.slider .thumb {
+    -fx-background-color: #d35400;
+}
+
+/* Table styles */
+.table-view {
+    -fx-background-color: #2c3e50;
+    -fx-table-cell-border-color: #34495e;
+    -fx-padding: 10;
+}
+
+.table-view .column-header {
+    -fx-background-color: #34495e;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-view .cell {
+    -fx-text-fill: white;
+    -fx-background-color: #2c3e50;
+}
+
+/* ScrollPane styles */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: #2c3e50;
+    -fx-border-width: 1px;
+}

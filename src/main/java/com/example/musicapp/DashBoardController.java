@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -23,7 +24,10 @@ public class DashBoardController {
     private ImageView imageView2;
     @FXML
     private ImageView imageView3;
-
+    @FXML
+    private AnchorPane aboutPane;
+    @FXML
+    private AnchorPane welcomeText;
     private int currentImageIndex = 0;
 
     private final String[] images = {
@@ -111,4 +115,43 @@ public class DashBoardController {
 //            statusMessage.setText("Failed to load Music Application.");
         }
     }
+
+
+    public void handleAbout_btn(ActionEvent event) {
+        boolean isAboutPaneVisible = aboutPane.isVisible();
+
+        // Toggle visibility
+        aboutPane.setVisible(!isAboutPaneVisible);
+        aboutPane.setManaged(!isAboutPaneVisible);
+
+        welcomeText.setVisible(isAboutPaneVisible);
+        welcomeText.setManaged(isAboutPaneVisible);
+    }
+
+    public void handleSettings(ActionEvent event) {
+        try {
+            // Load the FXML file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/dashBoardSetting.fxml"));
+            Parent root = loader.load();
+
+            // Create a new scene with fixed dimensions
+            Scene scene = new Scene(root, 556, 558); // Specify the width and height
+
+            // Get the current stage from the event source (the button)
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+
+            // Set the new scene
+            stage.setScene(scene);
+
+            // Fix the stage's size and disable resizing
+            stage.setResizable(false);
+            stage.setWidth(723);  // Fix the width
+            stage.setHeight(543); // Fix the height
+
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace(); // Debugging any potential issues
+        }
+    }
+
 }

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="707.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicapp.DashBoardSettingController">
+   <children>
+      <ImageView fitHeight="543.0" fitWidth="723.0" layoutX="-2.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@com/example/images/setting_bg.jpg" />
+         </image>
+      </ImageView>
+      <ToggleButton layoutX="258.0" layoutY="320.0" mnemonicParsing="false" onAction="#handleSupport" prefHeight="44.0" prefWidth="166.0" stylesheets="@dash_board_setting.css" text="User Feed Back">
+         <styleClass>
+            <String fx:value="button" />
+            <String fx:value="label-welcome-text" />
+         </styleClass></ToggleButton>
+      <Text fill="#f2eeee" layoutX="75.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label-welcome-title" text="Dashboard Settings" wrappingWidth="302.02442932128906">
+         <font>
+            <Font />
+         </font>
+      </Text>
+      <AnchorPane layoutX="402.0" layoutY="161.0" prefHeight="61.0" prefWidth="154.0" style="-fx-background-color: black;" styleClass="pane-alt">
+         <children>
+            <Text fill="#f2eeee" layoutX="53.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" wrappingWidth="57.224365234375">
+               <styleClass>
+                  <String fx:value="label" />
+                  <String fx:value="label-welcome-text" />
+                  <String fx:value="label-welcome-title" />
+               </styleClass>
+               <font>
+                  <Font />
+               </font>
+            </Text>
+            <Text fx:id="email" fill="#f2eeee" layoutX="119.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+               <styleClass>
+                  <String fx:value="label" />
+                  <String fx:value="label-welcome-text" />
+                  <String fx:value="label-welcome-title" />
+               </styleClass>
+            </Text>
+            <ImageView fitHeight="28.0" fitWidth="31.0" layoutX="9.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icons/email.png" />
+               </image>
+               <styleClass>
+                  <String fx:value="label-welcome-text" />
+                  <String fx:value="label-welcome-title" />
+               </styleClass>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="103.0" layoutY="160.0" prefHeight="82.0" prefWidth="129.0" style="-fx-background-color: black;" styleClass="pane-alt">
+         <children>
+            <Text fill="#f2eeee" layoutX="50.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello:" wrappingWidth="57.224365234375">
+               <styleClass>
+                  <String fx:value="label" />
+                  <String fx:value="label-welcome-text" />
+                  <String fx:value="label-welcome-title" />
+               </styleClass>
+               <font>
+                  <Font />
+               </font>
+            </Text>
+            <Text fx:id="name" fill="#faf6f6" layoutX="110.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+               <styleClass>
+                  <String fx:value="label" />
+                  <String fx:value="label-welcome-title" />
+                  <String fx:value="label-welcome-text" />
+               </styleClass>
+            </Text>
+            <ImageView fitHeight="28.0" fitWidth="31.0" layoutX="11.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icons/user2.png" />
+               </image>
+               <styleClass>
+                  <String fx:value="label-welcome-text" />
+                  <String fx:value="label-welcome-title" />
+               </styleClass>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <Button layoutX="286.0" layoutY="405.0" mnemonicParsing="false" onAction="#backToDashBoard_btn" prefHeight="44.0" prefWidth="118.0" styleClass="label-welcome-text" text="Dashboard" />
+      <ImageView fitHeight="21.0" fitWidth="22.0" layoutX="36.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@icons/settings_icon.png" />
+         </image>
+         <styleClass>
+            <String fx:value="label-welcome-text" />
+            <String fx:value="label-welcome-title" />
+         </styleClass>
+      </ImageView>
+      <ImageView fitHeight="21.0" fitWidth="22.0" layoutX="46.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@icons/settings_icon.png" />
+         </image>
+         <styleClass>
+            <String fx:value="label-welcome-text" />
+            <String fx:value="label-welcome-title" />
+         </styleClass>
+      </ImageView>
+      <ImageView fitHeight="28.0" fitWidth="31.0" layoutX="47.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@icons/settings_icon.png" />
+         </image>
+         <styleClass>
+            <String fx:value="label-welcome-text" />
+            <String fx:value="label-welcome-title" />
+         </styleClass>
+      </ImageView>
+      <TextArea fx:id="help_text_view" layoutX="70.0" layoutY="76.0" prefHeight="238.0" prefWidth="554.0" styleClass="pane-alt" visible="false" />
+      <Button fx:id="send" layoutX="486.0" layoutY="236.0" mnemonicParsing="false" onAction="#handleSend_btn" style="-fx-text-fill: black; -fx-background-color: transparent;" text="Send" visible="false" />
+   </children>
+   <stylesheets>
+      <URL value="@dash_board_setting.css" />
+      <URL value="@dash_Board.css" />
+   </stylesheets>
+</AnchorPane>
