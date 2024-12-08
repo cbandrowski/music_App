@@ -23,6 +23,8 @@ public class DashBoardSettingController {
     @FXML
     private TextArea help_text_view;
 
+    private String profileImageUrl;
+
 
     @FXML
     public void initialize() {
@@ -32,6 +34,16 @@ public class DashBoardSettingController {
         // Set the user details in the Text fields
         name.setText(userSession.getUserName());
         email.setText(userSession.getEmail());
+
+        // issue is when going from settings to dashboard and then music view the profile is not saved.
+        // attempting to save and pass image between scenes
+//        DashBoardController dBS = new DashBoardController();
+//        dBS.setUserProfileImage(profileImageUrl);
+//
+//        MusicController mC = new MusicController();
+//        mC.displayUserProfileImage(profileImageUrl);
+
+
     }
     public void backToDashBoard_btn(ActionEvent event) {
         try {

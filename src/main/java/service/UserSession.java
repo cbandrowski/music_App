@@ -12,6 +12,9 @@ public class UserSession {
     private String userName;
     private String privileges;
 
+    private String profileImageUrl;
+
+
     private String filePath;
 
     private UserSession(int userId, String email, String userName) {
@@ -64,6 +67,14 @@ public class UserSession {
 
     public String getUserName() {
         return userName;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
 

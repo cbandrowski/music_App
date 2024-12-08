@@ -23,7 +23,7 @@ public class register {
 
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(300);
-        primaryStage.setScene(new Scene(root, 540, 480));
+        primaryStage.setScene(new Scene(root, 636, 530));
         primaryStage.show();
         // Set fixed width and height
 //        primaryStage.setScene(new Scene(root, 400, 370));

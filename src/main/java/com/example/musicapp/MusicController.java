@@ -4,6 +4,9 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.models.BlobItem;
 import datab.DataBase;
 import datab.MusicDB;
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,10 +23,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
@@ -31,6 +31,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import model.Metadata;
 import model.MetadataExtractor;
 import service.UserSession;
@@ -112,6 +113,10 @@ public class MusicController {
 
     @FXML
     private TextArea searchBar; //used to search up songs
+    @FXML
+    private Text youRock; //used to search up songs
+
+
 
     @FXML
     private ListView<String> songListView; //displays the result
@@ -122,6 +127,30 @@ public class MusicController {
     @FXML
     private Text nameId;
     private String userEmail;
+
+    @FXML
+    private ImageView songNotPlaying;
+
+    @FXML
+    private ImageView songPlaying;
+
+    @FXML
+    private ImageView pauseIcon;
+
+    @FXML
+    private ImageView playIcon;
+
+    //for image animation
+    @FXML
+    private HBox imageBox;
+    @FXML
+    private VBox side_bar;
+    @FXML
+    private ImageView headphones;
+
+    @FXML
+    private ImageView Verticalimg1, Verticalimg2, Verticalimg3, Verticalimg4, Verticalimg5;
+
 
 
     private boolean isDarkMode = false;
@@ -138,6 +167,18 @@ public class MusicController {
 
 
     public void initialize() {
+
+        images();
+        //runs animation
+       // imageAnimation();
+//        setupImageAnimations(imageBox); // Call the setup method here
+
+
+        // this should show if song is playing or not
+        songNotPlaying.setVisible(true);
+        songPlaying.setVisible(false);
+        playIcon.setVisible(true);
+        pauseIcon.setVisible(false);
 
         ///to display search bar
         displaySearchBar();
@@ -808,105 +849,7 @@ public class MusicController {
         playCurrentSong(); // Start playing the first song
     }
 
-    //beginning of play buttons
-    /// Icons works same as buttons.
-    //will delete this in the future
 
-//    @FXML
-//    protected void onPlayButtonClick() {
-//        if (currentPlaylist.isEmpty()) {
-//            System.out.println("No songs available to play.");
-//            return;
-//        }
-//
-//        if (mediaPlayer == null || mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED) {
-//            // Play the current song
-//            playCurrentSong();
-//        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
-//            // Resume the song if it's paused
-//            mediaPlayer.play();
-//            System.out.println("Resuming playback...");
-//        } else {
-//            System.out.println("Already playing...");
-//        }
-//    }
-//    @FXML
-//    protected void onPauseButtonClick() {
-//        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-//            mediaPlayer.pause();
-//            System.out.println("Playback paused.");
-//        } else {
-//            System.out.println("No song is currently playing.");
-//        }
-//    }
-//    @FXML
-//    protected void onNextButtonClick() {
-//        if (currentPlaylist.isEmpty()) {
-//            System.out.println("No songs available in the playlist.");
-//            return;
-//        }
-//
-//        int startIndex = currentIndex; // Save the current index to avoid infinite loops
-//        do {
-//            // Move to the next song
-//            currentIndex = (currentIndex + 1) % currentPlaylist.size();
-//            Metadata nextSong = currentPlaylist.get(currentIndex);
-//
-//            if (!isUserLibrary || isSongFileAvailable(nextSong)) {
-//                playCurrentSong();
-//                return;
-//            }
-//        } while (currentIndex != startIndex); // Stop if we've looped back to the original song
-//
-//        System.out.println("No valid songs available in the playlist.");
-//    }
-//    @FXML
-//    protected void onPreviousButtonClick() {
-//        if (currentPlaylist.isEmpty()) {
-//            System.out.println("No songs available in the playlist.");
-//            return;
-//        }
-//
-//        int startIndex = currentIndex; // Save the current index to avoid infinite loops
-//        do {
-//            // Move to the previous song
-//            currentIndex = (currentIndex - 1 + currentPlaylist.size()) % currentPlaylist.size();
-//            Metadata previousSong = currentPlaylist.get(currentIndex);
-//
-//            if (!isUserLibrary || isSongFileAvailable(previousSong)) {
-//                playCurrentSong();
-//                return;
-//            }
-//        } while (currentIndex != startIndex); // Stop if we've looped back to the original song
-//
-//        System.out.println("No valid songs available in the playlist.");
-//    }
-//    @FXML
-//    public void onShuffleCLick(ActionEvent actionEvent) {
-//        if (currentPlaylist.isEmpty()) {
-//            System.out.println("No songs available to shuffle.");
-//            return;
-//        }
-//
-//        if (isUserLibrary) {
-//            // Filter out non-downloaded songs in the user library
-//            currentPlaylist = FXCollections.observableArrayList(
-//                    currentPlaylist.filtered(this::isSongFileAvailable)
-//            );
-//        } else {
-//            // Make a mutable copy for shuffling
-//            currentPlaylist = FXCollections.observableArrayList(currentPlaylist);
-//        }
-//
-//        // Shuffle the mutable playlist
-//        FXCollections.shuffle(currentPlaylist);
-//
-//        // Reset to the first song in the shuffled playlist
-//        currentIndex = 0;
-//        playCurrentSong();
-//    }
-
-    ////////////end of play buttons
     private boolean isSongFileAvailable(Metadata song) {
         String filePath = UserSession.getInstance().getLocalStoragePath() + File.separator + song.getBlobName();
         File file = new File(filePath);
@@ -954,25 +897,27 @@ public class MusicController {
 
     @FXML
     protected void onThemeToggleButtonClick() {
-        // Get the current scene
         Scene scene = rootPane.getScene();
 
-        // Check if the current theme is dark or light
+        // Clear existing stylesheets
+        scene.getStylesheets().clear();
+
+        // Add music view base style
+//        scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/musicView.css").toExternalForm());
+
+        // Add the selected theme
         if (isDarkMode) {
+            scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm());
             System.out.println("LightMode Active");
-            // Remove the dark theme and add the light theme
-            scene.getStylesheets().clear(); // Clear existing stylesheets
-            scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm()); // Add light theme
         } else {
-            // Remove the light theme and add the dark theme
+            scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/dark-theme.css").toExternalForm());
             System.out.println("DarkMode Active");
-            scene.getStylesheets().clear(); // Clear existing stylesheets
-            scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/dark-theme.css").toExternalForm()); // Add dark theme
         }
 
-        // Toggle the theme mode flag
+        // Toggle the flag
         isDarkMode = !isDarkMode;
     }
+
 
     public void handlePreferencesAction(ActionEvent actionEvent) {
     }
@@ -1166,7 +1111,6 @@ public class MusicController {
 
     ///this is to see is list can be worked with database
 
-
     private void populateSongListView() {
         // Fetch metadata from the database
         for (BlobItem blobItem : musicDB.getContainerClient().listBlobs()) {
@@ -1260,6 +1204,9 @@ public class MusicController {
         System.out.println("Icon clicked");
     }
 
+    /**
+    these icons are for handling playing songs
+    */
     public void handleOnPrevious_icon(MouseEvent event) {
         if (currentPlaylist.isEmpty()) {
             System.out.println("No songs available in the playlist.");
@@ -1297,6 +1244,14 @@ public class MusicController {
         } else {
             System.out.println("Already playing...");
         }
+
+        // Toggle icons: Show pause, hide play
+        playIcon.setVisible(false);
+        pauseIcon.setVisible(true);
+
+        // Toggle icons: Show 'songPlaying', hide 'songNotPlaying'
+        songNotPlaying.setVisible(false);
+        songPlaying.setVisible(true);
     }
 
     public void handleOnPause_icon(MouseEvent event) {
@@ -1306,6 +1261,13 @@ public class MusicController {
         } else {
             System.out.println("No song is currently playing.");
         }
+        // Toggle icons: Show play, hide pause
+        playIcon.setVisible(true);
+        pauseIcon.setVisible(false);
+
+        // Toggle icons: Show 'songNotPlaying', hide 'songPlaying'
+        songNotPlaying.setVisible(true);
+        songPlaying.setVisible(false);
     }
 
     public void handleOnNext_icon(MouseEvent event) {
@@ -1397,5 +1359,138 @@ public class MusicController {
             System.out.println("profileImageView is not initialized!");
         }
     }
+
+
+
+
+
+
+    // Define image URLs
+    private final String[] images = {
+            getClass().getResource("/com/example/musicresources/com/example/images/album_cover4.jpg").toString(),
+            getClass().getResource("/com/example/musicresources/com/example/images/album_cover3.jpg").toString(),
+            getClass().getResource("/com/example/musicresources/com/example/images/taylor.jpg").toString(),
+            getClass().getResource("/com/example/musicresources/com/example/images/album_cover2.jpg").toString(),
+            getClass().getResource("/com/example/musicresources/com/example/images/album_cover.jpg").toString()
+    };
+    private int currentImageIndex = 0; // To cycle through images
+
+
+    public void images(){
+        // Set the initial images for ImageView
+        Verticalimg1.setImage(new Image(images[0]));
+        Verticalimg2.setImage(new Image(images[1]));
+        Verticalimg3.setImage(new Image(images[2]));
+        Verticalimg4.setImage(new Image(images[3]));
+        Verticalimg5.setImage(new Image(images[4]));
+        Verticalimg1.setImage(new Image(images[0]));
+        Verticalimg2.setImage(new Image(images[1]));
+        Verticalimg3.setImage(new Image(images[2]));
+        Verticalimg4.setImage(new Image(images[3]));
+        Verticalimg5.setImage(new Image(images[4]));
+        // Start the fade animation
+        playFadeAnimation();
+    }
+    private void playFadeAnimation() {
+        // Define specific fade durations
+        double fadeInDuration = 1.0; // Duration for fade-in (1 second)
+        double fadeOutDuration = 1.5; // Duration for fade-out (1.5 seconds)
+
+        // Create FadeTransitions for each image with specific fade-in and fade-out durations
+        FadeTransition fadeOutImageView1 = createFadeTransition(Verticalimg1, 1.0, 0.0, fadeOutDuration);
+        FadeTransition fadeInImageView2 = createFadeTransition(Verticalimg2, 0.0, 1.0, fadeInDuration);
+        FadeTransition fadeInImageView3 = createFadeTransition(Verticalimg3, 0.0, 1.0, fadeInDuration);
+        FadeTransition fadeInImageView4 = createFadeTransition(Verticalimg4, 0.0, 1.0, fadeInDuration);
+        FadeTransition fadeInImageView5 = createFadeTransition(Verticalimg5, 0.0, 1.0, fadeInDuration);
+
+        // Create a sequential transition for smooth animation order
+        SequentialTransition sequentialTransition = new SequentialTransition();
+
+        // Add the fade transitions to the sequential transition
+        sequentialTransition.getChildren().addAll(
+                fadeOutImageView1, fadeInImageView2, fadeInImageView3, fadeInImageView4, fadeInImageView5
+        );
+
+        // Set an event for when the animation finishes
+        sequentialTransition.setOnFinished(e -> {
+            // Alternate images for the next cycle
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            Image nextImage = new Image(images[currentImageIndex]);
+
+            // Ensure the image update happens after fade-out
+            if (Verticalimg1.getOpacity() == 0) {
+                Verticalimg1.setImage(nextImage);
+            } else if (Verticalimg2.getOpacity() == 0) {
+                Verticalimg2.setImage(nextImage);
+            } else if (Verticalimg3.getOpacity() == 0) {
+                Verticalimg3.setImage(nextImage);
+            } else if (Verticalimg4.getOpacity() == 0) {
+                Verticalimg4.setImage(nextImage);
+            } else {
+                Verticalimg5.setImage(nextImage);
+            }
+
+            // Restart the animation for the next cycle
+            playFadeAnimation();
+        });
+
+        // Play the transition animation
+        sequentialTransition.play();
+    }
+
+    private FadeTransition createFadeTransition(ImageView imageView, double from, double to, double durationInSeconds) {
+        // Create the fade transition with specified duration
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(durationInSeconds), imageView);
+        fadeTransition.setFromValue(from);
+        fadeTransition.setToValue(to);
+        return fadeTransition;
+    }
+
+
+
+    private boolean sidebarVisible = false; // Track sidebar visibility
+    private boolean youRockVisible = false; // Track "You Rock!" text visibility
+
+    public void handleHeadphones(MouseEvent event) {
+        // Get the width of the sidebar for the sliding animation
+        double width = side_bar.getWidth();
+
+        // Create a TranslateTransition to slide the sidebar in or out
+        TranslateTransition slideTransition = new TranslateTransition(Duration.seconds(0.5), side_bar);
+
+        if (sidebarVisible) {
+            // Slide sidebar out of view (off-screen to the left)
+            slideTransition.setToX(-width);
+
+            // Fade out the "You Rock!" text (make invisible) when the sidebar is shown
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), youRock);
+            fadeTransition.setFromValue(1.0);
+            fadeTransition.setToValue(0.0); // Fully invisible
+            fadeTransition.play();
+
+            // Set the "You Rock!" text visibility flag to false
+            youRockVisible = false;
+        } else {
+            // Slide sidebar into view (from the left)
+            slideTransition.setToX(0);
+
+            // Fade in the "You Rock!" text (make visible) when the sidebar is hidden
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), youRock);
+            fadeTransition.setFromValue(0.0);
+            fadeTransition.setToValue(1.0); // Fully visible
+            fadeTransition.play();
+
+            // Set the "You Rock!" text visibility flag to true
+            youRockVisible = true;
+        }
+
+        // Play the sidebar slide transition
+        slideTransition.play();
+
+        // Toggle the sidebar visibility state
+        sidebarVisible = !sidebarVisible;
+    }
+
+
 
 }
