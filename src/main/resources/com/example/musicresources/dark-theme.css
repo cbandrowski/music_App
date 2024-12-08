@@ -30,7 +30,7 @@
 /* Dark theme for profilePane and overlay */
 #overlayPane {
     -fx-background-color: rgba(0, 1, 1, 0.7); /* Dark background with transparency */
-
+}
     #BorderPane {
         -fx-background-color: #000000B2;
     }
@@ -56,4 +56,4 @@
     #profilePane .button:hover {
         -fx-background-color: #666; /* Slightly lighter on hover */
     }
-}
+

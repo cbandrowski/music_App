@@ -20,25 +20,32 @@
 }
 /*Button */
 
-.button-d{
-     -fx-background-color: linear-gradient(to bottom, #3a5256, #2d4044); /* Dark gradient */
-        -fx-text-fill: #ffffff; /* White text for contrast */
-        -fx-font-size: 13px; /* Slightly larger font size */
-        -fx-font-weight: bold;
-        -fx-padding: 10px 15px;
-        -fx-background-radius: 8px;
-        -fx-border-radius: 8px;
-        -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 5, 0.2, 0, 2); /* Subtle shadow */
-        -fx-cursor: hand;
-        -fx-transition: all 0.3s ease; /* Smooth transition */
+.button-d {
+    -fx-background-color: linear-gradient(to bottom right, #2a2e58, #4e1d73); /* A more vibrant gradient to complement pane-alt */
+    -fx-text-fill: #f0f0f0; /* Light gray text for a softer contrast */
+    -fx-font-size: 14px; /* Slightly larger font size */
+    -fx-font-weight: bold; /* Bold text for emphasis */
+    -fx-padding: 10px 18px; /* Balanced padding for a sleek look */
+    -fx-background-radius: 12px; /* Rounded corners with a softer radius */
+    -fx-border-radius: 12px; /* Matching border radius */
+    -fx-border-color: rgba(255, 255, 255, 0.4); /* Lighter border color for subtle contrast */
+    -fx-border-width: 2px; /* Defined border width */
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.4), 8, 0.3, 0, 2),
+        innershadow(gaussian, rgba(0, 0, 0, 0.2), 6, 0.3, -2, -2); /* Subtle shadow effects */
+    -fx-cursor: hand; /* Changes cursor to hand on hover */
+    -fx-transition: all 0.3s ease; /* Smooth transition for hover effects */
 }
 
-.button-d:hover{
- -fx-background-color: linear-gradient(to bottom, #2d4044, #3a5256); /* Slightly lighter gradient on hover */
-    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.5), 8, 0.3, 0, 3); /* Stronger shadow on hover */
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05; /* Small scaling for emphasis */
+.button-d:hover {
+    -fx-background-color: linear-gradient(to bottom right, #4e1d73, #2a2e58); /* Reverse gradient with more contrast */
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.6), 12, 0.5, 0, 3),
+        innershadow(gaussian, rgba(255, 255, 255, 0.5), 8, 0.4, -1, -1); /* Stronger shadow on hover */
+    -fx-scale-x: 1.08; /* Slight scaling for emphasis */
+    -fx-scale-y: 1.08; /* Slight scaling for emphasis */
 }
+
 /*less intense button*/
 .button_sideBar{
  -fx-background-color: linear-gradient(to bottom, #3a5256, #2d4044); /* Dark gradient */
@@ -95,5 +102,159 @@
     -fx-opacity: 0.95; /* Slightly foggy content */
     -fx-text-fill: #ffffff; /* Ensures text is readable on the translucent background */
 }
+
+/* Apply to the ComboBox container */
+.combo-box {
+    -fx-font-family: "Arial"; /* Set the font family */
+    -fx-font-size: 14px; /* Set the font size */
+    -fx-text-fill: #333333; /* Set the text color */
+    -fx-border-color: #aaaaaa; /* Border color */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-color: #ffffff; /* Background color */
+    -fx-padding: 5px; /* Padding inside the ComboBox */
+}
+
+/* Change the dropdown list items */
+.combo-box-popup .list-cell {
+    -fx-font-family: "Arial"; /* Same font as ComboBox */
+    -fx-font-size: 14px; /* Font size for items */
+    -fx-text-fill: white; /* Text color for items */
+}
+
+/* Highlight selected item in the dropdown */
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #e6f7ff; /* Light blue hover background */
+    -fx-text-fill: #000000; /* Dark text on hover */
+}
+
+/* Style the arrow button */
+.combo-box .arrow {
+    -fx-background-color: #dddddd; /* Background color of the arrow button */
+    -fx-padding: 5px; /* Padding for the arrow button */
+}
+
+/* TableView Style */
+.table-view {
+    -fx-background-color: #1e1e1e; /* Dark background to reflect a music player */
+    -fx-border-color: #333333; /* Dark border */
+    -fx-border-width: 2px;
+    -fx-font-size: 12px; /* Smaller font size for compact look */
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-alignment: center-left; /* Align text to the left */
+    -fx-padding: 8px; /* Less padding for a more compact appearance */
+    -fx-spacing: 8px; /* Less spacing between rows */
+}
+
+/* Table header style */
+.table-view .column-header-background {
+    -fx-background-color: #f0b700; /* Golden/yellow color for the header */
+    -fx-border-color: #333333;
+    -fx-border-width: 0 0 2px 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white; /* White text for header */
+    -fx-font-weight: bold;
+    -fx-padding: 6px; /* Smaller padding for header */
+}
+
+/* Table row style */
+.table-view .table-row-cell {
+    -fx-background-color: #2c2c2c; /* Slightly lighter dark background for rows */
+    -fx-border-color: #333333;
+    -fx-border-width: 0 0 1px 0;
+}
+
+/* Row hover effect */
+.table-view .table-row-cell:hover {
+    -fx-background-color: #444444; /* Darker shade when hovering */
+    -fx-text-fill: #f0b700; /* Yellow text on hover */
+}
+
+/* Selected row style */
+.table-view .table-row-cell:selected {
+    -fx-background-color: #f0b700; /* Yellow background for selected row */
+    -fx-text-fill: black; /* Black text on selected row */
+}
+
+/* Table cell style */
+.table-view .table-cell {
+    -fx-padding: 6px 8px; /* Smaller padding for cells */
+    -fx-text-fill: #ffffff; /* White text for cell content */
+    -fx-font-size: 12px; /* Smaller font size for compact look */
+}
+
+/* Even row background */
+.table-view .table-row-cell:even {
+    -fx-background-color: #333333; /* Darker background for even rows */
+}
+
+/* Odd row background */
+.table-view .table-row-cell:odd {
+    -fx-background-color: #292929; /* Slightly lighter dark background for odd rows */
+}
+
+/* Focused cell effect */
+.table-view .table-cell:focused {
+    -fx-background-color: #f0b700;
+    -fx-text-fill: black;
+}
+
+/* Adding subtle shadow effect for the table */
+.table-view {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0, 0);
+}
+/* Dark Background with Violet Accent for Column Names */
+.table-view {
+    -fx-background-color: #1e1e1e; /* Black background */
+    -fx-border-color: #d4af37; /* Gold border */
+    -fx-border-width: 2px;
+    -fx-font-size: 12px;
+    -fx-font-family: 'Arial', sans-serif;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #1e1e1e; /* Dark background for header */
+}
+
+.table-view .column-header {
+    -fx-text-fill: #00FFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #2c2c2c;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #444444;
+    -fx-text-fill: #f0b700;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #f0b700;
+    -fx-text-fill: black;
+}
+
+/*You rock*/
+/* styles.css */
+
+/* Style for the "You Rock" text */
+.rock-text {
+    -fx-font-family: 'Impact', sans-serif; /* Strong font for a bold look */
+    -fx-font-size: 48px; /* Large font size for emphasis */
+    -fx-font-weight: bold; /* Make it bold */
+    -fx-text-fill: linear-gradient(from 0% 0% to 100% 100%, #ff0000, #ffff00); /* Gradient from red to yellow */
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.9, 0, 0); /* Glowing shadow effect */
+    -fx-stroke: black; /* Black outline for contrast */
+    -fx-stroke-width: 2; /* Outline width */
+    -fx-background-insets: 0; /* Remove background */
+    -fx-padding: 20px; /* Padding around text */
+    -fx-alignment: center; /* Center the text */
+    -fx-text-alignment: center; /* Center text alignment */
+}
+
+
 
 

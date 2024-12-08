@@ -1,5 +1,6 @@
 package login;
 
+import com.example.musicapp.DashBoardController;
 import com.example.musicapp.MusicController;
 import datab.DataBase;
 import javafx.concurrent.Task;
@@ -31,92 +32,90 @@ public class loginController {
     private DataBase database = new DataBase();
     MusicController mC = new MusicController();
 
-    public void handleLogin() {
-        String email = usernameField.getText().trim();
-        String password = passwordField.getText().trim();
+public void handleLogin() {
+    String email = usernameField.getText().trim();
+    String password = passwordField.getText().trim();
 
-        // Asynchronous login task
-        Task<Boolean> loginTask = new Task<>() {
-            private int userId;
-            private String fullName;
+    Task<Boolean> loginTask = new Task<>() {
+        private int userId;
+        private String fullName;
+        private String profileImageUrl;
 
-            private String profileImageUrl; // holds the profile image URL
-
-
-            @Override
-            protected Boolean call() throws Exception {
-                database.connectToDatabase();
-
-                // Verify user credentials
-                if (database.loginUser(email, password)) {
-                    // Fetch user details
-                    userId = database.getUserId(email);
-                    fullName = database.getUserFullName(email);
-                    profileImageUrl = database.getUserProfileImageUrl(userId); // gets profile image URL
-
-
-                    // Ensure valid user data is fetched
-                    return userId > 0 && fullName != null;
-                }
-                return false; // Invalid login credentials
+        @Override
+        protected Boolean call() throws Exception {
+            database.connectToDatabase();
+            if (database.loginUser(email, password)) {
+                userId = database.getUserId(email);
+                fullName = database.getUserFullName(email);
+                profileImageUrl = database.getUserProfileImageUrl(userId);
+                return userId > 0 && fullName != null;
             }
+            return false;
+        }
 
-            @Override
-            protected void succeeded() {
+        protected void succeeded() {
+            // Check if the email or password fields are empty
+            if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+                // If either field is empty, show a message asking the user to enter both
+                statusMessage.setText("Please enter both email and password.");
+            } else {
+                // Proceed with the login logic if both fields are filled
                 if (getValue()) {
-                    // Login successful, set up the user session
                     UserSession session = UserSession.getInstance(userId, email, fullName);
-
                     statusMessage.setText("Login successful!");
 
                     try {
-                        // Load the MusicApplication FXML
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/music-view.fxml"));
+                        // Load the dashboard FXML
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/dashboard.fxml"));
                         Parent root = loader.load();
 
-                        // Access MusicController from the FXMLLoader
-                        MusicController musicController = loader.getController();
+                        // Access the DashboardController
+                        DashBoardController dashboardController = loader.getController();
 
-                        // Set the profile image URL in MusicController
-                        musicController.displayUserProfileImage(profileImageUrl);
+                        // Pass the profile image URL to the dashboard controller (remove if no image is needed on dashboard)
+                        dashboardController.setUserProfileImage(profileImageUrl);
 
-                        // Launch the MusicApplication
-                        Stage musicStage = new Stage();
-                        musicStage.setScene(new Scene(root));
-                        musicStage.show();
+                        // Create a new stage for the dashboard
+                        Stage dashboardStage = new Stage();
+                        dashboardStage.setScene(new Scene(root));
+
+                        dashboardStage.setHeight(794);
+                        dashboardStage.setResizable(true);
+
+                        // Show the dashboard window
+                        dashboardStage.show();
 
                         // Close the login stage
                         Stage loginStage = (Stage) usernameField.getScene().getWindow();
                         loginStage.close();
-                    } catch (Exception e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
-                        statusMessage.setText("Failed to load Music Application.");
+                        statusMessage.setText("Failed to load Dashboard.");
                     }
                 } else {
                     statusMessage.setText("Invalid username or password.");
-                    System.out.println("Invalid login attempt for email: " + email);
                 }
             }
-
-            @Override
-            protected void failed() {
-                statusMessage.setText("An error occurred during login.");
-                getException().printStackTrace();
-            }
-        };
-
-        // Run the task on a background thread
-        new Thread(loginTask).start();
-    }
+        }
 
 
+        @Override
+        protected void failed() {
+            statusMessage.setText("An error occurred during login.");
+            getException().printStackTrace();
+        }
+    };
 
+    new Thread(loginTask).start();
+}
 
 
     // Method to open the registration screen
-    public void handleRegister() throws Exception {
+    public void handleRegister(ActionEvent event) throws Exception {
         register screen = new register();
         screen.start(new Stage());
+        // Close the login window
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
     public void handleForgotPassword(ActionEvent event) {

@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-public class login extends Application {
+public class login extends Application { //
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -17,7 +17,7 @@ public class login extends Application {
         Parent root = loader.load();
         preloadResources();
         primaryStage.setTitle("Music App Login");
-        primaryStage.setScene(new Scene(root, 697, 440));
+        primaryStage.setScene(new Scene(root, 795, 500));
         primaryStage.show();
     }
     public void preloadResources() {

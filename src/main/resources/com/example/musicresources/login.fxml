@@ -12,19 +12,17 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="463.0" prefWidth="733.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.loginController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="502.0" prefWidth="795.0" style="-fx-background-color: black;" stylesheets="@login.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.loginController">
 
     <children>
         <!-- Background ImageView covering the entire AnchorPane -->
-        <ImageView fitHeight="482.0" fitWidth="734.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-27.0" AnchorPane.topAnchor="0.0">
+        <ImageView fitHeight="518.0" fitWidth="795.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="1.8968505859375" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1.0">
             <image>
                 <Image url="@com/example/images/logo.jpg" />
             </image>
 
         </ImageView>
-
-        <Text fx:id="statusMessage" layoutX="50" layoutY="220" style="-fx-fill: red;" />
-      <VBox layoutX="165.0" layoutY="30.0" prefHeight="394.0" prefWidth="368.0" styleClass="pane" stylesheets="@login.css">
+      <VBox layoutX="214.0" layoutY="33.0" prefHeight="394.0" prefWidth="368.0" styleClass="pane" stylesheets="@login.css">
          <children>
               <Label prefHeight="36.0" prefWidth="324.0" style="-fx-text-fill: #ffb3c6;" styleClass="text" text="Welcome to Melodify!" textAlignment="CENTER">
                   <font>
@@ -79,6 +77,8 @@
                   <Insets left="100.0" top="5.0" />
                </VBox.margin>
               </Button>
+      
+              <Text fx:id="statusMessage" fill="#e74c3c" styleClass="button-d" wrappingWidth="147.99999618530273" />
             <Button onAction="#handleRegister" prefHeight="42.0" prefWidth="330.0" style="-fx-background-color: #3498db; -fx-text-fill: #ffb3c6; -fx-background-color: transparent;" styleClass="button-d" text="Dont have an account? Register Here!">
                <font>
                   <Font name="Arial" size="14" />
