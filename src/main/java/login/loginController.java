@@ -1,5 +1,6 @@
 package login;
 
+import com.example.musicapp.DashBoardController;
 import com.example.musicapp.MusicController;
 import datab.DataBase;
 import javafx.concurrent.Task;
@@ -30,7 +31,7 @@ public class loginController {
     // Instance of the Database class to check credentials
     private DataBase database = new DataBase();
     MusicController mC = new MusicController();
-
+/*
     public void handleLogin() {
         String email = usernameField.getText().trim();
         String password = passwordField.getText().trim();
@@ -111,6 +112,79 @@ public class loginController {
 
 
 
+*/
+public void handleLogin() {
+    String email = usernameField.getText().trim();
+    String password = passwordField.getText().trim();
+
+    Task<Boolean> loginTask = new Task<>() {
+        private int userId;
+        private String fullName;
+        private String profileImageUrl;
+
+        @Override
+        protected Boolean call() throws Exception {
+            database.connectToDatabase();
+            if (database.loginUser(email, password)) {
+                userId = database.getUserId(email);
+                fullName = database.getUserFullName(email);
+                profileImageUrl = database.getUserProfileImageUrl(userId);
+                return userId > 0 && fullName != null;
+            }
+            return false;
+        }
+
+        @Override
+        protected void succeeded() {
+            if (getValue()) {
+                UserSession session = UserSession.getInstance(userId, email, fullName);
+
+                statusMessage.setText("Login successful!");
+
+                try {
+                    // Load the dashboard FXML
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/dashboard.fxml"));
+                    Parent root = loader.load();
+
+                    // Access the DashboardController
+                    DashBoardController dashboardController = loader.getController();
+
+                    // Pass the profile image URL to the dashboard controller (remove if no image is needed on dashboard)
+                    dashboardController.setUserProfileImage(profileImageUrl);
+
+                    // Create a new stage for the dashboard
+                    Stage dashboardStage = new Stage();
+                    dashboardStage.setScene(new Scene(root));
+
+                    // Set the new scene and resize the stage
+//                    dashboardStage.setWidth(1015); // Set the width for dashboard
+                    dashboardStage.setHeight(794); // Set the height for dashboard
+                    dashboardStage.setResizable(true); // Allow resizing for the dashboard
+
+                    // Show the dashboard window
+                    dashboardStage.show();
+
+                    // Close the login stage
+                    Stage loginStage = (Stage) usernameField.getScene().getWindow();
+                    loginStage.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    statusMessage.setText("Failed to load Dashboard.");
+                }
+            } else {
+                statusMessage.setText("Invalid username or password.");
+            }
+        }
+
+        @Override
+        protected void failed() {
+            statusMessage.setText("An error occurred during login.");
+            getException().printStackTrace();
+        }
+    };
+
+    new Thread(loginTask).start();
+}
 
 
     // Method to open the registration screen

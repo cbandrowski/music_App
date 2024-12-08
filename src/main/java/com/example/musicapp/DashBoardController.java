@@ -29,6 +29,10 @@ public class DashBoardController {
     @FXML
     private AnchorPane welcomeText;
     private int currentImageIndex = 0;
+    @FXML
+    private ImageView profileImageView;
+
+    private String profileImageUrl;
 
     private final String[] images = {
             getClass().getResource("/com/example/musicresources/com/example/images/dasahBoardPic.jpg").toString(),
@@ -46,6 +50,7 @@ public class DashBoardController {
         // Start the fade animation
         playFadeAnimation();
     }
+
 
 
     private void playFadeAnimation() {
@@ -92,29 +97,30 @@ public class DashBoardController {
 
     public void handleHome_btn(ActionEvent event) {
         try {
-            // Load the MusicApplication FXML
+            // Load the music-view.fxml to show the music application
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/music-view.fxml"));
             Parent root = loader.load();
 
-            // Access MusicController from the FXMLLoader
+            // Access the MusicController (assuming you have one)
             MusicController musicController = loader.getController();
 
-            // Set the profile image URL in MusicController
-//            musicController.displayUserProfileImage(profileImageUrl);
+            // Pass the profile image URL to the MusicController (only here, not in the dashboard)
+            musicController.displayUserProfileImage(profileImageUrl);
 
             // Launch the MusicApplication
             Stage musicStage = new Stage();
             musicStage.setScene(new Scene(root));
             musicStage.show();
 
-            // Close the login stage
-//            Stage loginStage = (Stage) usernameField.getScene().getWindow();
-//            loginStage.close();
+            // Close the current dashboard stage
+            Stage dashboardStage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            dashboardStage.close();
         } catch (Exception e) {
             e.printStackTrace();
-//            statusMessage.setText("Failed to load Music Application.");
         }
     }
+
+
 
 
     public void handleAbout_btn(ActionEvent event) {
@@ -151,6 +157,15 @@ public class DashBoardController {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace(); // Debugging any potential issues
+        }
+    }
+
+    // This method is called from the login controller to set the profile image URL
+    public void setUserProfileImage(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+        // Load the image and set it to the profileImageView
+        if (profileImageUrl != null) {
+            profileImageView.setImage(new Image(profileImageUrl));
         }
     }
 
