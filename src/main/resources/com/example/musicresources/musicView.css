@@ -118,7 +118,7 @@
 .combo-box-popup .list-cell {
     -fx-font-family: "Arial"; /* Same font as ComboBox */
     -fx-font-size: 14px; /* Font size for items */
-    -fx-text-fill: #white; /* Text color for items */
+    -fx-text-fill: white; /* Text color for items */
 }
 
 /* Highlight selected item in the dropdown */
