@@ -173,6 +173,7 @@ public class MusicController {
 
     public void initialize() {
 
+
         images();
         //runs animation
        // imageAnimation();
