@@ -242,9 +242,9 @@
 
 /* Style for the "You Rock" text */
 .rock-text {
-    -fx-font-family: 'Impact', sans-serif; /* Strong font for a bold look */
-    -fx-font-size: 48px; /* Large font size for emphasis */
-    -fx-font-weight: bold; /* Make it bold */
+    -fx-font-family: 'Impact', sans-serif;
+    -fx-font-size: 48px;
+    -fx-font-weight: bold;
     -fx-text-fill: linear-gradient(from 0% 0% to 100% 100%, #ff0000, #ffff00); /* Gradient from red to yellow */
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.9, 0, 0); /* Glowing shadow effect */
     -fx-stroke: black; /* Black outline for contrast */
@@ -255,6 +255,46 @@
     -fx-text-alignment: center; /* Center text alignment */
 }
 
+
+.menu-bar-button {
+    -fx-background-color: linear-gradient(to bottom right, #e0e0e0, #cfcfcf);
+    -fx-text-fill: #000000;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: rgba(0, 0, 0, 0.2);
+    -fx-border-width: 1.5px;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0.3, 0, 1),
+        innershadow(gaussian, rgba(255, 255, 255, 0.6), 4, 0.3, -1, -1); /* Softer shadow effects */
+    -fx-cursor: hand; /* Changes cursor to hand on hover */
+    -fx-transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.menu-bar-button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #d6d6d6, #e8e8e8); /* Slightly darker hover gradient */
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0.4, 0, 2),
+        innershadow(gaussian, rgba(255, 255, 255, 0.8), 6, 0.4, -1, -1); /* Enhanced hover shadows */
+    -fx-scale-x: 1.05; /* Subtle scaling for emphasis */
+    -fx-scale-y: 1.05; /* Subtle scaling for emphasis */
+}
+
+
+
+/* Style for MenuItem text color */
+.menu-item {
+    -fx-text-fill: #FFFFFF;  /* Set text color */
+    -fx-font-size: 14px;      /* Set font size */
+}
+
+/* Style for MenuItem when hovered */
+.menu-item:hover {
+    -fx-background-color: #4CAF50; /* Green background on hover */
+    -fx-text-fill: #FFFFFF;        /* White text on hover */
+}
 
 
 

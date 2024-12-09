@@ -5,6 +5,7 @@ import com.azure.storage.blob.models.BlobItem;
 import datab.DataBase;
 import datab.MusicDB;
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -119,7 +120,7 @@ public class MusicController {
     @FXML
     private TextArea searchBar; //used to search up songs
     @FXML
-    private Text youRock; //used to search up songs
+    private Text youRock, comingSoonText;
 
 
 
@@ -174,10 +175,14 @@ public class MusicController {
     public void initialize() {
 
 
+        //initial mode for background theme
+        rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm());
+
+
+        //images for images
         images();
-        //runs animation
-       // imageAnimation();
-//        setupImageAnimations(imageBox); // Call the setup method here
+        musicNoteFadeAnimation();
+
 
 
         // this should show if song is playing or not
@@ -911,10 +916,13 @@ public class MusicController {
 
         // Add the selected theme
         if (isDarkMode) {
-            scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm());
+            // If it's in dark mode, switch to ligh
+            rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm());
             System.out.println("LightMode Active");
         } else {
-            scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/dark-theme.css").toExternalForm());
+            // If it's in light mode, switch to dark mode
+            rootPane.getStylesheets().clear();
+            rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/musicView.css").toExternalForm());
             System.out.println("DarkMode Active");
         }
 
@@ -942,8 +950,19 @@ public class MusicController {
     }
 
     public void handleLikes_btn(ActionEvent event) {
-    }
+        // Show the text
+        comingSoonText.setVisible(true);
 
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(2.5), comingSoonText);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+
+        // After 2.5 seconds, fade out the text
+        fadeOut.setOnFinished(e -> comingSoonText.setVisible(false));
+
+        // Start the fade transition
+        fadeOut.play();
+    }
     @FXML
     public void handleLibrary_btn(ActionEvent event) {
         // Get the user ID from the session
@@ -963,12 +982,6 @@ public class MusicController {
         headerLabel.setText("User Library");
         headerLabel.setVisible(true); // Show the header label if you want it visible
         System.out.println("Switched to User Library.");
-    }
-
-    public void handleSearch_btn(ActionEvent event) {
-    }
-
-    public void handleHome_btn(ActionEvent event) {
     }
 
     //should bring user back to the loin in screen
@@ -1298,7 +1311,6 @@ public class MusicController {
             }
     }
 
-    // Handle image import
 
     // Handle image import
     public void handleimportImage(MouseEvent event) {
@@ -1321,11 +1333,7 @@ public class MusicController {
     }
 
 
-
-
-
-
-    // Define image URLs
+    // images for fading animation
     private final String[] images = {
             getClass().getResource("/com/example/musicresources/com/example/images/album_cover4.jpg").toString(),
             getClass().getResource("/com/example/musicresources/com/example/images/album_cover3.jpg").toString(),
@@ -1407,9 +1415,11 @@ public class MusicController {
     }
 
 
+    //sidebar slider
 
     private boolean sidebarVisible = false; // Track sidebar visibility
-    private boolean youRockVisible = false; // Track "You Rock!" text visibility
+
+    // Initial setup in the constructor or an initialization method
 
     public void handleHeadphones(MouseEvent event) {
         // Get the width of the sidebar for the sliding animation
@@ -1418,61 +1428,75 @@ public class MusicController {
         // Create a TranslateTransition to slide the sidebar in or out
         TranslateTransition slideTransition = new TranslateTransition(Duration.seconds(0.5), side_bar);
 
+        // Create a FadeTransition for the "You Rock!" text
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), youRock);
+
         if (sidebarVisible) {
             // Slide sidebar out of view (off-screen to the left)
             slideTransition.setToX(-width);
 
-            // Fade out the "You Rock!" text (make invisible) when the sidebar is shown
-            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), youRock);
-            fadeTransition.setFromValue(1.0);
-            fadeTransition.setToValue(0.0); // Fully invisible
-            fadeTransition.play();
-
-            // Set the "You Rock!" text visibility flag to false
-            youRockVisible = false;
+            // Fade in the "You Rock!" text
+            fadeTransition.setFromValue(0.0);
+            fadeTransition.setToValue(1.0); // Fully visible
         } else {
             // Slide sidebar into view (from the left)
             slideTransition.setToX(0);
 
-            // Fade in the "You Rock!" text (make visible) when the sidebar is hidden
-            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), youRock);
-            fadeTransition.setFromValue(0.0);
-            fadeTransition.setToValue(1.0); // Fully visible
-            fadeTransition.play();
-
-            // Set the "You Rock!" text visibility flag to true
-            youRockVisible = true;
+            // Fade out the "You Rock!" text
+            fadeTransition.setFromValue(1.0);
+            fadeTransition.setToValue(0.0); // Fully invisible
         }
 
-        // Play the sidebar slide transition
+        // Play the transitions
         slideTransition.play();
+        fadeTransition.play();
 
         // Toggle the sidebar visibility state
         sidebarVisible = !sidebarVisible;
     }
 
 
-    public void initializeSearchTable(){
+
+    private PauseTransition hideDelay; // Define a PauseTransition for delayed hiding
+
+    public void initializeSearchTable() {
+        // Initially hide the sidebar off-screen
+        side_bar.setTranslateX(-side_bar.getWidth());
+
+        // Ensure "You Rock!" text is fully visible at the start
+        youRock.setOpacity(1.0);
+
         nameResultColumn.setCellValueFactory(new PropertyValueFactory<>("songName"));
         artistResultColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         albumResultColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
         resultsTable.setVisible(false);
+
         // Add a listener to the searchBar to detect text changes
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.trim().isEmpty()) {
                 resultsTable.setVisible(false); // Hide the table if the search bar is empty
             }
         });
-        rootPane.setOnMouseClicked(event -> {
-            // Check if the click occurred outside the table
-            if (!resultsTable.isHover()) {
-                hideTableWithFade();
-            }
-        });
+
+        // Hide the table after 5 seconds of inactivity
+        hideDelay = new PauseTransition(Duration.seconds(3));
+        hideDelay.setOnFinished(event -> hideTableWithFade());
+
         // Set placeholder for empty results
         resultsTable.setPlaceholder(new Label("No results found."));
 
+        // Detect loss of focus on searchBar
+        searchBar.focusedProperty().addListener((observable, oldFocus, newFocus) -> {
+            if (!newFocus && !resultsTable.isHover()) {
+                hideTableWithFade(); // Hide the table when searchBar loses focus
+            }
+        });
+
+        // Stop hiding the table if the user hovers over it
+        resultsTable.setOnMouseEntered(event -> hideDelay.stop());
+        resultsTable.setOnMouseExited(event -> hideDelay.play());
     }
+
     @FXML
     private void performSearchDBS() {
         String query = searchBar.getText().trim();
@@ -1501,13 +1525,11 @@ public class MusicController {
 
         // Check the selected source and perform the appropriate search
         if ("UserLibrary".equalsIgnoreCase(selectedSource)) {
-            // Assuming you have user ID stored (e.g., as a session variable or constant)
             int userId = UserSession.getInstance().getUserId();
             results = database.searchSongInUserLibrary(userId, query, null, null); // You can extend the query parameters as needed
         } else if ("BlobStorage".equalsIgnoreCase(selectedSource)) {
             results = searchBlobStorage(query);
         } else {
-            // Handle unexpected source value
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Invalid Source");
@@ -1526,9 +1548,10 @@ public class MusicController {
 
         resultsTable.setItems(results);
         showTableWithFade(); // Make table visible with fade animation
+
+        // Start the delay for hiding the table
+        hideDelay.playFromStart();
     }
-
-
 
     private void showTableWithFade() {
         resultsTable.toFront();
@@ -1540,54 +1563,95 @@ public class MusicController {
     }
 
     private void hideTableWithFade() {
-        rootPane.setOnMouseClicked(event -> {
-            // Check if the click occurred outside the table
-            if (!resultsTable.isHover() && resultsTable.isVisible() &&
-                    (event.getTarget() != resultsTable && !resultsTable.lookupAll(".cell").contains(event.getTarget()))) {
-
-                // Perform fade-out animation
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(1000), resultsTable);
-                fadeOut.setFromValue(1);
-                fadeOut.setToValue(0);
-                fadeOut.setOnFinished(e -> resultsTable.setVisible(false));
-                fadeOut.play();
-            }
-        });
+        // Perform fade-out animation
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(1000), resultsTable);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> resultsTable.setVisible(false));
+        fadeOut.play();
     }
 
     private ObservableList<Metadata> searchBlobStorage(String query) {
         ObservableList<Metadata> metadataList = FXCollections.observableArrayList();
-
-        // Normalize the query for case-insensitive matching
         String normalizedQuery = query.toLowerCase();
 
-        // Fetch metadata from Blob Storage
         for (BlobItem blobItem : musicBlobDB.getContainerClient().listBlobs()) {
             try {
-                // Create a BlobClient for the current blob
                 BlobClient blobClient = musicBlobDB.getContainerClient().getBlobClient(blobItem.getName());
-
-                // Use MetadataExtractor to extract metadata from the blob
                 Metadata metadata = MetadataExtractor.extractMetadataDB(blobClient, blobItem.getName());
-
-                // Check if the metadata matches the query
                 if (matchesQuery(metadata, normalizedQuery)) {
-                    metadataList.add(metadata); // Add matching metadata to the list
+                    metadataList.add(metadata);
                 }
             } catch (Exception e) {
-                // Log the error and continue processing other blobs
                 System.err.println("Error fetching metadata for blob: " + blobItem.getName() + " - " + e.getMessage());
             }
         }
 
         return metadataList;
     }
+
     private boolean matchesQuery(Metadata metadata, String query) {
         return (metadata.getSongName() != null && metadata.getSongName().toLowerCase().contains(query)) ||
                 (metadata.getArtist() != null && metadata.getArtist().toLowerCase().contains(query)) ||
                 (metadata.getAlbum() != null && metadata.getAlbum().toLowerCase().contains(query));
     }
 
+    public void handleDashBoard_btn(ActionEvent event) {
+        try {
+            // Load the dashboard scene
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/dashBoard.fxml"));
+            Scene scene = new Scene(loader.load(), 1200, 800);
 
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Set the new scene to the stage
+            stage.setTitle("Melodify");
+            stage.setScene(scene);
+            stage.setWidth(1002);   // I like this width
+            stage.setHeight(740);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();  // Print any error that occurs during loading
+        }
+    }
+    public void handleSearch_btn(ActionEvent event) {
+        // Set focus on the search bar when the search button is clicked
+        searchBar.requestFocus();
+
+        // Optionally, show the results table (if not already visible)
+        if (!resultsTable.isVisible()) {
+            showTableWithFade();
+        }
+    }
+
+
+    ///creating tune animation
+        @FXML
+        private ImageView tune1, tune2, tune3, tune4, tune5, tune6;
+    public void musicNoteFadeAnimation() {
+        // Array of ImageView elements to apply fade animation
+        ImageView[] tunes = {tune1, tune2, tune3, tune4, tune5, tune6};
+
+        // Loop through each ImageView and apply fade-in and fade-out effect
+        for (ImageView tune : tunes) {
+            // Apply fade-in
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), tune);
+            fadeIn.setFromValue(0.0); // start fully transparent
+            fadeIn.setToValue(1.0);   // end fully visible
+
+            // Apply fade-out
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), tune);
+            fadeOut.setFromValue(1.0); // start fully visible
+            fadeOut.setToValue(0.0);   // end fully transparent
+
+            // Set up the sequence to fade in and then fade out
+            fadeIn.setCycleCount(FadeTransition.INDEFINITE); // Loop the fade-in and fade-out
+            fadeIn.setAutoReverse(true); // Make the animation reverse itself (fade-in to fade-out)
+
+            // Start the fade-in animation
+            fadeIn.play();
+        }
+    }
 
 }

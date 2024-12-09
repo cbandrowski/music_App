@@ -28,6 +28,14 @@ public class DashBoardController {
     private AnchorPane aboutPane;
     @FXML
     private AnchorPane welcomeText;
+    @FXML
+    private ImageView tune1;
+
+    @FXML
+    private ImageView tune2;
+
+    @FXML
+    private ImageView tune3;
     private int currentImageIndex = 0;
     @FXML
     private ImageView profileImageView;
@@ -49,6 +57,7 @@ public class DashBoardController {
 
         // Start the fade animation
         playFadeAnimation();
+        musicNoteFadeAnimation();
     }
 
 
@@ -166,6 +175,33 @@ public class DashBoardController {
         // Load the image and set it to the profileImageView
         if (profileImageUrl != null) {
             profileImageView.setImage(new Image(profileImageUrl));
+        }
+    }
+
+
+
+    public void musicNoteFadeAnimation() {
+        // Array of ImageView elements to apply fade animation
+        ImageView[] tunes = {tune1, tune2, tune3};
+
+        // Loop through each ImageView and apply fade-in and fade-out effect
+        for (ImageView tune : tunes) {
+            // Apply fade-in
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), tune);
+            fadeIn.setFromValue(0.0); // start fully transparent
+            fadeIn.setToValue(1.0);   // end fully visible
+
+            // Apply fade-out
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), tune);
+            fadeOut.setFromValue(1.0); // start fully visible
+            fadeOut.setToValue(0.0);   // end fully transparent
+
+            // Set up the sequence to fade in and then fade out
+            fadeIn.setCycleCount(FadeTransition.INDEFINITE); // Loop the fade-in and fade-out
+            fadeIn.setAutoReverse(true); // Make the animation reverse itself (fade-in to fade-out)
+
+            // Start the fade-in animation
+            fadeIn.play();
         }
     }
 
