@@ -479,6 +479,102 @@ The `DashBoardController` facilitates:
 
   ## Music Controller
   
+#### **Class Overview**
+
+`MusicController` is responsible for managing the user interface, audio playback, user library, and playlists. It integrates with Azure Blob Storage for media storage and retrieval, ensuring seamless user interaction.
+
+---
+
+#### **Key Features**
+
+1. **User Library Management**
+   - Displays songs with metadata (e.g., name, artist, album, duration).
+   - Allows adding songs to the library or playlists.
+   - Validates downloaded songs and updates their status.
+
+2. **Playlist Management**
+   - Create, edit, and delete playlists.
+   - Add or remove songs from playlists.
+   - Navigate between playlists and the user library.
+
+3. **Music Playback**
+   - Play, pause, stop, and navigate tracks (next/previous).
+   - Shuffle songs in the playlist.
+   - Displays current song details (name, artist).
+
+4. **File Management**
+   - Upload music files to Azure Blob Storage with metadata extraction.
+   - Download songs with progress tracking.
+   - Extract metadata (e.g., artist, duration, album).
+
+5. **UI/UX Enhancements**
+   - Sidebar with sliding animation.
+   - Search bar with dynamic results table.
+   - Animated album cover transitions.
+   - Dark mode and light mode toggle.
+
+6. **Search Functionality**
+   - Search for songs in the user library or Azure Blob Storage by name, artist, or album.
+
+---
+
+#### **Methods**
+
+- **`initialize()`**
+  - Sets up the UI, validates downloaded songs, and loads user data.
+  - Configures event handlers for playlists, search, and playback.
+
+- **`handleUpload_btn(ActionEvent actionEvent)`**
+  - Allows the user to upload songs to Azure Blob Storage with a progress tracker.
+
+- **`loadUserLibrary(int userId)`**
+  - Retrieves the user's library from the database and updates the TableView.
+
+- **`addDoubleClickToPlay()`**
+  - Adds a double-click event to the user library table for starting playback.
+
+- **`playCurrentSong()`**
+  - Plays the currently selected song in the playlist or library.
+
+- **`onThemeToggleButtonClick()`**
+  - Toggles between dark mode and light mode for the application.
+
+- **`handleLogOutAction(ActionEvent event)`**
+  - Navigates the user back to the login screen.
+
+- **`validateDownloadedSongs()`**
+  - Verifies the existence of downloaded files and updates their status in the library.
+
+- **`createUploadTask(File file)`**
+  - Uploads a selected music file to Azure Blob Storage and extracts metadata.
+
+- **`handleSearch_btn(ActionEvent event)`**
+  - Executes a search query and displays results in a table.
+
+---
+
+#### **Usage**
+
+1. **Set Up Azure Blob Storage**
+   - Replace the placeholder `CONNECTION_STRING` with valid Azure credentials.
+
+2. **Database Configuration**
+   - Ensure the database schema is configured and connection details are updated in the `DataBase` class.
+
+3. **Run the Application**
+   - Start the JavaFX application to access the library, playlists, and playback features.
+
+4. **Interacting with Features**
+   - **Library:** Add, play, and download songs.
+   - **Playlists:** Create and manage playlists.
+   - **Search:** Search for songs by metadata.
+
+---
+
+#### **Notes**
+
+- This class interacts with `MusicDB`, `DataBase`, and `UserSession` for backend operations.
+- Ensure the Azure SDK and database dependencies are included in the project.
 
 
 
