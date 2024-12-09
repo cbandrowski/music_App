@@ -283,6 +283,32 @@
 }
 
 
+.button_new {
+    -fx-background-color: #4CAF50; /* Green background */
+    -fx-text-fill: white;           /* White text */
+    -fx-font-size: 16px;            /* Font size */
+    -fx-padding: 10px 20px;         /* Padding inside the button */
+    -fx-border-radius: 5px;        /* Rounded corners */
+    -fx-background-radius: 5px;    /* Rounded background */
+    -fx-effect: dropshadow( three-pass-box , rgba(0, 0, 0, 0.3) , 10 , 0.0 , 2 , 2 ); /* Shadow effect */
+}
+
+.button_new:hover {
+    -fx-background-color: #45a049; /* Darker green on hover */
+}
+
+
+/* Style for MenuItem text color */
+.menu-item {
+    -fx-text-fill: #FFFFFF;  /* Set text color */
+    -fx-font-size: 14px;      /* Set font size */
+}
+
+/* Style for MenuItem when hovered */
+.menu-item:hover {
+    -fx-background-color: #4CAF50; /* Green background on hover */
+    -fx-text-fill: #FFFFFF;        /* White text on hover */
+}
 
 
 

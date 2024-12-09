@@ -5,6 +5,7 @@ import com.azure.storage.blob.models.BlobItem;
 import datab.DataBase;
 import datab.MusicDB;
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -1488,8 +1489,10 @@ public class MusicController {
     }
 
 
-    public void initializeSearchTable(){
 
+    private PauseTransition hideDelay; // Define a PauseTransition for delayed hiding
+
+    public void initializeSearchTable() {
         // Initially hide the sidebar off-screen
         side_bar.setTranslateX(-side_bar.getWidth());
 
@@ -1500,22 +1503,33 @@ public class MusicController {
         artistResultColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         albumResultColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
         resultsTable.setVisible(false);
+
         // Add a listener to the searchBar to detect text changes
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.trim().isEmpty()) {
                 resultsTable.setVisible(false); // Hide the table if the search bar is empty
             }
         });
-        rootPane.setOnMouseClicked(event -> {
-            // Check if the click occurred outside the table
-            if (!resultsTable.isHover()) {
-                hideTableWithFade();
-            }
-        });
+
+        // Hide the table after 5 seconds of inactivity
+        hideDelay = new PauseTransition(Duration.seconds(3));
+        hideDelay.setOnFinished(event -> hideTableWithFade());
+
         // Set placeholder for empty results
         resultsTable.setPlaceholder(new Label("No results found."));
 
+        // Detect loss of focus on searchBar
+        searchBar.focusedProperty().addListener((observable, oldFocus, newFocus) -> {
+            if (!newFocus && !resultsTable.isHover()) {
+                hideTableWithFade(); // Hide the table when searchBar loses focus
+            }
+        });
+
+        // Stop hiding the table if the user hovers over it
+        resultsTable.setOnMouseEntered(event -> hideDelay.stop());
+        resultsTable.setOnMouseExited(event -> hideDelay.play());
     }
+
     @FXML
     private void performSearchDBS() {
         String query = searchBar.getText().trim();
@@ -1544,13 +1558,11 @@ public class MusicController {
 
         // Check the selected source and perform the appropriate search
         if ("UserLibrary".equalsIgnoreCase(selectedSource)) {
-            // Assuming you have user ID stored (e.g., as a session variable or constant)
             int userId = UserSession.getInstance().getUserId();
             results = database.searchSongInUserLibrary(userId, query, null, null); // You can extend the query parameters as needed
         } else if ("BlobStorage".equalsIgnoreCase(selectedSource)) {
             results = searchBlobStorage(query);
         } else {
-            // Handle unexpected source value
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Invalid Source");
@@ -1569,9 +1581,10 @@ public class MusicController {
 
         resultsTable.setItems(results);
         showTableWithFade(); // Make table visible with fade animation
+
+        // Start the delay for hiding the table
+        hideDelay.playFromStart();
     }
-
-
 
     private void showTableWithFade() {
         resultsTable.toFront();
@@ -1583,54 +1596,57 @@ public class MusicController {
     }
 
     private void hideTableWithFade() {
-        rootPane.setOnMouseClicked(event -> {
-            // Check if the click occurred outside the table
-            if (!resultsTable.isHover() && resultsTable.isVisible() &&
-                    (event.getTarget() != resultsTable && !resultsTable.lookupAll(".cell").contains(event.getTarget()))) {
-
-                // Perform fade-out animation
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(1000), resultsTable);
-                fadeOut.setFromValue(1);
-                fadeOut.setToValue(0);
-                fadeOut.setOnFinished(e -> resultsTable.setVisible(false));
-                fadeOut.play();
-            }
-        });
+        // Perform fade-out animation
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(1000), resultsTable);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> resultsTable.setVisible(false));
+        fadeOut.play();
     }
 
     private ObservableList<Metadata> searchBlobStorage(String query) {
         ObservableList<Metadata> metadataList = FXCollections.observableArrayList();
-
-        // Normalize the query for case-insensitive matching
         String normalizedQuery = query.toLowerCase();
 
-        // Fetch metadata from Blob Storage
         for (BlobItem blobItem : musicBlobDB.getContainerClient().listBlobs()) {
             try {
-                // Create a BlobClient for the current blob
                 BlobClient blobClient = musicBlobDB.getContainerClient().getBlobClient(blobItem.getName());
-
-                // Use MetadataExtractor to extract metadata from the blob
                 Metadata metadata = MetadataExtractor.extractMetadataDB(blobClient, blobItem.getName());
-
-                // Check if the metadata matches the query
                 if (matchesQuery(metadata, normalizedQuery)) {
-                    metadataList.add(metadata); // Add matching metadata to the list
+                    metadataList.add(metadata);
                 }
             } catch (Exception e) {
-                // Log the error and continue processing other blobs
                 System.err.println("Error fetching metadata for blob: " + blobItem.getName() + " - " + e.getMessage());
             }
         }
 
         return metadataList;
     }
+
     private boolean matchesQuery(Metadata metadata, String query) {
         return (metadata.getSongName() != null && metadata.getSongName().toLowerCase().contains(query)) ||
                 (metadata.getArtist() != null && metadata.getArtist().toLowerCase().contains(query)) ||
                 (metadata.getAlbum() != null && metadata.getAlbum().toLowerCase().contains(query));
     }
 
+    public void handleDashBoard_btn(ActionEvent event) {
+        try {
+            // Load the dashboard scene
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/dashBoard.fxml"));
+            Scene scene = new Scene(loader.load(), 1200, 800);
 
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Set the new scene to the stage
+            stage.setTitle("Melodify");
+            stage.setScene(scene);
+            stage.setWidth(1002);   // I like this width
+            stage.setHeight(740);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();  // Print any error that occurs during loading
+        }
+    }
 
 }
