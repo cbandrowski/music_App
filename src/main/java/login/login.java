@@ -1,6 +1,5 @@
 package login;
 
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,9 +7,9 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-public class login extends Application { //
+public class login  { //
 
-    @Override
+
     public void start(Stage primaryStage) throws Exception {
         // Use the absolute path to load the FXML file
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/login.fxml"));
@@ -37,8 +36,8 @@ public class login extends Application { //
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-
-    }
+//    public static void main(String[] args) {
+//        launch(args);
+//
+//    }
 }

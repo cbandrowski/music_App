@@ -18,7 +18,7 @@ public class splashScreenController extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/com/example/musicresources/splashScreen.fxml"));
 
         // Set up the scene
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 787, 567);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Music App Splash Screen");
         primaryStage.show();

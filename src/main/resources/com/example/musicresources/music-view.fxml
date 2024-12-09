@@ -25,7 +25,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootPane" prefHeight="719.0" prefWidth="1117.0" styleClass="pane-alt" stylesheets="@musicView.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicapp.MusicController">
+<AnchorPane fx:id="rootPane" prefHeight="719.0" prefWidth="1117.0" styleClass="pane-alt" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicapp.MusicController">
     <children>
         <TableView fx:id="metadataTable" layoutX="607.0" layoutY="342.0" prefHeight="359.0" prefWidth="558.0">
             <columns>
@@ -53,39 +53,39 @@
             <Font name="System Bold Italic" size="18.0" />
          </font></Label>
         <ImageView fx:id="albumArt" fitHeight="100" fitWidth="100" layoutX="707.0" layoutY="543.0" />
-      <AnchorPane layoutX="574.0" layoutY="147.0" prefHeight="92.0" prefWidth="140.0">
+      <AnchorPane layoutX="613.0" layoutY="154.0" prefHeight="92.0" prefWidth="116.0">
          <children>
-            <ImageView fitHeight="54.0" fitWidth="99.0" layoutX="12.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="69.0" fitWidth="100.0" layoutX="8.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@icons/playingRadio.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="77.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <ImageView fx:id="tune2" fitHeight="30.0" fitWidth="34.0" layoutX="77.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
                <image>
                   <Image url="@icons/musical-note.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="61.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <ImageView fx:id="tune1" fitHeight="30.0" fitWidth="34.0" layoutX="61.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
                <image>
                   <Image url="@icons/musical-note.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="songNotPlaying111" fitHeight="30.0" fitWidth="34.0" layoutX="5.0" layoutY="-39.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <ImageView fx:id="tune3" fitHeight="30.0" fitWidth="34.0" layoutX="5.0" layoutY="-39.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
                <image>
                   <Image url="@icons/musical-note.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="8.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <ImageView fx:id="tune4" fitHeight="30.0" fitWidth="34.0" layoutX="8.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
                <image>
                   <Image url="@icons/musical-note.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="-9.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <ImageView fx:id="tune5" fitHeight="30.0" fitWidth="34.0" layoutX="-9.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
                <image>
                   <Image url="@icons/musical-note.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="62.0" layoutY="-20.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+            <ImageView fx:id="tune6" fitHeight="30.0" fitWidth="34.0" layoutX="62.0" layoutY="-20.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
                <image>
                   <Image url="@icons/musical-note.png" />
                </image>
@@ -287,7 +287,7 @@
       </VBox>
       <Button layoutX="474.0" layoutY="633.0" mnemonicParsing="false" onAction="#onRefresh" prefHeight="40.0" prefWidth="99.0" styleClass="button-d" text="Refresh" />
       <Button layoutX="361.0" layoutY="633.0" mnemonicParsing="false" onAction="#handleUserLib" styleClass="button-d" text="userLib" />
-        <VBox alignment="TOP_CENTER" layoutX="238.0" layoutY="22.0" prefHeight="194.0" prefWidth="890.0" spacing="10.0">
+        <VBox alignment="TOP_CENTER" layoutX="238.0" layoutY="22.0" prefHeight="158.0" prefWidth="890.0" spacing="10.0">
             <children>
                 <!-- HBox for Search Bar -->
                 <HBox alignment="TOP_CENTER" prefHeight="14.0" prefWidth="890.0">
@@ -413,5 +413,14 @@
             </Button>
          </children>
       </VBox>
+      <Text fx:id="comingSoonText" layoutX="175.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #00B3A6;" styleClass="label-welcome-title" text="Feature Coming Soon..." visible="false">
+         <font>
+            <Font name="System Bold Italic" size="25.0" />
+         </font>
+      </Text>
     </children>
+   <stylesheets>
+      <URL value="@musicView.css" />
+      <URL value="@dash_Board.css" />
+   </stylesheets>
 </AnchorPane>

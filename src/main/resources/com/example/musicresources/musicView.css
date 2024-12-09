@@ -242,9 +242,9 @@
 
 /* Style for the "You Rock" text */
 .rock-text {
-    -fx-font-family: 'Impact', sans-serif; /* Strong font for a bold look */
-    -fx-font-size: 48px; /* Large font size for emphasis */
-    -fx-font-weight: bold; /* Make it bold */
+    -fx-font-family: 'Impact', sans-serif;
+    -fx-font-size: 48px;
+    -fx-font-weight: bold;
     -fx-text-fill: linear-gradient(from 0% 0% to 100% 100%, #ff0000, #ffff00); /* Gradient from red to yellow */
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.9, 0, 0); /* Glowing shadow effect */
     -fx-stroke: black; /* Black outline for contrast */
@@ -257,15 +257,15 @@
 
 
 .menu-bar-button {
-    -fx-background-color: linear-gradient(to bottom right, #e0e0e0, #cfcfcf); /* Subtle light gradient */
-    -fx-text-fill: #000000; /* Black text for contrast */
-    -fx-font-size: 14px; /* Consistent font size with .button-d */
-    -fx-font-weight: bold; /* Bold text for emphasis */
-    -fx-padding: 8px 16px; /* Slightly smaller padding for a distinct feel */
-    -fx-background-radius: 10px; /* Rounded corners for consistency */
-    -fx-border-radius: 10px; /* Matching border radius */
-    -fx-border-color: rgba(0, 0, 0, 0.2); /* Subtle dark border */
-    -fx-border-width: 1.5px; /* Lighter border width */
+    -fx-background-color: linear-gradient(to bottom right, #e0e0e0, #cfcfcf);
+    -fx-text-fill: #000000;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: rgba(0, 0, 0, 0.2);
+    -fx-border-width: 1.5px;
     -fx-effect:
         dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0.3, 0, 1),
         innershadow(gaussian, rgba(255, 255, 255, 0.6), 4, 0.3, -1, -1); /* Softer shadow effects */
@@ -282,20 +282,6 @@
     -fx-scale-y: 1.05; /* Subtle scaling for emphasis */
 }
 
-
-.button_new {
-    -fx-background-color: #4CAF50; /* Green background */
-    -fx-text-fill: white;           /* White text */
-    -fx-font-size: 16px;            /* Font size */
-    -fx-padding: 10px 20px;         /* Padding inside the button */
-    -fx-border-radius: 5px;        /* Rounded corners */
-    -fx-background-radius: 5px;    /* Rounded background */
-    -fx-effect: dropshadow( three-pass-box , rgba(0, 0, 0, 0.3) , 10 , 0.0 , 2 , 2 ); /* Shadow effect */
-}
-
-.button_new:hover {
-    -fx-background-color: #45a049; /* Darker green on hover */
-}
 
 
 /* Style for MenuItem text color */

@@ -120,7 +120,7 @@ public class MusicController {
     @FXML
     private TextArea searchBar; //used to search up songs
     @FXML
-    private Text youRock; //used to search up songs
+    private Text youRock, comingSoonText;
 
 
 
@@ -175,10 +175,14 @@ public class MusicController {
     public void initialize() {
 
 
+        //initial mode for background theme
+        rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm());
+
+
+        //images for images
         images();
-        //runs animation
-       // imageAnimation();
-//        setupImageAnimations(imageBox); // Call the setup method here
+        musicNoteFadeAnimation();
+
 
 
         // this should show if song is playing or not
@@ -912,10 +916,13 @@ public class MusicController {
 
         // Add the selected theme
         if (isDarkMode) {
-            scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm());
+            // If it's in dark mode, switch to ligh
+            rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm());
             System.out.println("LightMode Active");
         } else {
-            scene.getStylesheets().add(getClass().getResource("/com/example/musicresources/dark-theme.css").toExternalForm());
+            // If it's in light mode, switch to dark mode
+            rootPane.getStylesheets().clear();
+            rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/musicView.css").toExternalForm());
             System.out.println("DarkMode Active");
         }
 
@@ -943,8 +950,19 @@ public class MusicController {
     }
 
     public void handleLikes_btn(ActionEvent event) {
-    }
+        // Show the text
+        comingSoonText.setVisible(true);
 
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(2.5), comingSoonText);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+
+        // After 2.5 seconds, fade out the text
+        fadeOut.setOnFinished(e -> comingSoonText.setVisible(false));
+
+        // Start the fade transition
+        fadeOut.play();
+    }
     @FXML
     public void handleLibrary_btn(ActionEvent event) {
         // Get the user ID from the session
@@ -964,12 +982,6 @@ public class MusicController {
         headerLabel.setText("User Library");
         headerLabel.setVisible(true); // Show the header label if you want it visible
         System.out.println("Switched to User Library.");
-    }
-
-    public void handleSearch_btn(ActionEvent event) {
-    }
-
-    public void handleHome_btn(ActionEvent event) {
     }
 
     //should bring user back to the loin in screen
@@ -1403,52 +1415,7 @@ public class MusicController {
     }
 
 
-/*
-    private boolean sidebarVisible = false; // Track sidebar visibility
-    private boolean youRockVisible = false; // Track "You Rock!" text visibility
-
-    public void handleHeadphones(MouseEvent event) {
-        // Get the width of the sidebar for the sliding animation
-        double width = side_bar.getWidth();
-
-        // Create a TranslateTransition to slide the sidebar in or out
-        TranslateTransition slideTransition = new TranslateTransition(Duration.seconds(0.5), side_bar);
-
-        if (sidebarVisible) {
-            // Slide sidebar out of view (off-screen to the left)
-            slideTransition.setToX(-width);
-
-            // Fade out the "You Rock!" text (make invisible) when the sidebar is shown
-            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), youRock);
-            fadeTransition.setFromValue(1.0);
-            fadeTransition.setToValue(0.0); // Fully invisible
-            fadeTransition.play();
-
-            // Set the "You Rock!" text visibility flag to false
-            youRockVisible = false;
-        } else {
-            // Slide sidebar into view (from the left)
-            slideTransition.setToX(0);
-
-            // Fade in the "You Rock!" text (make visible) when the sidebar is hidden
-            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), youRock);
-            fadeTransition.setFromValue(0.0);
-            fadeTransition.setToValue(1.0); // Fully visible
-            fadeTransition.play();
-
-            // Set the "You Rock!" text visibility flag to true
-            youRockVisible = true;
-        }
-
-        // Play the sidebar slide transition
-        slideTransition.play();
-
-        // Toggle the sidebar visibility state
-        sidebarVisible = !sidebarVisible;
-    }
-
-
- */
+    //sidebar slider
 
     private boolean sidebarVisible = false; // Track sidebar visibility
 
@@ -1646,6 +1613,44 @@ public class MusicController {
 
         } catch (Exception e) {
             e.printStackTrace();  // Print any error that occurs during loading
+        }
+    }
+    public void handleSearch_btn(ActionEvent event) {
+        // Set focus on the search bar when the search button is clicked
+        searchBar.requestFocus();
+
+        // Optionally, show the results table (if not already visible)
+        if (!resultsTable.isVisible()) {
+            showTableWithFade();
+        }
+    }
+
+
+    ///creating tune animation
+        @FXML
+        private ImageView tune1, tune2, tune3, tune4, tune5, tune6;
+    public void musicNoteFadeAnimation() {
+        // Array of ImageView elements to apply fade animation
+        ImageView[] tunes = {tune1, tune2, tune3, tune4, tune5, tune6};
+
+        // Loop through each ImageView and apply fade-in and fade-out effect
+        for (ImageView tune : tunes) {
+            // Apply fade-in
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), tune);
+            fadeIn.setFromValue(0.0); // start fully transparent
+            fadeIn.setToValue(1.0);   // end fully visible
+
+            // Apply fade-out
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), tune);
+            fadeOut.setFromValue(1.0); // start fully visible
+            fadeOut.setToValue(0.0);   // end fully transparent
+
+            // Set up the sequence to fade in and then fade out
+            fadeIn.setCycleCount(FadeTransition.INDEFINITE); // Loop the fade-in and fade-out
+            fadeIn.setAutoReverse(true); // Make the animation reverse itself (fade-in to fade-out)
+
+            // Start the fade-in animation
+            fadeIn.play();
         }
     }
 

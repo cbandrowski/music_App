@@ -1,59 +1,148 @@
-.root {
-    -fx-background-color: #2e2e2e;
+/* MenuBar */
+.menu-bar {
+    -fx-background-color: #82cfff; /* Light sky blue */
+}
+
+.menu-bar .label {
+    -fx-text-fill: #003366; /* Dark navy text */
+}
+
+.menu-item {
+    -fx-background-color: transparent; /* Default transparent background */
+    -fx-text-fill: #003366; /* Dark navy text */
+}
+
+.menu-item:hover {
+    -fx-background-color: #66b2ff; /* Brighter blue hover */
+}
+
+/* Buttons */
+.button-d {
+    -fx-background-color: linear-gradient(to bottom right, #b3e5fc, #64b5f6); /* Light blue gradient */
+    -fx-text-fill: #003366; /* Dark navy text for good contrast */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 18px;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-border-color: rgba(0, 51, 102, 0.4); /* Subtle dark border */
+    -fx-border-width: 2px;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0.3, 0, 2),
+        innershadow(gaussian, rgba(255, 255, 255, 0.5), 6, 0.3, -2, -2);
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.button-d:hover {
+    -fx-background-color: linear-gradient(to bottom right, #64b5f6, #b3e5fc); /* Reverse gradient */
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.2), 12, 0.5, 0, 3),
+        innershadow(gaussian, rgba(255, 255, 255, 0.6), 8, 0.4, -1, -1);
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+}
+
+/* SideBar Button */
+.button_sideBar {
+    -fx-background-color: linear-gradient(to bottom, #cce7ff, #99d6ff); /* Soft blue gradient */
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 5, 0.2, 0, 2);
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.button_sideBar:hover {
+    -fx-background-color: linear-gradient(to bottom, #99d6ff, #cce7ff); /* Lighter hover gradient */
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.2), 8, 0.3, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Side Pane */
+.pane {
+    -fx-background-color: linear-gradient(to bottom right, #e3f2fd, #bbdefb, #90caf9);
+    -fx-border-color: #5c6bc0; /* Soft indigo border */
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-effect:
+        innershadow(gaussian, rgba(255, 255, 255, 0.6), 20, 0.5, 2, 2),
+        innershadow(gaussian, rgba(0, 0, 0, 0.2), 30, 0.3, -4, -4),
+        dropshadow(gaussian, rgba(0, 0, 0, 0.2), 25, 0.6, 0, 0);
+    -fx-padding: 15;
+}
+
+.pane::content {
+    -fx-opacity: 0.95; /* Slightly foggy look */
+}
+
+/* Main Pane */
+.pane-alt {
+    -fx-background-color: linear-gradient(to bottom right, #e0f7fa, #b2ebf2, #80deea, #4dd0e1);
+    -fx-border-color: rgba(0, 102, 153, 0.7); /* Darker teal border */
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-effect:
+        innershadow(gaussian, rgba(255, 255, 255, 0.6), 15, 0.5, 3, 3),
+        innershadow(gaussian, rgba(0, 0, 0, 0.2), 20, 0.3, -3, -3),
+        dropshadow(gaussian, rgba(0, 0, 0, 0.3), 25, 0.5, 0, 0);
+    -fx-padding: 15;
+    -fx-opacity: 0.9; /* Adds a translucent glassy effect */
+    -fx-background-blur: 10; /* Creates a frosted glass effect */
+}
+
+.pane-alt::content {
+    -fx-opacity: 0.95; /* Slightly foggy content */
+    -fx-text-fill: #003366; /* Ensures text is readable on the translucent background */
+}
+
+/* ComboBox */
+.combo-box {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-text-fill: #003366; /* Dark navy text */
+    -fx-border-color: #82b3ff; /* Soft blue border */
+    -fx-border-radius: 5px;
+    -fx-background-color: #ffffff; /* White background */
+    -fx-padding: 5px;
+}
+
+.combo-box-popup .list-cell {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-text-fill: #003366;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #82b3ff; /* Light blue hover */
     -fx-text-fill: #ffffff;
 }
 
-.button {
-    -fx-background-color: #444444;
+/* TableView */
+.table-view {
+    -fx-background-color: #ffffff; /* White background */
+    -fx-border-color: #99ccff; /* Light blue border */
+    -fx-border-width: 2px;
+    -fx-font-size: 12px;
+    -fx-font-family: 'Arial', sans-serif;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #bbdefb; /* Light blue header */
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #003366; /* Dark navy text */
+    -fx-font-weight: bold;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #e3f2fd; /* Light blue hover */
+    -fx-text-fill: #003366;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #82b3ff; /* Bright blue selected row */
     -fx-text-fill: #ffffff;
 }
-
-.label {
-    -fx-text-fill: #ffffff;
-}
-.text-area{
-    -fx-background-color: #444444;
-
-}
-.list-view{
-    -fx-background-color: #444444;
-}
-.menu{
-    -fx-background-color: #444444;
-}
-.menu-item{
-    -fx-background-color: #444444;
-}
-.menu-bar{
-    -fx-background-color: #444444;
-}
-/* Dark theme for profilePane and overlay */
-#overlayPane {
-    -fx-background-color: rgba(0, 1, 1, 0.7); /* Dark background with transparency */
-}
-    #BorderPane {
-        -fx-background-color: #000000B2;
-    }
-
-    #profilePane {
-        -fx-background-color: #000000B2; /* Dark gray background for profile content */
-        -fx-border-color: #555; /* Lighter border to differentiate */
-        -fx-border-width: 1;
-        -fx-border-radius: 10;
-        -fx-background-radius: 10;
-    }
-
-    #profilePane .label {
-        -fx-text-fill: #ffffff; /* White text for labels */
-        -fx-background-color: #000000B2;
-    }
-
-    #profilePane .button {
-        -fx-background-color: #555; /* Dark background for buttons */
-        -fx-text-fill: #ffffff; /* White text for buttons */
-    }
-
-    #profilePane .button:hover {
-        -fx-background-color: #666; /* Slightly lighter on hover */
-    }
-
