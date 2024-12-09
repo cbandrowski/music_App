@@ -1298,7 +1298,6 @@ public class MusicController {
             }
     }
 
-    // Handle image import
 
     // Handle image import
     public void handleimportImage(MouseEvent event) {
@@ -1321,11 +1320,7 @@ public class MusicController {
     }
 
 
-
-
-
-
-    // Define image URLs
+    // images for fading animation
     private final String[] images = {
             getClass().getResource("/com/example/musicresources/com/example/images/album_cover4.jpg").toString(),
             getClass().getResource("/com/example/musicresources/com/example/images/album_cover3.jpg").toString(),
@@ -1407,7 +1402,7 @@ public class MusicController {
     }
 
 
-
+/*
     private boolean sidebarVisible = false; // Track sidebar visibility
     private boolean youRockVisible = false; // Track "You Rock!" text visibility
 
@@ -1452,7 +1447,55 @@ public class MusicController {
     }
 
 
+ */
+
+    private boolean sidebarVisible = false; // Track sidebar visibility
+
+    // Initial setup in the constructor or an initialization method
+
+    public void handleHeadphones(MouseEvent event) {
+        // Get the width of the sidebar for the sliding animation
+        double width = side_bar.getWidth();
+
+        // Create a TranslateTransition to slide the sidebar in or out
+        TranslateTransition slideTransition = new TranslateTransition(Duration.seconds(0.5), side_bar);
+
+        // Create a FadeTransition for the "You Rock!" text
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), youRock);
+
+        if (sidebarVisible) {
+            // Slide sidebar out of view (off-screen to the left)
+            slideTransition.setToX(-width);
+
+            // Fade in the "You Rock!" text
+            fadeTransition.setFromValue(0.0);
+            fadeTransition.setToValue(1.0); // Fully visible
+        } else {
+            // Slide sidebar into view (from the left)
+            slideTransition.setToX(0);
+
+            // Fade out the "You Rock!" text
+            fadeTransition.setFromValue(1.0);
+            fadeTransition.setToValue(0.0); // Fully invisible
+        }
+
+        // Play the transitions
+        slideTransition.play();
+        fadeTransition.play();
+
+        // Toggle the sidebar visibility state
+        sidebarVisible = !sidebarVisible;
+    }
+
+
     public void initializeSearchTable(){
+
+        // Initially hide the sidebar off-screen
+        side_bar.setTranslateX(-side_bar.getWidth());
+
+        // Ensure "You Rock!" text is fully visible at the start
+        youRock.setOpacity(1.0);
+
         nameResultColumn.setCellValueFactory(new PropertyValueFactory<>("songName"));
         artistResultColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         albumResultColumn.setCellValueFactory(new PropertyValueFactory<>("album"));

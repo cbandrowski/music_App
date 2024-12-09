@@ -256,5 +256,33 @@
 }
 
 
+.menu-bar-button {
+    -fx-background-color: linear-gradient(to bottom right, #e0e0e0, #cfcfcf); /* Subtle light gradient */
+    -fx-text-fill: #000000; /* Black text for contrast */
+    -fx-font-size: 14px; /* Consistent font size with .button-d */
+    -fx-font-weight: bold; /* Bold text for emphasis */
+    -fx-padding: 8px 16px; /* Slightly smaller padding for a distinct feel */
+    -fx-background-radius: 10px; /* Rounded corners for consistency */
+    -fx-border-radius: 10px; /* Matching border radius */
+    -fx-border-color: rgba(0, 0, 0, 0.2); /* Subtle dark border */
+    -fx-border-width: 1.5px; /* Lighter border width */
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0.3, 0, 1),
+        innershadow(gaussian, rgba(255, 255, 255, 0.6), 4, 0.3, -1, -1); /* Softer shadow effects */
+    -fx-cursor: hand; /* Changes cursor to hand on hover */
+    -fx-transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.menu-bar-button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #d6d6d6, #e8e8e8); /* Slightly darker hover gradient */
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0.4, 0, 2),
+        innershadow(gaussian, rgba(255, 255, 255, 0.8), 6, 0.4, -1, -1); /* Enhanced hover shadows */
+    -fx-scale-x: 1.05; /* Subtle scaling for emphasis */
+    -fx-scale-y: 1.05; /* Subtle scaling for emphasis */
+}
+
+
+
 
 

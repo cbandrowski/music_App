@@ -1,24 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.collections.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootPane" prefHeight="719.0" prefWidth="1117.0" styleClass="pane-alt" stylesheets="@musicView.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicapp.MusicController">
+<AnchorPane fx:id="rootPane" prefHeight="719.0" prefWidth="1117.0" styleClass="pane-alt" stylesheets="@musicView.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicapp.MusicController">
     <children>
         <TableView fx:id="metadataTable" layoutX="607.0" layoutY="342.0" prefHeight="359.0" prefWidth="558.0">
             <columns>
-                <TableColumn fx:id="songNameColumn" prefWidth="133.5999755859375" text="Song Name" />
-                <TableColumn fx:id="artistColumn" prefWidth="98.4000244140625" text="Artist" />
-                <TableColumn fx:id="durationColumn" prefWidth="76.0" text="Duration" />
-                <TableColumn fx:id="albumColumn" prefWidth="63.0" text="Album" />
-                <TableColumn fx:id="genreColumn" prefWidth="73.60009765625" text="Genre" />
-                <TableColumn fx:id="actionColumn" prefWidth="95.9998779296875" text="Actions" />
+                <TableColumn fx:id="songNameColumn" prefWidth="117.60003662109375" text="Song Name" />
+                <TableColumn fx:id="artistColumn" prefWidth="102.4000244140625" text="Artist" />
+                <TableColumn fx:id="durationColumn" prefWidth="75.199951171875" text="Duration" />
+                <TableColumn fx:id="albumColumn" prefWidth="68.79998779296875" text="Album" />
+                <TableColumn fx:id="genreColumn" prefWidth="78.4000244140625" text="Genre" />
+                <TableColumn fx:id="actionColumn" prefWidth="101.5999755859375" text="Actions" />
             </columns>
         </TableView>
         <!-- Label to indicate the current view (initially hidden) -->
@@ -38,8 +54,47 @@
             <Font name="System Bold Italic" size="18.0" />
          </font></Label>
         <ImageView fx:id="albumArt" fitHeight="100" fitWidth="100" layoutX="707.0" layoutY="543.0" />
+      <AnchorPane layoutX="574.0" layoutY="147.0" prefHeight="92.0" prefWidth="140.0">
+         <children>
+            <ImageView fitHeight="54.0" fitWidth="99.0" layoutX="12.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icons/playingRadio.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="77.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+               <image>
+                  <Image url="@icons/musical-note.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="61.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+               <image>
+                  <Image url="@icons/musical-note.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="songNotPlaying111" fitHeight="30.0" fitWidth="34.0" layoutX="5.0" layoutY="-39.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+               <image>
+                  <Image url="@icons/musical-note.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="8.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+               <image>
+                  <Image url="@icons/musical-note.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="-9.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+               <image>
+                  <Image url="@icons/musical-note.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="62.0" layoutY="-20.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+               <image>
+                  <Image url="@icons/musical-note.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
 
-        <HBox layoutX="244.0" layoutY="473.0" prefHeight="36.0" prefWidth="207.0" spacing="10" styleClass="pane-alt">
+        <HBox layoutX="291.0" layoutY="471.0" prefHeight="36.0" prefWidth="207.0" spacing="10" styleClass="pane-alt">
          <children>
             <AnchorPane prefHeight="36.0" prefWidth="218.0">
                <children>
@@ -107,7 +162,7 @@
          <children>
             <AnchorPane prefHeight="654.0" prefWidth="179.0">
                <children>
-                  <Text fill="#690d6e" layoutX="8.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MELODIFY">
+                  <Text fill="#690d6e" layoutX="3.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="rock-text" text="MELODIFY">
                      <font>
                         <Font name="System Bold Italic" size="30.0" />
                      </font>
@@ -231,14 +286,17 @@
          </padding>
 
       </VBox>
-      <Button layoutX="467.0" layoutY="621.0" mnemonicParsing="false" onAction="#onRefresh" prefHeight="40.0" prefWidth="99.0" styleClass="button-d" text="Refresh" />
-      <Button layoutX="473.0" layoutY="549.0" mnemonicParsing="false" onAction="#handleUserLib" styleClass="button-d" text="userLib" />
-        <VBox alignment="TOP_CENTER" layoutX="219.0" layoutY="22.0" spacing="10.0" prefWidth="890.0">
+      <Button layoutX="474.0" layoutY="633.0" mnemonicParsing="false" onAction="#onRefresh" prefHeight="40.0" prefWidth="99.0" styleClass="button-d" text="Refresh" />
+      <Button layoutX="361.0" layoutY="633.0" mnemonicParsing="false" onAction="#handleUserLib" styleClass="button-d" text="userLib" />
+        <VBox alignment="TOP_CENTER" layoutX="238.0" layoutY="22.0" prefHeight="194.0" prefWidth="890.0" spacing="10.0">
             <children>
                 <!-- HBox for Search Bar -->
-                <HBox alignment="TOP_CENTER" prefHeight="78.0" prefWidth="890.0">
+                <HBox alignment="TOP_CENTER" prefHeight="14.0" prefWidth="890.0">
                     <children>
-                        <TextArea fx:id="searchBar" prefHeight="22.0" prefWidth="320.0" promptText="Search by song name, artist, or album" />
+                        <TextArea fx:id="searchBar" prefHeight="22.0" prefWidth="320.0" promptText="Search by song name, artist, or album">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin></TextArea>
                         <AnchorPane prefHeight="22.0" prefWidth="35.0" style="-fx-background-color: black;">
                             <children>
                                 <ImageView fitHeight="21.0" fitWidth="20.0" layoutX="5.0" layoutY="9.0" onMouseClicked="#performSearchDBS" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
@@ -255,58 +313,42 @@
                                     <String fx:value="BlobStorage" />
                                 </FXCollections>
                             </items>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
                         </ComboBox>
-                        <Button fx:id="themeToggleButton" onAction="#onThemeToggleButtonClick" prefHeight="49.0" prefWidth="149.0" styleClass="button-d" text="Dark Mode" />
-                        <MenuBar fx:id="menuBar" prefHeight="54.0" prefWidth="133.0" styleClass="button-d" stylesheets="@musicView.css">
-                            <Menu text="Account">
-                                <MenuItem onAction="#handleProfileAction" text="Profile" />
+                        <Button fx:id="themeToggleButton" onAction="#onThemeToggleButtonClick" prefHeight="49.0" prefWidth="149.0" styleClass="button-d" text="Dark Mode">
+                     <HBox.margin>
+                        <Insets left="50.0" />
+                     </HBox.margin></Button>
+                        <MenuBar fx:id="menuBar" prefHeight="54.0" prefWidth="133.0" stylesheets="@musicView.css">
+                            <Menu styleClass="button-d" text="Account">
+                                <MenuItem onAction="#handleProfileAction" styleClass="menu_item" text="Profile" />
                                 <MenuItem onAction="#handlePreferencesAction" text="Preferences" />
                                 <MenuItem onAction="#handleHelpAction" text="Help" />
                                 <MenuItem onAction="#handleLogOutAction" text="Logout" />
                             </Menu>
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                     <styleClass>
+                        <String fx:value="button-d" />
+                        <String fx:value="menu-item" />
+                     </styleClass>
                         </MenuBar>
                     </children>
                 </HBox>
-
-                <!-- Results Table -->
-                <TableView fx:id="resultsTable" opacity="0" visible="false" prefWidth="890.0">
-                    <columns>
-                        <TableColumn fx:id="nameResultColumn" text="Song Name" prefWidth="120.0" />
-                        <TableColumn fx:id="artistResultColumn" text="Artist" prefWidth="100.0" />
-                        <TableColumn fx:id="albumResultColumn" text="Album" prefWidth="100.0" />
-                    </columns>
-                </TableView>
             </children>
         </VBox>
 
-        <ImageView fx:id="songPlaying" fitHeight="92.0" fitWidth="132.0" layoutX="260.0" layoutY="354.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+        <ImageView fx:id="songPlaying" fitHeight="92.0" fitWidth="132.0" layoutX="293.0" layoutY="342.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
          <image>
             <Image url="@icons/music_playing.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="songNotPlaying" fitHeight="92.0" fitWidth="132.0" layoutX="260.0" layoutY="354.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+      <ImageView fx:id="songNotPlaying" fitHeight="92.0" fitWidth="132.0" layoutX="293.0" layoutY="342.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
          <image>
             <Image url="@icons/music_notplaying.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="54.0" fitWidth="99.0" layoutX="632.0" layoutY="177.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@icons/playingRadio.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="700.0" layoutY="161.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
-         <image>
-            <Image url="@icons/musical-note.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="683.0" layoutY="161.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
-         <image>
-            <Image url="@icons/musical-note.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="songNotPlaying111" fitHeight="30.0" fitWidth="34.0" layoutX="628.0" layoutY="112.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
-         <image>
-            <Image url="@icons/musical-note.png" />
          </image>
       </ImageView>
       <ImageView fx:id="Verticalimg3" fitHeight="167.0" fitWidth="185.0" layoutX="328.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
@@ -334,21 +376,21 @@
             <Image url="@com/example/images/album_cover2.jpg" />
          </image>
       </ImageView>
-      <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="631.0" layoutY="146.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
+      <ImageView fx:id="headphones" fitHeight="151.0" fitWidth="114.0" layoutX="932.0" layoutY="122.0" onMouseClicked="#handleHeadphones" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
          <image>
-            <Image url="@icons/musical-note.png" />
+            <Image url="@com/example/images/headphones.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="614.0" layoutY="146.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
-         <image>
-            <Image url="@icons/musical-note.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="30.0" fitWidth="34.0" layoutX="685.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
-         <image>
-            <Image url="@icons/musical-note.png" />
-         </image>
-      </ImageView>
+      <Text fx:id="youRock" layoutX="32.0" layoutY="537.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="rock-text" text="You Rock" />
+
+          <!-- Results Table -->
+          <TableView fx:id="resultsTable" opacity="0" prefWidth="890.0" visible="false">
+              <columns>
+                  <TableColumn fx:id="nameResultColumn" prefWidth="120.0" text="Song Name" />
+                  <TableColumn fx:id="artistResultColumn" prefWidth="100.0" text="Artist" />
+                  <TableColumn fx:id="albumResultColumn" prefWidth="100.0" text="Album" />
+              </columns>
+          </TableView>
       <VBox fx:id="userLib_vbox" layoutX="306.0" layoutY="120.0" prefHeight="464.0" prefWidth="411.0" styleClass="pane" visible="false">
          <children>
       
@@ -375,11 +417,5 @@
             </Button>
          </children>
       </VBox>
-      <ImageView fx:id="headphones" fitHeight="151.0" fitWidth="114.0" layoutX="932.0" layoutY="122.0" onMouseClicked="#handleHeadphones" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
-         <image>
-            <Image url="@com/example/images/headphones.png" />
-         </image>
-      </ImageView>
-      <Text fx:id="youRock" layoutX="20.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="rock-text" text="You Rock" />
     </children>
 </AnchorPane>
