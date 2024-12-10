@@ -187,8 +187,10 @@ src/main/resources
 ## Regristration
  
 #### **Class Overview**
-
+![Screenshot 2024-12-09 at 6 53 02 PM](https://github.com/user-attachments/assets/226cfdd2-823f-4367-aff8-ed43f21b80e8)
 `RegistrationController` is responsible for managing the user registration workflow, including form validation, interaction with the database, and local storage selection.
+
+
 
 ---
 
@@ -251,8 +253,8 @@ src/main/resources
 
 ## Login
 
-
 #### **Class Overview**
+![Screenshot 2024-12-09 at 6 52 11 PM](https://github.com/user-attachments/assets/0022798b-d88f-444d-a793-d48e69c7f8b3)
 
 The `login` class extends `Application` and is the main class responsible for launching the JavaFX application. It handles:
 
@@ -313,7 +315,7 @@ The `login` class extends `Application` and is the main class responsible for la
 ## Forgot Password
 
 #### **Class Overview**
-
+![Screenshot 2024-12-09 at 6 53 30 PM](https://github.com/user-attachments/assets/4236a343-9b2a-46e1-8e03-74828f95c895)
 The `ForgotPassController` handles:
 1. Capturing user input for the email address and new password.
 2. Validating input fields.
@@ -385,6 +387,7 @@ The `ForgotPassController` handles:
 ## Dashboard
 
 #### **Class Overview**
+![Screenshot 2024-12-09 at 6 57 51 PM](https://github.com/user-attachments/assets/cfe25a1b-d79e-4989-8018-ae73d22e8ed3)
 
 The `DashBoardController` facilitates:
 1. A dynamic image slideshow with smooth fade transitions.
@@ -477,9 +480,12 @@ The `DashBoardController` facilitates:
 - Ensure the FXML files for the dashboard, music view, and settings are in the correct paths.
 - Customize the window dimensions and styles for a cohesive user experience.
 
+  
+
   ## Music Controller
   
 #### **Class Overview**
+![Screenshot 2024-12-09 at 6 59 30 PM](https://github.com/user-attachments/assets/e2bb3843-97bc-4986-8e63-e0588c3d5f1d)
 
 `MusicController` is responsible for managing the user interface, audio playback, user library, and playlists. It integrates with Azure Blob Storage for media storage and retrieval, ensuring seamless user interaction.
 
