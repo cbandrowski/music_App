@@ -176,7 +176,7 @@
                               <Font name="System Bold Italic" size="14.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#handleSearch_btn" style="-fx-background-color: transparent;" styleClass="button_sideBar" stylesheets="@musicView.css" text="Search" textFill="WHITE">
+                        <Button mnemonicParsing="false"  style="-fx-background-color: transparent;" styleClass="button_sideBar" stylesheets="@musicView.css" text="Search" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" />
                            </VBox.margin>
