@@ -4,10 +4,7 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.models.BlobItem;
 import datab.DataBase;
 import datab.MusicDB;
-import javafx.animation.FadeTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,10 +40,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -804,7 +797,6 @@ public class MusicController {
             skipToNextAvailableSong();
         }
     }
-
     private void addDoubleClickToPlay() {
         userLib.setRowFactory(tv -> {
             TableRow<Metadata> row = new TableRow<>();
@@ -833,7 +825,6 @@ public class MusicController {
             return row;
         });
     }
-
     @FXML
     public void handleProfileAction(ActionEvent actionEvent) {
         overlayPane.setVisible(true);
@@ -846,25 +837,20 @@ public class MusicController {
         lastNameLabel.setText("Doe");
         addressLabel.setText("123 Main St, Anytown, USA");
     }
-
     @FXML
     public void closeProfilePane() {
         overlayPane.setVisible(false);
     }
-
     public void setCurrentPlaylist(ObservableList<Metadata> playlist) {
         currentPlaylist = playlist;
         currentIndex = 0; // Reset to the first song
         playCurrentSong(); // Start playing the first song
     }
-
-
     private boolean isSongFileAvailable(Metadata song) {
         String filePath = UserSession.getInstance().getLocalStoragePath() + File.separator + song.getBlobName();
         File file = new File(filePath);
         return file.exists();
     }
-
     private void playCurrentSong() {
         if (currentPlaylist.isEmpty() || currentIndex < 0 || currentIndex >= currentPlaylist.size()) {
             songTitle.setText("No valid songs to play.");
@@ -883,8 +869,6 @@ public class MusicController {
 
         initializeMediaPlayer(filePath, currentSong.getSongName(), currentSong.getArtist());
     }
-
-
     private void skipToNextAvailableSong() {
         int startIndex = currentIndex;
         do {
@@ -902,8 +886,6 @@ public class MusicController {
 
         System.out.println("No valid songs available to play.");
     }
-
-
     @FXML
     protected void onThemeToggleButtonClick() {
         Scene scene = rootPane.getScene();
@@ -929,17 +911,9 @@ public class MusicController {
         // Toggle the flag
         isDarkMode = !isDarkMode;
     }
-
-
-    public void handlePreferencesAction(ActionEvent actionEvent) {
-    }
-
-    public void handleHelpAction(ActionEvent actionEvent) {
-    }
-
-    public void handlePaymentAction(ActionEvent actionEvent) {
-    }
-
+    public void handlePreferencesAction(ActionEvent actionEvent) {}
+    public void handleHelpAction(ActionEvent actionEvent) {}
+    public void handlePaymentAction(ActionEvent actionEvent) {}
     public void handleSetting_btn(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/settings.fxml"));
         Parent root = loader.load();
@@ -948,7 +922,6 @@ public class MusicController {
         settingsStage.show();
 
     }
-
     public void handleLikes_btn(ActionEvent event) {
         // Show the text
         comingSoonText.setVisible(true);
@@ -983,7 +956,6 @@ public class MusicController {
         headerLabel.setVisible(true); // Show the header label if you want it visible
         System.out.println("Switched to User Library.");
     }
-
     //should bring user back to the loin in screen
     public void handleLogOutAction(ActionEvent event) {
 
@@ -1006,7 +978,6 @@ public class MusicController {
             e.printStackTrace();
         }
     }
-
     public void handleUpload_btn(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
@@ -1053,7 +1024,6 @@ public class MusicController {
             alert.showAndWait();
         }
     }
-
     private Task<Void> createUploadTask(File file) {
         return new Task<>() {
             @Override
@@ -1093,30 +1063,6 @@ public class MusicController {
             }
         };
     }
-
-    private void saveMetadataToDatabase(Map<String, String> metadata, String blobName, String userId) {
-        try (Connection conn = DriverManager.getConnection(DataBase.DB_URL, DataBase.USERNAME, DataBase.PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(
-                     "INSERT INTO UserSongs (user_id, blob_name, title, duration, artist, album, composer, year_recorded) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
-
-            stmt.setString(1, userId);
-            stmt.setString(2, blobName);
-            stmt.setString(3, metadata.getOrDefault("title", "Unknown Title"));
-            stmt.setString(4, metadata.getOrDefault("duration", "0"));
-            stmt.setString(5, metadata.getOrDefault("artist", "Unknown Artist"));
-            stmt.setString(6, metadata.getOrDefault("album", "Unknown Album"));
-            stmt.setString(7, metadata.getOrDefault("composer", "Unknown Composer"));
-            stmt.setString(8, metadata.getOrDefault("year", "0"));
-
-            stmt.executeUpdate();
-            System.out.println("Metadata saved to database successfully!");
-
-        } catch (SQLException e) {
-            System.err.println("Failed to save metadata to database: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     @FXML
     private void handleRefreshUserLibrary(ActionEvent event) {
         // Logic to refresh the user library
@@ -1124,9 +1070,6 @@ public class MusicController {
         ObservableList<Metadata> library = FXCollections.observableArrayList(database.getUserLibrary(userId));
         userLib.setItems(library);
     }
-
-
-    ///this is to see is list can be worked with database
 
     private void populateSongListView() {
         // Fetch metadata from the database
@@ -1150,8 +1093,6 @@ public class MusicController {
             }
         }
     }
-
-
     //makes user lib appear. This helps organize the page a bit better
     public void handleUserLib(ActionEvent event) {
         System.out.println("userLib clicked");
@@ -1166,7 +1107,6 @@ public class MusicController {
 
 
     }
-
     /**
      * icons for search and playing music
      *
@@ -1176,10 +1116,6 @@ public class MusicController {
     public void handleIconSearch(MouseEvent event) {
         System.out.println("Icon clicked");
     }
-
-    /**
-    these icons are for handling playing songs
-    */
     public void handleOnPrevious_icon(MouseEvent event) {
         if (currentPlaylist.isEmpty()) {
             System.out.println("No songs available in the playlist.");
@@ -1200,7 +1136,6 @@ public class MusicController {
 
         System.out.println("No valid songs available in the playlist.");
     }
-
     public void handleOnPlay_icon(MouseEvent event) {
         if (currentPlaylist.isEmpty()) {
             System.out.println("No songs available to play.");
@@ -1226,7 +1161,6 @@ public class MusicController {
         songNotPlaying.setVisible(false);
         songPlaying.setVisible(true);
     }
-
     public void handleOnPause_icon(MouseEvent event) {
         if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             mediaPlayer.pause();
@@ -1242,7 +1176,6 @@ public class MusicController {
         songNotPlaying.setVisible(true);
         songPlaying.setVisible(false);
     }
-
     public void handleOnNext_icon(MouseEvent event) {
         if (currentPlaylist.isEmpty()) {
             System.out.println("No songs available in the playlist.");
@@ -1263,7 +1196,6 @@ public class MusicController {
 
         System.out.println("No valid songs available in the playlist.");
     }
-
     public void handleOnShuffle_icon(MouseEvent event) {
         if (currentPlaylist.isEmpty()) {
             System.out.println("No songs available to shuffle.");
@@ -1287,12 +1219,9 @@ public class MusicController {
         currentIndex = 0;
         playCurrentSong();
     }
-
-
 //    private ImageView profilePic; // next to the username should display a pic of the user and should be allowed to change it
-
     //displaying profile picture
-        public void displayUserProfileImage(String imageUrl) {
+    public void displayUserProfileImage(String imageUrl) {
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 // Load the image from the URL or local path
                 Image image = new Image(imageUrl);
@@ -1310,8 +1239,6 @@ public class MusicController {
 
             }
     }
-
-
     // Handle image import
     public void handleimportImage(MouseEvent event) {
 
@@ -1331,8 +1258,6 @@ public class MusicController {
             System.out.println("profileImageView is not initialized!");
         }
     }
-
-
     // images for fading animation
     private final String[] images = {
             getClass().getResource("/com/example/musicresources/com/example/images/album_cover4.jpg").toString(),
@@ -1342,8 +1267,6 @@ public class MusicController {
             getClass().getResource("/com/example/musicresources/com/example/images/album_cover.jpg").toString()
     };
     private int currentImageIndex = 0; // To cycle through images
-
-
     public void images(){
         // Set the initial images for ImageView
         Verticalimg1.setImage(new Image(images[0]));
@@ -1405,7 +1328,6 @@ public class MusicController {
         // Play the transition animation
         sequentialTransition.play();
     }
-
     private FadeTransition createFadeTransition(ImageView imageView, double from, double to, double durationInSeconds) {
         // Create the fade transition with specified duration
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(durationInSeconds), imageView);
@@ -1413,14 +1335,8 @@ public class MusicController {
         fadeTransition.setToValue(to);
         return fadeTransition;
     }
-
-
-    //sidebar slider
-
     private boolean sidebarVisible = false; // Track sidebar visibility
-
     // Initial setup in the constructor or an initialization method
-
     public void handleHeadphones(MouseEvent event) {
         // Get the width of the sidebar for the sliding animation
         double width = side_bar.getWidth();
@@ -1454,12 +1370,8 @@ public class MusicController {
         // Toggle the sidebar visibility state
         sidebarVisible = !sidebarVisible;
     }
+    public void initializeSearchTable(){
 
-
-
-    private PauseTransition hideDelay; // Define a PauseTransition for delayed hiding
-
-    public void initializeSearchTable() {
         // Initially hide the sidebar off-screen
         side_bar.setTranslateX(-side_bar.getWidth());
 
@@ -1470,33 +1382,26 @@ public class MusicController {
         artistResultColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         albumResultColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
         resultsTable.setVisible(false);
-
         // Add a listener to the searchBar to detect text changes
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.trim().isEmpty()) {
                 resultsTable.setVisible(false); // Hide the table if the search bar is empty
             }
         });
+        // Cancel fade-out if the table is hovered
+        cancelFadeOutOnHover();
 
-        // Hide the table after 5 seconds of inactivity
-        hideDelay = new PauseTransition(Duration.seconds(3));
-        hideDelay.setOnFinished(event -> hideTableWithFade());
-
+        // Listen for clicks on the rootPane to hide the table if clicked outside
+        rootPane.setOnMouseClicked(event -> {
+            // Check if the click occurred outside the table
+            if (!resultsTable.isHover() && resultsTable.isVisible()) {
+                hideTableWithFade();
+            }
+        });
         // Set placeholder for empty results
         resultsTable.setPlaceholder(new Label("No results found."));
 
-        // Detect loss of focus on searchBar
-        searchBar.focusedProperty().addListener((observable, oldFocus, newFocus) -> {
-            if (!newFocus && !resultsTable.isHover()) {
-                hideTableWithFade(); // Hide the table when searchBar loses focus
-            }
-        });
-
-        // Stop hiding the table if the user hovers over it
-        resultsTable.setOnMouseEntered(event -> hideDelay.stop());
-        resultsTable.setOnMouseExited(event -> hideDelay.play());
     }
-
     @FXML
     private void performSearchDBS() {
         String query = searchBar.getText().trim();
@@ -1525,11 +1430,15 @@ public class MusicController {
 
         // Check the selected source and perform the appropriate search
         if ("UserLibrary".equalsIgnoreCase(selectedSource)) {
+            // Assuming you have user ID stored (e.g., as a session variable or constant)
             int userId = UserSession.getInstance().getUserId();
-            results = database.searchSongInUserLibrary(userId, query, null, null); // You can extend the query parameters as needed
+            results = database.searchSongInUserLibrary(userId,query); // You can extend the query parameters as needed
+            results.forEach(metadata -> System.out.println(metadata.getSongName()));
+
         } else if ("BlobStorage".equalsIgnoreCase(selectedSource)) {
             results = searchBlobStorage(query);
         } else {
+            // Handle unexpected source value
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Invalid Source");
@@ -1548,29 +1457,59 @@ public class MusicController {
 
         resultsTable.setItems(results);
         showTableWithFade(); // Make table visible with fade animation
-
-        // Start the delay for hiding the table
-        hideDelay.playFromStart();
     }
-
+    // Show the table with a sliding effect combined with fade-in
     private void showTableWithFade() {
-        resultsTable.toFront();
-        resultsTable.setVisible(true);
-        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), resultsTable);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        fadeIn.play();
-    }
+        if (!resultsTable.isVisible()) {
+            resultsTable.setVisible(true);
+            resultsTable.toFront();
 
+            // Slide-in transition
+            TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), resultsTable);
+            slideIn.setFromX(-resultsTable.getWidth());
+            slideIn.setToX(0);
+
+            // Fade-in transition
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), resultsTable);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+
+            // Play both animations together
+            ParallelTransition showTransition = new ParallelTransition(slideIn, fadeIn);
+            showTransition.play();
+        }
+    }
     private void hideTableWithFade() {
-        // Perform fade-out animation
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(1000), resultsTable);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-        fadeOut.setOnFinished(e -> resultsTable.setVisible(false));
-        fadeOut.play();
-    }
+        // Add a delay before starting the fade-out animation
+        PauseTransition delay = new PauseTransition(Duration.seconds(2)); // 2-second delay
+        delay.setOnFinished(event -> {
+            // Check if the table is still not hovered before proceeding with fade-out
+            if (!resultsTable.isHover() && resultsTable.isVisible()) {
+                // Slide-out transition
+                TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), resultsTable);
+                slideOut.setFromX(0);
+                slideOut.setToX(-resultsTable.getWidth());
 
+                // Fade-out transition
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(300), resultsTable);
+                fadeOut.setFromValue(1);
+                fadeOut.setToValue(0);
+
+                // Play both animations together and set the table invisible at the end
+                ParallelTransition hideTransition = new ParallelTransition(slideOut, fadeOut);
+                hideTransition.setOnFinished(e -> resultsTable.setVisible(false));
+                hideTransition.play();
+            }
+        });
+
+        delay.play();
+    }
+    private void cancelFadeOutOnHover() {
+        resultsTable.setOnMouseEntered(event -> {
+            // Stop any ongoing fade-out animation
+            resultsTable.setOpacity(1); // Reset opacity
+        });
+    }
     private ObservableList<Metadata> searchBlobStorage(String query) {
         ObservableList<Metadata> metadataList = FXCollections.observableArrayList();
         String normalizedQuery = query.toLowerCase();
@@ -1589,13 +1528,11 @@ public class MusicController {
 
         return metadataList;
     }
-
     private boolean matchesQuery(Metadata metadata, String query) {
         return (metadata.getSongName() != null && metadata.getSongName().toLowerCase().contains(query)) ||
                 (metadata.getArtist() != null && metadata.getArtist().toLowerCase().contains(query)) ||
                 (metadata.getAlbum() != null && metadata.getAlbum().toLowerCase().contains(query));
     }
-
     public void handleDashBoard_btn(ActionEvent event) {
         try {
             // Load the dashboard scene
@@ -1615,17 +1552,6 @@ public class MusicController {
             e.printStackTrace();  // Print any error that occurs during loading
         }
     }
-    public void handleSearch_btn(ActionEvent event) {
-        // Set focus on the search bar when the search button is clicked
-        searchBar.requestFocus();
-
-        // Optionally, show the results table (if not already visible)
-        if (!resultsTable.isVisible()) {
-            showTableWithFade();
-        }
-    }
-
-
     ///creating tune animation
         @FXML
         private ImageView tune1, tune2, tune3, tune4, tune5, tune6;

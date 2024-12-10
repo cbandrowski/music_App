@@ -187,33 +187,28 @@ public class DataBase {
         }
         return false; // Return false if there's an error or no result
     }
-    public ObservableList<Metadata> searchSongInUserLibrary(int userId, String songName, String artist, String albumName) {
+    public ObservableList<Metadata> searchSongInUserLibrary(int userId, String query) {
+        // Construct the SQL query to search multiple fields using OR
         String searchQuery = "SELECT title, blob_name, artist, album " +
-                "FROM UserSongs WHERE user_id = ?" +
-                (songName != null && !songName.isBlank() ? " AND title LIKE ?" : "") +
-                (artist != null && !artist.isBlank() ? " AND artist LIKE ?" : "") +
-                (albumName != null && !albumName.isBlank() ? " AND album LIKE ?" : "");
+                "FROM UserSongs WHERE user_id = ? AND " +
+                "(LOWER(title) LIKE ? OR LOWER(artist) LIKE ? OR LOWER(album) LIKE ?)";
 
         ObservableList<Metadata> results = FXCollections.observableArrayList();
 
         try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
              PreparedStatement stmt = connection.prepareStatement(searchQuery)) {
 
-            int paramIndex = 1;
-            stmt.setInt(paramIndex++, userId);
+            // Set query parameters
+            stmt.setInt(1, userId);
+            String normalizedQuery = "%" + query.trim().toLowerCase() + "%"; // Normalize query for case-insensitive matching
+            stmt.setString(2, normalizedQuery); // Match against title
+            stmt.setString(3, normalizedQuery); // Match against artist
+            stmt.setString(4, normalizedQuery); // Match against album
 
-            if (songName != null && !songName.isBlank()) {
-                stmt.setString(paramIndex++, "%" + songName + "%");
-            }
-            if (artist != null && !artist.isBlank()) {
-                stmt.setString(paramIndex++, "%" + artist + "%");
-            }
-            if (albumName != null && !albumName.isBlank()) {
-                stmt.setString(paramIndex++, "%" + albumName + "%");
-            }
-
+            // Execute the query
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
+                // Retrieve and map the result set into Metadata objects
                 String title = rs.getString("title");
                 String blobName = rs.getString("blob_name");
                 String songArtist = rs.getString("artist");
@@ -222,11 +217,54 @@ public class DataBase {
                 results.add(new Metadata(title, blobName, songArtist, "", songAlbum, ""));
             }
         } catch (SQLException e) {
+            // Print exception stack trace for debugging
             e.printStackTrace();
         }
 
-        return results;
+        return results; // Return the results list
     }
+
+//    public ObservableList<Metadata> searchSongInUserLibrary(int userId, String songName, String artist, String albumName) {
+//        String searchQuery = "SELECT title, blob_name, artist, album " +
+//                "FROM UserSongs WHERE user_id = ?" +
+//                (songName != null && !songName.isBlank() ? " AND title LIKE ?" : "") +
+//                (artist != null && !artist.isBlank() ? " AND artist LIKE ?" : "") +
+//                (albumName != null && !albumName.isBlank() ? " AND album LIKE ?" : "");
+//
+//        ObservableList<Metadata> results = FXCollections.observableArrayList();
+//
+//        try (Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+//
+//             PreparedStatement stmt = connection.prepareStatement(searchQuery)) {
+//
+//            int paramIndex = 1;
+//            stmt.setInt(paramIndex++, userId);
+//
+//            if (songName != null && !songName.isBlank()) {
+//                stmt.setString(paramIndex++, "%" + songName + "%");
+//            }
+//            if (artist != null && !artist.isBlank()) {
+//                stmt.setString(paramIndex++, "%" + artist + "%");
+//            }
+//            if (albumName != null && !albumName.isBlank()) {
+//                stmt.setString(paramIndex++, "%" + albumName + "%");
+//            }
+//
+//            ResultSet rs = stmt.executeQuery();
+//            while (rs.next()) {
+//                String title = rs.getString("title");
+//                String blobName = rs.getString("blob_name");
+//                String songArtist = rs.getString("artist");
+//                String songAlbum = rs.getString("album");
+//
+//                results.add(new Metadata(title, blobName, songArtist, "", songAlbum, ""));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return results;
+//    }
 
 
     public int getUserId(String email) {
