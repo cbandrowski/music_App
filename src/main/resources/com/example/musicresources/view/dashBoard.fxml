@@ -24,22 +24,7 @@
                </image>
             </ImageView>
             <AnchorPane fx:id="welcomeText" layoutX="305.0" layoutY="40.0" prefHeight="202.0" prefWidth="420.0" styleClass="label-welcome-title">
-               <children>
-                  <Text fill="#e9beec" layoutX="77.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Melodify!" />
-                  <Text fill="#e9beec" layoutX="59.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your perfect soundtrack " />
-                  <Text fill="#e9beec" layoutX="29.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="is just a tap away. Enjoy " />
-                  <Text fill="#e9beec" layoutX="107.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" text="the music!" />
-                  <ImageView fitHeight="48.0" fitWidth="50.0" layoutX="282.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icons/guitar.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="44.0" fitWidth="60.0" layoutX="12.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icons/radio.png" />
-                     </image>
-                  </ImageView>
-               </children>
+
             </AnchorPane>
             <AnchorPane fx:id="aboutPane" layoutX="184.0" layoutY="90.0" prefHeight="366.0" prefWidth="580.0" visible="false">
                <styleClass>

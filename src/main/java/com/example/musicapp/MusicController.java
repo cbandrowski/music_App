@@ -44,22 +44,26 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MusicController {
-    public Button refreshUserLibButton;
+    //Results tables--------------------------------------------------------------------------------------------
     public TableView resultsTable;
     public TableColumn nameResultColumn;
     public TableColumn albumResultColumn;
     public TableColumn artistResultColumn;
     public ComboBox sourceComboBox;
+    //User library--------------------------------------------------------------------------------------------
+    public Button refreshUserLibButton;
     @FXML
     private VBox userLib_vbox;
-    public ProgressBar downloadProgressBar = new ProgressBar(0);
     @FXML
     private ListView<String> playlistListView; // Displays playlist names
     @FXML
-    private Label headerLabel; // A label above the table to indicate the current view context (e.g., "My Library" or "Playlist: <Name>")
-    @FXML
     private TableView<Metadata> userLib;
+    //Song uploading-------------------------------------------------------------------------------------------
+    public ProgressBar downloadProgressBar = new ProgressBar(0);
+    @FXML
+    private Label headerLabel; // A label above the table to indicate the current view context (e.g., "My Library" or "Playlist: <Name>")
     private boolean isUserLibrary = true; // Flag to differentiate between library and playlist
+    //User Database--------------------------------------------------------------------------------------------
     private DataBase database = new DataBase(); // Database instance
     @FXML
     private TableColumn<Metadata, String> userLibSongNameColumn;
@@ -113,11 +117,8 @@ public class MusicController {
     private ImageView playIcon;
     @FXML
     private VBox side_bar;
-    @FXML
-    private ImageView Verticalimg1, Verticalimg2, Verticalimg3, Verticalimg4, Verticalimg5;
     private boolean isDarkMode = false;
     private MediaPlayer mediaPlayer;
-
     // Variables for tracking drag offsets
     private double xOffset = 0;
     private double yOffset = 0;
@@ -126,8 +127,7 @@ public class MusicController {
     @FXML
     private ObservableList<Metadata> currentPlaylist = FXCollections.observableArrayList(); // Holds the current playlist or user library
     private int currentIndex = 0; // Tracks the currently playing song
-
-
+    private boolean sidebarVisible = false; // Track sidebar visibility
     public void initialize() {
         //initial mode for background theme
         rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/css/light-theme.css").toExternalForm());
@@ -205,8 +205,6 @@ public class MusicController {
         loadMetadataIntoTable();
         addButtonToTable();
     }
-
-    ////// use this in the button
     private void validateDownloadedSongs() {
         ObservableList<Metadata> library = userLib.getItems();
 
@@ -225,7 +223,6 @@ public class MusicController {
         // Refresh the table to update button states
         userLib.refresh();
     }
-
     private void loadMetadataIntoTable() {
         ObservableList<Metadata> metadataList = FXCollections.observableArrayList();
 
@@ -254,7 +251,6 @@ public class MusicController {
             metadataTable.setPlaceholder(new Label("No metadata available."));
         }
     }
-
     private void loadUserLibrary(int userId) {
         // Fetch the user's library from the database
         ObservableList<Metadata> library = FXCollections.observableArrayList(database.getUserLibrary(userId));
@@ -268,7 +264,6 @@ public class MusicController {
             userLib.setPlaceholder(new Label("Your library is empty."));
         }
     }
-
     private void addOptionsMenuToTable() {
         userDownloadColumn.setCellFactory(param -> new TableCell<Metadata, Void>() {
             private final MenuButton optionsMenu = new MenuButton("Options");
@@ -566,8 +561,6 @@ public class MusicController {
             }
         });
     }
-
-
     private void loadUserPlaylists() {
         int userId = UserSession.getInstance().getUserId();
         ObservableList<String> playlists = database.getUserPlaylists(userId);
@@ -583,7 +576,6 @@ public class MusicController {
             }
         });
     }
-
     private void loadPlaylistIntoTable(String playlistName) {
         int userId = UserSession.getInstance().getUserId();
 
@@ -596,7 +588,6 @@ public class MusicController {
         // Update the header label to show the current playlist name
         headerLabel.setText("Playlist: " + playlistName);
     }
-
     @FXML
     public void handlePlayList_btn(ActionEvent event) {
         if (isPlaylistViewVisible) {
@@ -625,12 +616,10 @@ public class MusicController {
 
         }
     }
-
     // Helper method to check if the song is in the user's library
     private boolean isSongInLibrary(int userId, String blobName) {
         return database.isSongInUserLibrary(userId, blobName);
     }
-
     private void addButtonToTable() {
         actionColumn.setCellFactory(param -> new TableCell<>() {
             private final Button addButton = new Button("Add to Library");
@@ -671,7 +660,6 @@ public class MusicController {
             }
         });
     }
-
     @FXML
     public void onRefresh(ActionEvent actionEvent) {
         Task<Void> task = new Task<>() {
@@ -686,7 +674,6 @@ public class MusicController {
         };
         new Thread(task).start();
     }
-
     private void makeProfilePaneDraggable() {
         profilePane.setOnMousePressed(event -> {
             // Capture the initial offset when mouse is pressed
@@ -700,7 +687,6 @@ public class MusicController {
             profilePane.setTranslateY(event.getSceneY() - yOffset);
         });
     }
-
     public void initializeMediaPlayer(String filePath, String songName, String artistName) {
         if (filePath == null || filePath.isEmpty()) {
             songTitle.setText("Error: Invalid file path!");
@@ -994,7 +980,6 @@ public class MusicController {
         ObservableList<Metadata> library = FXCollections.observableArrayList(database.getUserLibrary(userId));
         userLib.setItems(library);
     }
-
     //makes user lib appear. This helps organize the page a bit better
     public void handleUserLib(ActionEvent event) {
         System.out.println("userLib clicked");
@@ -1155,7 +1140,6 @@ public class MusicController {
         }
     }
     // images for fading animation
-    private boolean sidebarVisible = false; // Track sidebar visibility
     // Initial setup in the constructor or an initialization method
     public void handleHeadphones(MouseEvent event) {
         // Get the width of the sidebar for the sliding animation

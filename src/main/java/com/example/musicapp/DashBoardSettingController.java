@@ -23,9 +23,6 @@ public class DashBoardSettingController {
     @FXML
     private TextArea help_text_view;
 
-    private String profileImageUrl;
-
-
     @FXML
     public void initialize() {
         // Get the UserSession instance
