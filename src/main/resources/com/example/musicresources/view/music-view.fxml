@@ -346,31 +346,6 @@
             <Image url="@../icons/music_notplaying.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="Verticalimg3" fitHeight="167.0" fitWidth="185.0" layoutX="328.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../com/example/images/taylor.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="Verticalimg5" fitHeight="167.0" fitWidth="287.0" layoutX="290.0" layoutY="96.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../com/example/images/album_cover4.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="Verticalimg4" fitHeight="167.0" fitWidth="224.0" layoutX="362.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../com/example/images/album_cover3.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="Verticalimg2" fitHeight="189.0" fitWidth="211.0" layoutX="293.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../com/example/images/album_cover.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="Verticalimg1" fitHeight="167.0" fitWidth="191.0" layoutX="331.0" layoutY="105.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../com/example/images/album_cover2.jpg" />
-         </image>
-      </ImageView>
       <ImageView fx:id="headphones" fitHeight="151.0" fitWidth="114.0" layoutX="932.0" layoutY="122.0" onMouseClicked="#handleHeadphones" pickOnBounds="true" preserveRatio="true" styleClass="button-d">
          <image>
             <Image url="@../com/example/images/headphones.png" />

@@ -129,34 +129,21 @@ public class MusicController {
 
 
     public void initialize() {
-
-
         //initial mode for background theme
         rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/css/light-theme.css").toExternalForm());
-
-
-        //images for images
-        images();
-        musicNoteFadeAnimation();
-
-
-
         // this should show if song is playing or not
         songNotPlaying.setVisible(true);
         songPlaying.setVisible(false);
         playIcon.setVisible(true);
         pauseIcon.setVisible(false);
         initializeSearchTable();
-
         // Retrieve user session details
         UserSession session = UserSession.getInstance();
-
         // Use session details to load user-specific data
         int userId = session.getUserId();
         String email = session.getEmail();
         String fullName = session.getUserName();
-
-// Initially hide the playlist view and header label
+        // Initially hide the playlist view and header label
         headerLabel.setVisible(false);
         playlistListView.setVisible(false);
 
@@ -1130,8 +1117,6 @@ public class MusicController {
         currentIndex = 0;
         playCurrentSong();
     }
-//    private ImageView profilePic; // next to the username should display a pic of the user and should be allowed to change it
-    //displaying profile picture
     public void displayUserProfileImage(String imageUrl) {
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 // Load the image from the URL or local path
@@ -1170,82 +1155,6 @@ public class MusicController {
         }
     }
     // images for fading animation
-    private final String[] images = {
-            getClass().getResource("/com/example/musicresources/com/example/images/album_cover4.jpg").toString(),
-            getClass().getResource("/com/example/musicresources/com/example/images/album_cover3.jpg").toString(),
-            getClass().getResource("/com/example/musicresources/com/example/images/taylor.jpg").toString(),
-            getClass().getResource("/com/example/musicresources/com/example/images/album_cover2.jpg").toString(),
-            getClass().getResource("/com/example/musicresources/com/example/images/album_cover.jpg").toString()
-    };
-    private int currentImageIndex = 0; // To cycle through images
-    public void images(){
-        // Set the initial images for ImageView
-        Verticalimg1.setImage(new Image(images[0]));
-        Verticalimg2.setImage(new Image(images[1]));
-        Verticalimg3.setImage(new Image(images[2]));
-        Verticalimg4.setImage(new Image(images[3]));
-        Verticalimg5.setImage(new Image(images[4]));
-        Verticalimg1.setImage(new Image(images[0]));
-        Verticalimg2.setImage(new Image(images[1]));
-        Verticalimg3.setImage(new Image(images[2]));
-        Verticalimg4.setImage(new Image(images[3]));
-        Verticalimg5.setImage(new Image(images[4]));
-        // Start the fade animation
-        playFadeAnimation();
-    }
-    private void playFadeAnimation() {
-        // Define specific fade durations
-        double fadeInDuration = 1.0; // Duration for fade-in (1 second)
-        double fadeOutDuration = 1.5; // Duration for fade-out (1.5 seconds)
-
-        // Create FadeTransitions for each image with specific fade-in and fade-out durations
-        FadeTransition fadeOutImageView1 = createFadeTransition(Verticalimg1, 1.0, 0.0, fadeOutDuration);
-        FadeTransition fadeInImageView2 = createFadeTransition(Verticalimg2, 0.0, 1.0, fadeInDuration);
-        FadeTransition fadeInImageView3 = createFadeTransition(Verticalimg3, 0.0, 1.0, fadeInDuration);
-        FadeTransition fadeInImageView4 = createFadeTransition(Verticalimg4, 0.0, 1.0, fadeInDuration);
-        FadeTransition fadeInImageView5 = createFadeTransition(Verticalimg5, 0.0, 1.0, fadeInDuration);
-
-        // Create a sequential transition for smooth animation order
-        SequentialTransition sequentialTransition = new SequentialTransition();
-
-        // Add the fade transitions to the sequential transition
-        sequentialTransition.getChildren().addAll(
-                fadeOutImageView1, fadeInImageView2, fadeInImageView3, fadeInImageView4, fadeInImageView5
-        );
-
-        // Set an event for when the animation finishes
-        sequentialTransition.setOnFinished(e -> {
-            // Alternate images for the next cycle
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            Image nextImage = new Image(images[currentImageIndex]);
-
-            // Ensure the image update happens after fade-out
-            if (Verticalimg1.getOpacity() == 0) {
-                Verticalimg1.setImage(nextImage);
-            } else if (Verticalimg2.getOpacity() == 0) {
-                Verticalimg2.setImage(nextImage);
-            } else if (Verticalimg3.getOpacity() == 0) {
-                Verticalimg3.setImage(nextImage);
-            } else if (Verticalimg4.getOpacity() == 0) {
-                Verticalimg4.setImage(nextImage);
-            } else {
-                Verticalimg5.setImage(nextImage);
-            }
-
-            // Restart the animation for the next cycle
-            playFadeAnimation();
-        });
-
-        // Play the transition animation
-        sequentialTransition.play();
-    }
-    private FadeTransition createFadeTransition(ImageView imageView, double from, double to, double durationInSeconds) {
-        // Create the fade transition with specified duration
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(durationInSeconds), imageView);
-        fadeTransition.setFromValue(from);
-        fadeTransition.setToValue(to);
-        return fadeTransition;
-    }
     private boolean sidebarVisible = false; // Track sidebar visibility
     // Initial setup in the constructor or an initialization method
     public void handleHeadphones(MouseEvent event) {
@@ -1463,32 +1372,4 @@ public class MusicController {
             e.printStackTrace();  // Print any error that occurs during loading
         }
     }
-    ///creating tune animation
-        @FXML
-        private ImageView tune1, tune2, tune3, tune4, tune5, tune6;
-    public void musicNoteFadeAnimation() {
-        // Array of ImageView elements to apply fade animation
-        ImageView[] tunes = {tune1, tune2, tune3, tune4, tune5, tune6};
-
-        // Loop through each ImageView and apply fade-in and fade-out effect
-        for (ImageView tune : tunes) {
-            // Apply fade-in
-            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), tune);
-            fadeIn.setFromValue(0.0); // start fully transparent
-            fadeIn.setToValue(1.0);   // end fully visible
-
-            // Apply fade-out
-            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), tune);
-            fadeOut.setFromValue(1.0); // start fully visible
-            fadeOut.setToValue(0.0);   // end fully transparent
-
-            // Set up the sequence to fade in and then fade out
-            fadeIn.setCycleCount(FadeTransition.INDEFINITE); // Loop the fade-in and fade-out
-            fadeIn.setAutoReverse(true); // Make the animation reverse itself (fade-in to fade-out)
-
-            // Start the fade-in animation
-            fadeIn.play();
-        }
-    }
-
 }
