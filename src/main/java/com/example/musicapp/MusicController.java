@@ -169,7 +169,7 @@ public class MusicController {
 
 
         //initial mode for background theme
-        rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm());
+        rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/css/light-theme.css").toExternalForm());
 
 
         //images for images
@@ -899,12 +899,12 @@ public class MusicController {
         // Add the selected theme
         if (isDarkMode) {
             // If it's in dark mode, switch to ligh
-            rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm());
+            rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/css/light-theme.css").toExternalForm());
             System.out.println("LightMode Active");
         } else {
             // If it's in light mode, switch to dark mode
             rootPane.getStylesheets().clear();
-            rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/musicView.css").toExternalForm());
+            rootPane.getStylesheets().add(getClass().getResource("/com/example/musicresources/css/musicView.css").toExternalForm());
             System.out.println("DarkMode Active");
         }
 
@@ -915,7 +915,7 @@ public class MusicController {
     public void handleHelpAction(ActionEvent actionEvent) {}
     public void handlePaymentAction(ActionEvent actionEvent) {}
     public void handleSetting_btn(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/settings.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/settings.fxml"));
         Parent root = loader.load();
         Stage settingsStage = new Stage();
         settingsStage.setScene(new Scene(root));
@@ -961,7 +961,7 @@ public class MusicController {
 
         try {
             // Load the login screen FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/login.fxml"));
             Parent loginRoot = loader.load();
 
             // Get the current stage (window) from the button or any other control in the scene
@@ -1536,7 +1536,7 @@ public class MusicController {
     public void handleDashBoard_btn(ActionEvent event) {
         try {
             // Load the dashboard scene
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/dashBoard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/dashBoard.fxml"));
             Scene scene = new Scene(loader.load(), 1200, 800);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

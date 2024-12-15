@@ -107,7 +107,7 @@ public class DashBoardController {
     public void handleHome_btn(ActionEvent event) {
         try {
             // Load the music-view.fxml to show the music application
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/music-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/music-view.fxml"));
             Parent root = loader.load();
 
             // Access the MusicController (assuming you have one)
@@ -146,7 +146,7 @@ public class DashBoardController {
     public void handleSettings(ActionEvent event) {
         try {
             // Load the FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/dashBoardSetting.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/dashBoardSetting.fxml"));
             Parent root = loader.load();
 
             // Create a new scene with fixed dimensions

@@ -48,7 +48,7 @@ public class DashBoardSettingController {
     public void backToDashBoard_btn(ActionEvent event) {
         try {
             // Load the FXML file for the dashboard
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/dashBoard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/dashBoard.fxml"));
             Parent root = loader.load();
 
             // Create a new scene with the original dimensions for the dashboard

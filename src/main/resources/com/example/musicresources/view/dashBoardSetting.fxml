@@ -15,10 +15,10 @@
    <children>
       <ImageView fitHeight="543.0" fitWidth="723.0" layoutX="-2.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@com/example/images/setting_bg.jpg" />
+            <Image url="@../com/example/images/setting_bg.jpg" />
          </image>
       </ImageView>
-      <ToggleButton layoutX="258.0" layoutY="320.0" mnemonicParsing="false" onAction="#handleSupport" prefHeight="44.0" prefWidth="166.0" stylesheets="@dash_board_setting.css" text="User Feed Back">
+      <ToggleButton layoutX="258.0" layoutY="320.0" mnemonicParsing="false" onAction="#handleSupport" prefHeight="44.0" prefWidth="166.0" stylesheets="@../css/dash_board_setting.css" text="User Feed Back">
          <styleClass>
             <String fx:value="button" />
             <String fx:value="label-welcome-text" />
@@ -49,7 +49,7 @@
             </Text>
             <ImageView fitHeight="28.0" fitWidth="31.0" layoutX="9.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@icons/email.png" />
+                  <Image url="@../icons/email.png" />
                </image>
                <styleClass>
                   <String fx:value="label-welcome-text" />
@@ -79,7 +79,7 @@
             </Text>
             <ImageView fitHeight="28.0" fitWidth="31.0" layoutX="11.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@icons/user2.png" />
+                  <Image url="@../icons/user2.png" />
                </image>
                <styleClass>
                   <String fx:value="label-welcome-text" />
@@ -91,7 +91,7 @@
       <Button layoutX="286.0" layoutY="405.0" mnemonicParsing="false" onAction="#backToDashBoard_btn" prefHeight="44.0" prefWidth="118.0" styleClass="label-welcome-text" text="Dashboard" />
       <ImageView fitHeight="21.0" fitWidth="22.0" layoutX="36.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@icons/settings_icon.png" />
+            <Image url="@../icons/settings_icon.png" />
          </image>
          <styleClass>
             <String fx:value="label-welcome-text" />
@@ -100,7 +100,7 @@
       </ImageView>
       <ImageView fitHeight="21.0" fitWidth="22.0" layoutX="46.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@icons/settings_icon.png" />
+            <Image url="@../icons/settings_icon.png" />
          </image>
          <styleClass>
             <String fx:value="label-welcome-text" />
@@ -109,7 +109,7 @@
       </ImageView>
       <ImageView fitHeight="28.0" fitWidth="31.0" layoutX="47.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@icons/settings_icon.png" />
+            <Image url="@../icons/settings_icon.png" />
          </image>
          <styleClass>
             <String fx:value="label-welcome-text" />
@@ -120,7 +120,7 @@
       <Button fx:id="send" layoutX="486.0" layoutY="236.0" mnemonicParsing="false" onAction="#handleSend_btn" style="-fx-text-fill: black; -fx-background-color: transparent;" text="Send" visible="false" />
    </children>
    <stylesheets>
-      <URL value="@dash_board_setting.css" />
-      <URL value="@dash_Board.css" />
+      <URL value="@../css/dash_board_setting.css" />
+      <URL value="@../css/dash_Board.css" />
    </stylesheets>
 </AnchorPane>

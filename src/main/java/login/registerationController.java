@@ -100,7 +100,7 @@ public class registerationController {
     public void handleBackToLogin() {
         try {
             // Correct path to FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) statusMessage.getScene().getWindow(); // Or another reference to your stage
             stage.setScene(new Scene(root));

@@ -12,11 +12,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="636.0" style="-fx-background-color: #f4f4f4;" styleClass="pane" stylesheets="@reg.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.registerationController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="636.0" style="-fx-background-color: #f4f4f4;" styleClass="pane" stylesheets="@../css/reg.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.registerationController">
     <!-- Background Image -->
     <ImageView fitHeight="533.0" fitWidth="636.0" pickOnBounds="true" preserveRatio="false">
         <image>
-            <Image url="@com/example/images/registeration_bg.jpeg" />
+            <Image url="@../com/example/images/registeration_bg.jpeg" />
         </image>
     </ImageView>
 
@@ -26,23 +26,23 @@
       </font></Label>
 
                 <Label layoutX="126.0" layoutY="85.0" style="-fx-text-fill: black;" text="First Name:" />
-       <TextField fx:id="firstNameField" layoutX="246.0" layoutY="83.0" promptText="Enter your first name" styleClass="text-field" stylesheets="@reg.css" />
+       <TextField fx:id="firstNameField" layoutX="246.0" layoutY="83.0" promptText="Enter your first name" styleClass="text-field" stylesheets="@../css/reg.css" />
 
                 <Label layoutX="127.0" layoutY="129.0" style="-fx-text-fill: black;" text="Last Name:" />
-       <TextField fx:id="lastNameField" layoutX="246.0" layoutY="127.0" promptText="Enter your last name" styleClass="text-field" stylesheets="@reg.css" />
+       <TextField fx:id="lastNameField" layoutX="246.0" layoutY="127.0" promptText="Enter your last name" styleClass="text-field" stylesheets="@../css/reg.css" />
 
                 <Label layoutX="161.0" layoutY="182.0" style="-fx-text-fill: black;" text="Email:" />
-       <TextField fx:id="emailField" layoutX="252.0" layoutY="178.0" promptText="Enter your email" styleClass="text-field" stylesheets="@reg.css" />
+       <TextField fx:id="emailField" layoutX="252.0" layoutY="178.0" promptText="Enter your email" styleClass="text-field" stylesheets="@../css/reg.css" />
 
                 <Label layoutX="131.0" layoutY="226.0" style="-fx-text-fill: black;" text="Password:" />
-       <PasswordField fx:id="passwordField" layoutX="252.0" layoutY="224.0" promptText="Enter your password" styleClass="text-field" stylesheets="@reg.css" />
+       <PasswordField fx:id="passwordField" layoutX="252.0" layoutY="224.0" promptText="Enter your password" styleClass="text-field" stylesheets="@../css/reg.css" />
 
                 <Label layoutX="71.0" layoutY="269.0" style="-fx-text-fill: black;" text="Confirm Password:" />
-       <PasswordField fx:id="confirmPasswordField" layoutX="252.0" layoutY="267.0" promptText="Confirm your password" styleClass="text-field" stylesheets="@reg.css" />
+       <PasswordField fx:id="confirmPasswordField" layoutX="252.0" layoutY="267.0" promptText="Confirm your password" styleClass="text-field" stylesheets="@../css/reg.css" />
 
-                <Button fx:id="registerButton" layoutX="249.0" layoutY="374.0" onAction="#handleRegister" prefHeight="18.0" prefWidth="98.0" style="-fx-background-color: #3498db; -fx-text-fill: white;" styleClass="button-d" stylesheets="@reg.css" text="Sign up" />
+                <Button fx:id="registerButton" layoutX="249.0" layoutY="374.0" onAction="#handleRegister" prefHeight="18.0" prefWidth="98.0" style="-fx-background-color: #3498db; -fx-text-fill: white;" styleClass="button-d" stylesheets="@../css/reg.css" text="Sign up" />
 
-                <Button layoutX="112.0" layoutY="438.0" onAction="#handleBackToLogin" prefHeight="42.0" prefWidth="372.0" style="-fx-text-fill: white; -fx-background-color: transparent;" styleClass="button-d" stylesheets="@reg.css" text="Already have an account? Click           to Login" />
+                <Button layoutX="112.0" layoutY="438.0" onAction="#handleBackToLogin" prefHeight="42.0" prefWidth="372.0" style="-fx-text-fill: white; -fx-background-color: transparent;" styleClass="button-d" stylesheets="@../css/reg.css" text="Already have an account? Click           to Login" />
 
                 <Text fx:id="statusMessage" layoutX="50.0" layoutY="360.0" style="-fx-fill: #A8BDAE;" wrappingWidth="174.39997558593757">
       <styleClass>

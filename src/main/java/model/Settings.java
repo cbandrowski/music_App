@@ -40,9 +40,9 @@ public class Settings{
     private void toggleTheme(boolean enableDarkMode) {
         rootPane.getScene().getStylesheets().clear();
         if (enableDarkMode) {
-            rootPane.getScene().getStylesheets().add(getClass().getResource("/com/example/musicresources/dark-theme.css").toExternalForm());
+            rootPane.getScene().getStylesheets().add(getClass().getResource("/com/example/musicresources/css/dark-theme.css").toExternalForm());
         } else {
-            rootPane.getScene().getStylesheets().add(getClass().getResource("/com/example/musicresources/light-theme.css").toExternalForm());
+            rootPane.getScene().getStylesheets().add(getClass().getResource("/com/example/musicresources/css/light-theme.css").toExternalForm());
         }
         isDarkMode = enableDarkMode;
     }

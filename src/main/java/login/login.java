@@ -12,7 +12,7 @@ public class login  { //
 
     public void start(Stage primaryStage) throws Exception {
         // Use the absolute path to load the FXML file
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/login.fxml"));
         Parent root = loader.load();
         preloadResources();
         primaryStage.setTitle("Music App Login");
@@ -21,8 +21,8 @@ public class login  { //
     }
     public void preloadResources() {
         List<String> stylesheets = List.of(
-                "/com/example/musicresources/dark-theme.css",
-                "/com/example/musicresources/light-theme.css"
+                "/com/example/musicresources/css/dark-theme.css",
+                "/com/example/musicresources/css/light-theme.css"
         );
         for (String stylesheet : stylesheets) {
             new Thread(() -> {

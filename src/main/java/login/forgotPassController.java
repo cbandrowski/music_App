@@ -63,7 +63,7 @@ public class forgotPassController {
     public void handleBackToLoginAction(ActionEvent event) {
         try {
             // Load the login screen FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/login.fxml"));
             Parent loginRoot = loader.load();
             System.out.println("back to login");
 

@@ -15,7 +15,7 @@ public class splashScreenController extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Load the FXML file for the splash screen
-        Parent root = FXMLLoader.load(getClass().getResource("/com/example/musicresources/splashScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/com/example/musicresources/view/splashScreen.fxml"));
 
         // Set up the scene
         Scene scene = new Scene(root, 787, 567);

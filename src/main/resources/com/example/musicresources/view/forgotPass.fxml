@@ -16,7 +16,7 @@
               <!-- Background Image -->
         <ImageView fitHeight="455.0" fitWidth="632.0" pickOnBounds="true" preserveRatio="false">
             <image>
-                <Image url="@com/example/images/forgot_bg.jpg" />
+                <Image url="@../com/example/images/forgot_bg.jpg" />
             </image>
         </ImageView>
         <!-- Title -->
@@ -30,27 +30,27 @@
          <font>
             <Font name="System Bold Italic" size="12.0" />
          </font></Label>
-        <TextField fx:id="emailField" layoutX="250" layoutY="125" prefWidth="250" promptText="Enter your email" stylesheets="@reg.css" />
+        <TextField fx:id="emailField" layoutX="250" layoutY="125" prefWidth="250" promptText="Enter your email" stylesheets="@../css/reg.css" />
 
         <!-- New Password Field -->
         <Label layoutX="100" layoutY="180" style="-fx-font-size: 12; -fx-text-fill: #444; -fx-font-style: bold;" text="New Password:">
          <font>
             <Font name="System Bold Italic" size="12.0" />
          </font></Label>
-        <PasswordField fx:id="newPasswordField" layoutX="250" layoutY="175" prefWidth="250" promptText="Enter new password" stylesheets="@reg.css" />
+        <PasswordField fx:id="newPasswordField" layoutX="250" layoutY="175" prefWidth="250" promptText="Enter new password" stylesheets="@../css/reg.css" />
 
         <!-- Confirm Password Field -->
         <Label layoutX="100" layoutY="230" style="-fx-font-size: 12; -fx-text-fill: #444; -fx-font-style: bold;" text="Confirm Password:">
          <font>
             <Font name="System Bold Italic" size="12.0" />
          </font></Label>
-        <PasswordField fx:id="confirmPasswordField" layoutX="250" layoutY="225" prefWidth="250" promptText="Confirm new password" stylesheets="@reg.css" />
+        <PasswordField fx:id="confirmPasswordField" layoutX="250" layoutY="225" prefWidth="250" promptText="Confirm new password" stylesheets="@../css/reg.css" />
 
         <!-- Submit Button -->
-        <Button fx:id="resetButton" layoutX="131.0" layoutY="330.0" onAction="#handleResetPasswordAction" prefWidth="150" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14;" styleClass="button-d" stylesheets="@reg.css" text="Reset Password" />
+        <Button fx:id="resetButton" layoutX="131.0" layoutY="330.0" onAction="#handleResetPasswordAction" prefWidth="150" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14;" styleClass="button-d" stylesheets="@../css/reg.css" text="Reset Password" />
 
         <!-- Cancel Button -->
-        <Button layoutX="348.0" layoutY="329.0" onAction="#handleBackToLoginAction" prefHeight="42.0" prefWidth="142.0" style="-fx-background-color: #f44336; -fx-text-fill: Black; -fx-font-size: 14;" styleClass="button-d" stylesheets="@reg.css" text="Back to Login" />
+        <Button layoutX="348.0" layoutY="329.0" onAction="#handleBackToLoginAction" prefHeight="42.0" prefWidth="142.0" style="-fx-background-color: #f44336; -fx-text-fill: Black; -fx-font-size: 14;" styleClass="button-d" stylesheets="@../css/reg.css" text="Back to Login" />
       <Label fx:id="statusLabel" layoutX="172.0" layoutY="279.0" prefHeight="18.0" prefWidth="237.0" style="-fx-font-size: 12; -fx-text-fill: #444;" />
     </children>
 </AnchorPane>

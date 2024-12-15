@@ -15,7 +15,7 @@ public class register {
         //try user Id = s@gmail.com
         //pass = 123
         // Load FXML for the registration screen
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/registeration.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/registeration.fxml"));
         Parent root = loader.load();
 
         // Set up the primary stage

@@ -66,7 +66,7 @@ public void handleLogin() {
 
                     try {
                         // Load the dashboard FXML
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/dashboard.fxml"));
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/dashBoard.fxml"));
                         Parent root = loader.load();
 
                         // Access the DashboardController
@@ -121,7 +121,7 @@ public void handleLogin() {
     public void handleForgotPassword(ActionEvent event) {
         try {
             // Load the forgotPass.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/forgotPass.fxml")); // Replace with your actual FXML file path
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/musicresources/view/forgotPass.fxml")); // Replace with your actual FXML file path
             Parent root = loader.load();
 
             // Create a new stage for the forgot password screen
