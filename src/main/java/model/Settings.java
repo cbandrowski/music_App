@@ -58,18 +58,4 @@ public class Settings{
         notificationsCheckBox.setSelected(true);  // Example of another setting
     }
 
-    @FXML
-    private void handleSaveSettings() {
-        System.out.println("Settings saved!");
-    }
-
-    @FXML
-    private void handleCancelSettings() {
-        System.out.println("Settings changes canceled.");
-    }
-
-    @FXML
-    private void handleChangePassword() {
-        System.out.println("Change Password clicked.");
-    }
 }

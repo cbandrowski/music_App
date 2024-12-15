@@ -41,10 +41,6 @@ import javafx.beans.property.SimpleStringProperty;
             return genre.get();
         }
         public String getBlobName() {   return BlobName.get(); }
-        public boolean isDownloaded() {
-            return downloaded;
-        }
-
         public void setDownloaded(boolean downloaded) {
             this.downloaded = downloaded;
         }

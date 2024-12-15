@@ -35,17 +35,6 @@ public class Playlist {
     public void setName(String name) {
         this.name = name;
     }
-
-    // Getter for songs in the playlist
-    public ObservableList<Song> getSongs() {
-        return songs;
-    }
-
-    // Method to add a song to the playlist
-    public void addSong(Song song) {
-        songs.add(song);
-    }
-
     // Method to remove a song from the playlist
     public void removeSong(Song song) {
         songs.remove(song);

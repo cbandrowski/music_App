@@ -44,8 +44,6 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MusicController {
-    private static final String CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=musicappdb;AccountKey=/TxkG8DnJ6NGWCEnv/82FiqesEi04JLZ/s6qd5Ox78qGJuxETnxCrpVs6C42jsmTzNUQ65iZ5cLn+AStfJBFbw==;EndpointSuffix=core.windows.net";
-    private static final String CONTAINER_NAME = "media-files";
     public Button refreshUserLibButton;
     public TableView resultsTable;
     public TableColumn nameResultColumn;
@@ -55,13 +53,10 @@ public class MusicController {
     @FXML
     private VBox userLib_vbox;
     public ProgressBar downloadProgressBar = new ProgressBar(0);
-    ;
     @FXML
     private ListView<String> playlistListView; // Displays playlist names
-
     @FXML
     private Label headerLabel; // A label above the table to indicate the current view context (e.g., "My Library" or "Playlist: <Name>")
-
     @FXML
     private TableView<Metadata> userLib;
     private boolean isUserLibrary = true; // Flag to differentiate between library and playlist
@@ -79,79 +74,47 @@ public class MusicController {
     public TableColumn<Metadata, Void> userDownloadColumn;
     @FXML
     private TableColumn<Metadata, String> songNameColumn;
-
     @FXML
     private TableColumn<Metadata, String> artistColumn;
-
     @FXML
     private TableColumn<Metadata, String> durationColumn;
-
     @FXML
     private TableColumn<Metadata, String> albumColumn;
-
     @FXML
     private TableColumn<Metadata, String> genreColumn;
-
-
     private MusicDB musicBlobDB;
     @FXML
     private ImageView albumArt, profileImage;
-
     @FXML
     private ImageView profilePic; // next to the username should display a pic of the user and should be allowed to change it
     @FXML
     private Label songTitle, usernameLabel, firstNameLabel, lastNameLabel, addressLabel;
-    @FXML
-    private Button playButton, pauseButton, nextButton, previousButton, themeToggleButton, paymentButton;
     @FXML
     private AnchorPane rootPane;
     @FXML
     private StackPane overlayPane;
     @FXML
     private BorderPane profilePane;
-
     @FXML
     private TextArea searchBar; //used to search up songs
     @FXML
     private Text youRock, comingSoonText;
-
-
-
-    @FXML
-    private ListView<String> songListView; //displays the result
-
     private ObservableList<String> allSongs; // Complete list of songs
-
     private MusicDB musicDB; // Reference to your MusicDB class
     @FXML
     private Text nameId;
-    private String userEmail;
-
     @FXML
     private ImageView songNotPlaying;
-
     @FXML
     private ImageView songPlaying;
-
     @FXML
     private ImageView pauseIcon;
-
     @FXML
     private ImageView playIcon;
-
-    //for image animation
-    @FXML
-    private HBox imageBox;
     @FXML
     private VBox side_bar;
     @FXML
-    private ImageView headphones;
-
-    @FXML
     private ImageView Verticalimg1, Verticalimg2, Verticalimg3, Verticalimg4, Verticalimg5;
-
-
-
     private boolean isDarkMode = false;
     private MediaPlayer mediaPlayer;
 
@@ -317,12 +280,6 @@ public class MusicController {
         if (library.isEmpty()) {
             userLib.setPlaceholder(new Label("Your library is empty."));
         }
-    }
-
-    @FXML
-    private void openPlaylist(String playlistName) {
-        ObservableList<Metadata> playlistSongs = database.getSongsInPlaylist(UserSession.getInstance().getUserId(), playlistName);
-        setCurrentPlaylist(playlistSongs); // Set the selected playlist as the current playlist
     }
 
     private void addOptionsMenuToTable() {
@@ -936,26 +893,6 @@ public class MusicController {
         // Start the fade transition
         fadeOut.play();
     }
-    @FXML
-    public void handleLibrary_btn(ActionEvent event) {
-        // Get the user ID from the session
-        int userId = UserSession.getInstance().getUserId();
-
-        // Load the user library from the database
-        ObservableList<Metadata> library = FXCollections.observableArrayList(database.getUserLibrary(userId));
-
-        // Set the library data into the `userLib` TableView
-        userLib.setItems(library);
-
-        // Update the playlist view and header label visibility
-        playlistListView.setVisible(false); // Hide the playlist view if it's visible
-        headerLabel.setVisible(false); // Hide the header label
-
-        // Optional: Update the UI to indicate that the user is now viewing their library
-        headerLabel.setText("User Library");
-        headerLabel.setVisible(true); // Show the header label if you want it visible
-        System.out.println("Switched to User Library.");
-    }
     //should bring user back to the loin in screen
     public void handleLogOutAction(ActionEvent event) {
 
@@ -1071,28 +1008,6 @@ public class MusicController {
         userLib.setItems(library);
     }
 
-    private void populateSongListView() {
-        // Fetch metadata from the database
-        for (BlobItem blobItem : musicDB.getContainerClient().listBlobs()) {
-            try {
-                BlobClient blobClient = musicDB.getContainerClient().getBlobClient(blobItem.getName());
-                Metadata metadata = MetadataExtractor.extractMetadataDB(blobClient, blobItem.getName());
-
-                // Format metadata as a single string
-                String songInfo = String.format(
-                        "Song: %s | Artist: %s | Duration: %s | Album: %s | Genre: %s",
-                        metadata.getSongName(), metadata.getArtist(), metadata.getDuration(),
-                        metadata.getAlbum(), metadata.getGenre()
-                );
-
-                // Add to the complete list
-                allSongs.add(songInfo);
-            } catch (Exception e) {
-                // Handle blobs without proper metadata
-                allSongs.add("Invalid metadata for blob: " + blobItem.getName());
-            }
-        }
-    }
     //makes user lib appear. This helps organize the page a bit better
     public void handleUserLib(ActionEvent event) {
         System.out.println("userLib clicked");
@@ -1112,10 +1027,6 @@ public class MusicController {
      *
      * @param event
      */
-    //search method with icon image
-    public void handleIconSearch(MouseEvent event) {
-        System.out.println("Icon clicked");
-    }
     public void handleOnPrevious_icon(MouseEvent event) {
         if (currentPlaylist.isEmpty()) {
             System.out.println("No songs available in the playlist.");

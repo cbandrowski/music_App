@@ -6,8 +6,6 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.azure.storage.blob.models.BlobItem;
 import com.azure.storage.blob.models.BlobStorageException;
-import model.Metadata;
-import model.MetadataExtractor;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -30,43 +28,6 @@ public class MusicDB {
     }
     public BlobContainerClient getContainerClient() {
         return containerClient;
-    }
-    public boolean doesBlobExist(String blobName) {
-        for (BlobItem blobItem : this.containerClient.listBlobs()) {
-            if (blobItem.getName().equals(blobName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public String listAllBlobsMetadataOnly() {
-        StringBuilder metadataBuilder = new StringBuilder();
-
-        // Add column headers
-        metadataBuilder.append(String.format("%-20s %-20s %-10s %-20s %-20s\n", "Song Name", "Artist", "Duration", "Album", "Genre"));
-        metadataBuilder.append("-------------------------------------------------------------------------------------------\n");
-
-        // Iterate over each blob item in the container
-        for (BlobItem blobItem : containerClient.listBlobs()) {
-            try {
-                // Create a BlobClient for the current blob
-                BlobClient blobClient = containerClient.getBlobClient(blobItem.getName());
-
-                // Use MetadataExtractor to extract metadata from the blob
-                Metadata metadata = MetadataExtractor.extractMetadataDB(blobClient, blobItem.getName());
-
-                // Append metadata row
-                metadataBuilder.append(String.format("%-20s %-20s %-10s %-20s %-20s\n",
-                        metadata.getSongName(), metadata.getArtist(), metadata.getDuration(),
-                        metadata.getAlbum(), metadata.getGenre()));
-            } catch (Exception e) {
-                // Append an error row for this blob
-                metadataBuilder.append(String.format("%-20s %-20s %-10s %-20s %-20s\n",
-                        "Na", "Na", "Na", "Na", "Na"));
-            }
-        }
-
-        return metadataBuilder.toString();
     }
     public void downloadFileWithProgress(String blobName, String destinationPath, BiConsumer<Long, Long> progressCallback) throws Exception {
         MusicDB musicDB = new MusicDB();

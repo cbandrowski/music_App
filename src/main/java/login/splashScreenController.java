@@ -11,7 +11,6 @@ import javafx.util.Duration;
 //this is the starting part of the app
 
 public class splashScreenController extends Application {
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Load the FXML file for the splash screen
@@ -37,8 +36,6 @@ public class splashScreenController extends Application {
         });
         pause.play();
     }
-
-
     public static void main(String[] args) {
         launch(args);
     }
